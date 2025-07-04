@@ -1,4 +1,4 @@
-package SANTA.backend.jwt;
+package SANTA.backend.global.jwt;
 
 import SANTA.backend.dto.CustomUserDetails;
 import SANTA.backend.entity.UserEntity;
@@ -25,7 +25,7 @@ public class JWTFilter extends OncePerRequestFilter {
         //검증 확인 하는 부분
         //request에서 Authorization 헤더를 찾음
         String authorization= request.getHeader("Authorization");
-        //Authorization 헤더 검증 (적적, 접두가 알맞은지)
+        //Authorization 헤더 검증 (적절한지, 접두가 알맞은지)
         if (authorization == null || !authorization.startsWith("Bearer ")) {
 
             System.out.println("token null");

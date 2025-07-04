@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    //DB에 접근할 repository 객체
     private  final UserRepository userRepository;
 
     public  CustomUserDetailsService(UserRepository userRepository){

@@ -37,6 +37,7 @@ public class CustomUserDetails implements UserDetails {
         return userEntity.getUsername();
     }
 
+    //계정에 관한 추가 설정들
     @Override
     public boolean isAccountNonExpired() {
         return true;

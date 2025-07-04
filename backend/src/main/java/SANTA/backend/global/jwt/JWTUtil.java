@@ -1,8 +1,6 @@
-package SANTA.backend.jwt;
+package SANTA.backend.global.jwt;
 
 import io.jsonwebtoken.Jwts;
-import lombok.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -22,6 +20,7 @@ public class JWTUtil {
                 Jwts.SIG.HS256.key().build().getAlgorithm()
         );
     }
+
     //token의 특정 요소들을 검증하는 부분
     public String getUsername(String token) {
 
@@ -37,6 +36,7 @@ public class JWTUtil {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
+
     //token 생성
     public String createJwt(String username, String role, Long expiredMs) {
 

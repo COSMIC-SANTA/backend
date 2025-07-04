@@ -1,4 +1,4 @@
-package SANTA.backend.jwt;
+package SANTA.backend.global.jwt;
 
 import SANTA.backend.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
@@ -29,7 +29,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
+    //Authentication : 인증할 때 사용 / attemptAuthentication : 이름
         //클라이언트 요청에서 username, password 추출
         String username = obtainUsername(request);
         String password = obtainPassword(request);
@@ -61,7 +61,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtUtil.createJwt(username, role, 60*60*10L);
 
         response.addHeader("Authorization", "Bearer " + token);
-
     }
 
     //로그인 실패시 실행하는 메소드

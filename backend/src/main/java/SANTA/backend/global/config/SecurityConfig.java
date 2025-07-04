@@ -1,13 +1,13 @@
-package SANTA.backend.config;
+package SANTA.backend.global.config;
 
-import SANTA.backend.jwt.JWTFilter;
-import SANTA.backend.jwt.JWTProperties;
-import SANTA.backend.jwt.JWTUtil;
-import SANTA.backend.jwt.LoginFilter;
-import org.springframework.beans.factory.annotation.Configurable;
+import SANTA.backend.global.jwt.JWTFilter;
+import SANTA.backend.global.jwt.JWTUtil;
+import SANTA.backend.global.jwt.LoginFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -53,10 +57,17 @@ public class SecurityConfig {
         //http basic 인증방식 disable
         http
                 .httpBasic((auth)->auth.disable());
-        //경로별 인가 작업
+        //경로별 인가 작업, OAuth2
         http
-                .authorizeHttpRequests((auth)->auth.requestMatchers("/login","/","/api/auth/sign-up").permitAll().requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
-        //JWT필터 등록
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/api/auth/sign-up").permitAll()
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(Customizer.withDefaults());
+
+        //JWT필터 등록->왜 로그인 필터 앞에 추가??
         http
                 .addFilterBefore(new JWTFilter(jwtUtil),LoginFilter.class);
         //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
@@ -66,6 +77,26 @@ public class SecurityConfig {
         //세션 설정-stateless 상태로 설정하는 것이 중요
         http
                 .sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http//이거 cors처리
+                .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                        CorsConfiguration configuration = new CorsConfiguration();
+
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setMaxAge(3600L);
+
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
+                        return configuration;
+                    }
+                })));
 
         return  http.build();
     }
