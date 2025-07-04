@@ -1,4 +1,4 @@
-package SANTA.backend.controller;
+package SANTA.backend.core.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

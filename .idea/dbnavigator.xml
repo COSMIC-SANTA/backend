@@ -46,9 +46,6 @@ SELECT * FROM user_entity;]]></console>
     <last-used-operator value="EQUAL" />
     <filters />
   </component>
-  <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
-    <recently-used-interfaces />
-  </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
       <connection id="8f6258bb-197c-4c06-89be-ba9bfffdc054" active="true" signed="true">

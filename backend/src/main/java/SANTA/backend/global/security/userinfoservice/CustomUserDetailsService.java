@@ -1,8 +1,8 @@
-package SANTA.backend.service;
+package SANTA.backend.global.security.userinfoservice;
 
-import SANTA.backend.dto.CustomUserDetails;
-import SANTA.backend.entity.UserEntity;
-import SANTA.backend.repository.UserRepository;
+import SANTA.backend.core.domain.User;
+import SANTA.backend.core.repository.UserRepository;
+import SANTA.backend.global.security.userinfo.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //DB에서 조회
-        UserEntity userData =userRepository.findByUsername(username);
+        User userData =userRepository.findByUsername(username);
         if(userData!=null){
             //UserDetails에 담아서 return하면 AutneticationManager가 검증 함
             return  new CustomUserDetails(userData);

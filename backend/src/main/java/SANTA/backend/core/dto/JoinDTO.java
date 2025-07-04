@@ -1,4 +1,4 @@
-package SANTA.backend.dto;
+package SANTA.backend.core.dto;
 
 import lombok.Getter;
 import lombok.Setter;

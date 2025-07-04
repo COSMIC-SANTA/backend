@@ -1,4 +1,4 @@
-package SANTA.backend.controller;
+package SANTA.backend.core.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
