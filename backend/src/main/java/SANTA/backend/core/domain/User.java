@@ -38,12 +38,18 @@ public class User {
     }
 
     public static User registerUser( String username, String password, String nickname, int age){
-
-
         return User.builder()
                 .username(username)
                 .password(password)
                 .age(age)
+                .role(Role.ROLE_USER)
+                .build();
+    }
+
+    public static User registerUser( String username, String password, String nickname){
+        return User.builder()
+                .username(username)
+                .password(password)
                 .role(Role.ROLE_USER)
                 .build();
     }

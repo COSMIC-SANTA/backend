@@ -6,6 +6,7 @@ import SANTA.backend.core.dto.JoinResponseDTO;
 import SANTA.backend.core.service.JoinService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +27,11 @@ public class JoinController {
     public ResponseEntity<JoinResponseDTO> joinProcess(@RequestBody JoinDTO joinDTO) throws IllegalAccessException{
         JoinResponseDTO joinUser = joinService.join(joinDTO.getUsername(),joinDTO.getPassword(),joinDTO.getNickname(),joinDTO.getAge());
         return ResponseEntity.ok().body(joinUser);
+    }
+
+    @GetMapping("/form")
+    public String loginForm(){
+        return "form";
     }
     //id를 어떻게 뺴와야 할지 몰겠음;;
     //login도 login 하나를 만들어서 제어할 수 있게 해서 하자

@@ -15,4 +15,9 @@ public class UserServiceImpl implements UserService {
     public User findById(String userId){
         return userRepository.findById(Long.valueOf(userId));
     }
+
+    @Override
+    public User register(User user) {
+        return userRepository.join(user);
+    }
 }

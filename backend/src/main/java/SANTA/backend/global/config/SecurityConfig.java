@@ -104,8 +104,11 @@ public class SecurityConfig {
                                 .baseUri("/api/oauth2/authorize")
                                 .authorizationRequestRepository(httpCookieOAuth2Auth2AuthorizationRequestRepository)
                         )
-                        .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/api/oauth2/callback/*"))
-                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(customOauth2UserService))
+                        .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
+                                .baseUri("/api/oauth2/callback/*")
+                        )
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOauth2UserService))
                 );
 
         //JWT필터 등록

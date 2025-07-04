@@ -14,7 +14,7 @@ import java.util.Iterator;
 @ResponseBody
 public class MainController {
 
-    @GetMapping("/")
+    @GetMapping("/abc")
     public String mainP(){
 
         //username 가져오기
@@ -27,6 +27,6 @@ public class MainController {
         GrantedAuthority auth = iter.next();
         String role = auth.getAuthority();
 
-        return "main Controller\n"+username+role;
+        return "abc";
     }
 }

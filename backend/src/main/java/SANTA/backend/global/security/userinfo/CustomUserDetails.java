@@ -15,9 +15,24 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private Map<String, Object>attributes;
 
-    public CustomUserDetails(User user){
-        this.user=user;
+    private CustomUserDetails(User user) {
+        this.user = user;
     }
+
+    public static CustomUserDetails create(User user) {
+        return new CustomUserDetails(user);
+    }
+
+    public static CustomUserDetails create(User user, Map<String, Object> attributes) {
+        CustomUserDetails userPrincipal = CustomUserDetails.create(user);
+        userPrincipal.setAttributes(attributes);
+        return userPrincipal;
+    }
+
+    public void setAttributes(Map<String, Object> attributes) {
+        this.attributes = attributes;
+    }
+
 
     @Override
     public Map<String, Object> getAttributes() {

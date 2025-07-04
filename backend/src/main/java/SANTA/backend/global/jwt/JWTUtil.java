@@ -53,7 +53,8 @@ public class JWTUtil {
     }
 
     public String createJwt(Authentication authentication){
-        CustomUserDetails userDetails=(CustomUserDetails) authentication.getDetails();
+        CustomUserDetails userDetails=(CustomUserDetails) authentication.getPrincipal();
+
         return Jwts.builder()
                 .claim("id",userDetails.getUserId())
                 .claim("username",userDetails.getUsername())

@@ -32,7 +32,8 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,Authentication authentication) {
-        String redirectUri=CookieUtil.getCookie(request,REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue).get();
+        String redirectUri = "http://localhost:8080/abc";
+        //String redirectUri=CookieUtil.getCookie(request,REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue).get();
 
         String token=jwtUtil.createJwt(authentication);
 
