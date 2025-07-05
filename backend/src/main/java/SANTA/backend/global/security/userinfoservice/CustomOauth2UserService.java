@@ -39,7 +39,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) throws org.apache.tomcat.websocket.AuthenticationException {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
                 oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-        if (StringUtils.isEmpty(oAuth2UserInfo.getUsername())) {
+        if (StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             log.info("@@@@@@@@@@@@@@@@@@@@@@username 정보 없음@@@@@@@@@@@@@@@@@@@@");
             throw new org.apache.tomcat.websocket.AuthenticationException("username 정보 없음;");
         }

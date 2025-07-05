@@ -23,6 +23,10 @@ public class UserEntity {
     private int age;
     private Role role;
 
+    protected UserEntity(){
+
+    }
+
     public UserEntity(User user){
         this.userId = user.getUserId();
         this.username = user.getUsername();

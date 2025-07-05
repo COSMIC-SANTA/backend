@@ -5,6 +5,9 @@ import SANTA.backend.core.entity.UserEntity;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
@@ -13,6 +16,7 @@ public class UserJpaRepository implements UserRepository{
     private final EntityManager em;
 
     @Override
+    @Transactional
     public User join(User user) {
         UserEntity userEntity = new UserEntity(user);
         em.persist(userEntity);
@@ -21,7 +25,9 @@ public class UserJpaRepository implements UserRepository{
 
     @Override
     public User findById(Long id) {
-        return em.find(User.class,id);
+        UserEntity userEntity = em.find(UserEntity.class, id);
+        return userEntity != null ? User.fromEntity(userEntity) : null;
+
     }
 
     @Override
@@ -31,9 +37,15 @@ public class UserJpaRepository implements UserRepository{
 
     @Override
     public User findByUsername(String username) {
-        return em.createQuery("select u from user u where u.username =: username",User.class)
-                .setParameter("username",username)
-                .getSingleResult();
+        List<UserEntity> results = em.createQuery("select u from UserEntity u where u.username = :username", UserEntity.class)
+                .setParameter("username", username)
+                .getResultList();
+
+        if (results.isEmpty()) {
+            return null; // 혹은 Optional.empty() 등
+        } else {
+            return User.fromEntity(results.get(0));
+        }
     }
 
     @Override

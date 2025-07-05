@@ -1,6 +1,7 @@
 package SANTA.backend.core.domain;
 
 import SANTA.backend.core.entity.UserEntity;
+import jakarta.persistence.Entity;
 import lombok.Builder;
 import lombok.Getter;
 

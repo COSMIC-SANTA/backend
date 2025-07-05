@@ -25,8 +25,9 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+
         String targetUrl=determineTargetUrl(request,response,authentication);
-        handle(request, response, authentication);
+        System.out.println("\uD83D\uDD01 리다이렉트 대상 URL = " + targetUrl);
         clearAuthenticationAttributes(request);
         getRedirectStrategy().sendRedirect(request,response,targetUrl);
     }
