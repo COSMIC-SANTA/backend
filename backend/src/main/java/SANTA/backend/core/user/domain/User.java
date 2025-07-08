@@ -14,15 +14,25 @@ public class User {
     private String nickname;
     private int age;
     private Role role;
+    private String location;
+    private Medal medal;
+    private Interest interest;
+    private Level level;
+
 
     @Builder
-    protected User(Long userId, String username, String password, String nickname, int age, Role role){
+    protected User(Long userId, String username, String password, String nickname, int age, Role role, String location, Medal medal, Interest interest, Level level) {
         this.userId=userId;
         this.username=username;
         this.password=password;
         this.nickname=nickname;
         this.age=age;
         this.role=role;
+        this.location=location;
+        this.medal=medal;
+        this.interest=interest;
+        this.level=level;
+
     }
 
     public static User fromEntity(UserEntity userEntity){
@@ -33,8 +43,11 @@ public class User {
                 .nickname(userEntity.getNickname())
                 .age(userEntity.getAge())
                 .role(userEntity.getRole())
+                .location(userEntity.getLocation())
+                .medal(userEntity.getMedal())
+                .interest(userEntity.getInterest())
+                .level(userEntity.getLevel())
                 .build();
-
     }
 
     public static User registerUser( String username, String password, String nickname, int age){
@@ -43,6 +56,7 @@ public class User {
                 .password(password)
                 .age(age)
                 .role(Role.ROLE_USER)
+                .level(Level.BEGINER)
                 .build();
     }
 
@@ -51,6 +65,7 @@ public class User {
                 .username(username)
                 .password(password)
                 .role(Role.ROLE_USER)
+                .level(Level.BEGINER)
                 .build();
     }
 }
