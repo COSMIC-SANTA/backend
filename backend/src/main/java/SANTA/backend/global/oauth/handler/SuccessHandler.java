@@ -1,6 +1,6 @@
-package SANTA.backend.core.auth.oauth.handler;
+package SANTA.backend.global.oauth.handler;
 
-import SANTA.backend.core.auth.jwt.JWTUtil;
+import SANTA.backend.global.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

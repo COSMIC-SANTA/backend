@@ -1,4 +1,4 @@
-package SANTA.backend.core.auth.jwt;
+package SANTA.backend.global.jwt;
 
 import SANTA.backend.core.auth.service.CustomUserDetails;
 import io.jsonwebtoken.Claims;

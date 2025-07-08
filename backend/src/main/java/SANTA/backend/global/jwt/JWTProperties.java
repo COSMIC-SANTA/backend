@@ -1,4 +1,4 @@
-package SANTA.backend.core.auth.jwt;
+package SANTA.backend.global.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

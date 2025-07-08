@@ -1,4 +1,4 @@
-package SANTA.backend.core.auth.oauth.handler;
+package SANTA.backend.global.oauth.handler;
 
 import SANTA.backend.core.auth.util.CookieUtil;
 import com.nimbusds.oauth2.sdk.util.StringUtils;

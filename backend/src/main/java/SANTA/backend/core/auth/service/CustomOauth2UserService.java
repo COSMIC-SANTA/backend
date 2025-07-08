@@ -1,7 +1,7 @@
 package SANTA.backend.core.auth.service;
 
-import SANTA.backend.core.auth.oauth.OAuth2UserInfo;
-import SANTA.backend.core.auth.oauth.OAuth2UserInfoFactory;
+import SANTA.backend.global.oauth.OAuth2UserInfo;
+import SANTA.backend.global.oauth.OAuth2UserInfoFactory;
 import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

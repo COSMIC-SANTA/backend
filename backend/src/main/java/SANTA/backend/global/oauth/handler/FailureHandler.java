@@ -1,4 +1,4 @@
-package SANTA.backend.core.auth.oauth.handler;
+package SANTA.backend.global.oauth.handler;
 
 import SANTA.backend.core.auth.util.CookieUtil;
 import io.jsonwebtoken.io.IOException;
@@ -13,7 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URLEncoder;
 
-import static SANTA.backend.core.auth.oauth.handler.HttpCookieOAuth2Auth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static SANTA.backend.global.oauth.handler.HttpCookieOAuth2Auth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
 @RequiredArgsConstructor

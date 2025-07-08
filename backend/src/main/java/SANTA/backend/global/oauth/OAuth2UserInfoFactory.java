@@ -1,4 +1,4 @@
-package SANTA.backend.core.auth.oauth;
+package SANTA.backend.global.oauth;
 
 import org.apache.tomcat.websocket.AuthenticationException;
 

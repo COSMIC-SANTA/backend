@@ -1,12 +1,12 @@
 package SANTA.backend.global.config;
 
-import SANTA.backend.core.auth.jwt.JWTFilter;
-import SANTA.backend.core.auth.jwt.JWTUtil;
-import SANTA.backend.core.auth.jwt.LoginFilter;
-import SANTA.backend.core.auth.jwt.LoginSuccessHandler;
-import SANTA.backend.core.auth.oauth.handler.FailureHandler;
-import SANTA.backend.core.auth.oauth.handler.HttpCookieOAuth2Auth2AuthorizationRequestRepository;
-import SANTA.backend.core.auth.oauth.handler.SuccessHandler;
+import SANTA.backend.global.jwt.JWTFilter;
+import SANTA.backend.global.jwt.JWTUtil;
+import SANTA.backend.global.jwt.LoginFilter;
+import SANTA.backend.global.jwt.LoginSuccessHandler;
+import SANTA.backend.global.oauth.handler.FailureHandler;
+import SANTA.backend.global.oauth.handler.HttpCookieOAuth2Auth2AuthorizationRequestRepository;
+import SANTA.backend.global.oauth.handler.SuccessHandler;
 import SANTA.backend.core.auth.service.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
