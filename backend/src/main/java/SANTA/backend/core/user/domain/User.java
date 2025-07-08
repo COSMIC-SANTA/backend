@@ -39,6 +39,9 @@ public class User {
                 .nickname(userEntity.getNickname())
                 .age(userEntity.getAge())
                 .role(userEntity.getRole())
+                .location(userEntity.getLocation())
+                .interest(userEntity.getInterest())
+                .level(userEntity.getLevel())
                 .build();
     }
 

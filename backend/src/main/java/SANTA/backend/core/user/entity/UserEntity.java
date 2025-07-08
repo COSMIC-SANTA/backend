@@ -1,9 +1,7 @@
 package SANTA.backend.core.user.entity;
 
 import SANTA.backend.core.group.entity.UserGroupEntity;
-import SANTA.backend.core.user.domain.Medal;
-import SANTA.backend.core.user.domain.Role;
-import SANTA.backend.core.user.domain.User;
+import SANTA.backend.core.user.domain.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +22,17 @@ public class UserEntity {
     private Long userId; //->이거 string형임
 
     private String username;
+
     private String password;
+
     private String nickname;
+
     private int age;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
+
+    private String location;
 
     @OneToMany(mappedBy = "USER_ID")
     private List<UserGroupEntity> userGroups = new ArrayList<>();
@@ -35,14 +40,24 @@ public class UserEntity {
     @Embedded
     Medal medal;
 
+    @Enumerated(EnumType.STRING)
+    private Interest interest;
+
+    @Enumerated(EnumType.STRING)
+    private Level level;
+
     @Builder
-    public UserEntity(Long userId, String username, String password, String nickname, int age, Role role){
+    public UserEntity(Long userId, String username, String password, String nickname, int age, Role role, String location, Medal medal, Interest interest, Level level) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.age = age;
         this.role = role;
+        this.location = location;
+        this.medal = medal;
+        this.interest = interest;
+        this.level = level;
     }
 
     public static UserEntity from(User user){
@@ -53,6 +68,9 @@ public class UserEntity {
                 .nickname(user.getNickname())
                 .age(user.getAge())
                 .role(user.getRole())
+                .location(user.getLocation())
+                .interest(user.getInterest())
+                .level(user.getLevel())
                 .build();
     }
 
