@@ -1,5 +1,6 @@
-package SANTA.backend.core.user.repository;
+package SANTA.backend.core.user.infra;
 
+import SANTA.backend.core.user.domain.UserRepository;
 import SANTA.backend.core.user.entity.UserEntity;
 import SANTA.backend.core.user.domain.User;
 import jakarta.persistence.EntityManager;
@@ -18,7 +19,7 @@ public class UserJpaRepository implements UserRepository {
     @Override
     @Transactional
     public User join(User user) {
-        UserEntity userEntity = new UserEntity(user);
+        UserEntity userEntity = UserEntity.from(user);
         em.persist(userEntity);
         return user;
     }

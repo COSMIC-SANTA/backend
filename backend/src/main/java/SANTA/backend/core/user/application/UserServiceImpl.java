@@ -1,7 +1,7 @@
-package SANTA.backend.core.user.service;
+package SANTA.backend.core.user.application;
 
 import SANTA.backend.core.user.domain.User;
-import SANTA.backend.core.user.repository.UserRepository;
+import SANTA.backend.core.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,7 @@ package SANTA.backend.core.auth.service;
 import SANTA.backend.global.oauth.OAuth2UserInfo;
 import SANTA.backend.global.oauth.OAuth2UserInfoFactory;
 import SANTA.backend.core.user.domain.User;
-import SANTA.backend.core.user.repository.UserRepository;
+import SANTA.backend.core.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

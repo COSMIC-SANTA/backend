@@ -1,6 +1,4 @@
-package SANTA.backend.core.user.repository;
-
-import SANTA.backend.core.user.domain.User;
+package SANTA.backend.core.user.domain;
 
 public interface UserRepository {
 //Integer은 가변. userentity의 id값의 자료형을 넣으면 됨

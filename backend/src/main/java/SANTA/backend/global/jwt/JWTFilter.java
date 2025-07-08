@@ -2,7 +2,7 @@ package SANTA.backend.global.jwt;
 
 import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.auth.service.CustomUserDetails;
-import SANTA.backend.core.user.service.UserService;
+import SANTA.backend.core.user.application.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
