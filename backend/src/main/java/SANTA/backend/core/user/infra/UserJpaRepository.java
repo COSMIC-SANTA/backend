@@ -1,4 +1,4 @@
-package SANTA.backend.core.user.repository;
+package SANTA.backend.core.user.infra;
 
 import SANTA.backend.core.user.domain.UserRepository;
 import SANTA.backend.core.user.entity.UserEntity;
