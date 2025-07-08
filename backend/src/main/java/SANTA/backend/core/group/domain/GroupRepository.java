@@ -1,2 +1,4 @@
-package SANTA.backend.core.group.domain;public interface GroupRepository {
+package SANTA.backend.core.group.domain;
+
+public interface GroupRepository {
 }
