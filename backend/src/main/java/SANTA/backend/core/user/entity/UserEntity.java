@@ -1,6 +1,7 @@
 package SANTA.backend.core.user.entity;
 
 import SANTA.backend.core.group.entity.UserGroupEntity;
+import SANTA.backend.core.user.domain.Medal;
 import SANTA.backend.core.user.domain.Role;
 import SANTA.backend.core.user.domain.User;
 import jakarta.persistence.*;
@@ -30,6 +31,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "USER_ID")
     private List<UserGroupEntity> userGroups = new ArrayList<>();
+
+    @Embedded
+    Medal medal;
 
     @Builder
     public UserEntity(Long userId, String username, String password, String nickname, int age, Role role){
