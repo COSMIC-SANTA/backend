@@ -19,7 +19,7 @@ public class UserJpaRepository implements UserRepository {
     @Override
     @Transactional
     public User join(User user) {
-        UserEntity userEntity = new UserEntity(user);
+        UserEntity userEntity = UserEntity.from(user);
         em.persist(userEntity);
         return user;
     }
