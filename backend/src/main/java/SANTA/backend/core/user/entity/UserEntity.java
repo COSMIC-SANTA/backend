@@ -69,6 +69,7 @@ public class UserEntity {
                 .age(user.getAge())
                 .role(user.getRole())
                 .location(user.getLocation())
+                .medal(user.getMedal())
                 .interest(user.getInterest())
                 .level(user.getLevel())
                 .build();

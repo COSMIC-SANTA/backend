@@ -15,11 +15,13 @@ public class User {
     private int age;
     private Role role;
     private String location;
+    private Medal medal;
     private Interest interest;
     private Level level;
 
+
     @Builder
-    protected User(Long userId, String username, String password, String nickname, int age, Role role, String location, Interest interest, Level level) {
+    protected User(Long userId, String username, String password, String nickname, int age, Role role, String location, Medal medal, Interest interest, Level level) {
         this.userId=userId;
         this.username=username;
         this.password=password;
@@ -27,8 +29,10 @@ public class User {
         this.age=age;
         this.role=role;
         this.location=location;
+        this.medal=medal;
         this.interest=interest;
         this.level=level;
+
     }
 
     public static User fromEntity(UserEntity userEntity){
@@ -40,6 +44,7 @@ public class User {
                 .age(userEntity.getAge())
                 .role(userEntity.getRole())
                 .location(userEntity.getLocation())
+                .medal(userEntity.getMedal())
                 .interest(userEntity.getInterest())
                 .level(userEntity.getLevel())
                 .build();
