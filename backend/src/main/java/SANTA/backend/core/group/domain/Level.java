@@ -1,2 +1,4 @@
-package SANTA.backend.core.group.domain;public enum Level {
+package SANTA.backend.core.group.domain;
+
+public enum Level {
 }
