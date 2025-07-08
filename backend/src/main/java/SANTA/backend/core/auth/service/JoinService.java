@@ -2,7 +2,7 @@ package SANTA.backend.core.auth.service;
 
 import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.auth.dto.JoinResponseDTO;
-import SANTA.backend.core.user.repository.UserRepository;
+import SANTA.backend.core.user.domain.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

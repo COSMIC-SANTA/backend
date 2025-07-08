@@ -1,5 +1,6 @@
 package SANTA.backend.core.user.repository;
 
+import SANTA.backend.core.user.domain.UserRepository;
 import SANTA.backend.core.user.entity.UserEntity;
 import SANTA.backend.core.user.domain.User;
 import jakarta.persistence.EntityManager;
