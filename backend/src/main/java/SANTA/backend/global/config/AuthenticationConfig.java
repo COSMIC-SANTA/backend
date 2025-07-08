@@ -1,6 +1,6 @@
 package SANTA.backend.global.config;
 
-import SANTA.backend.global.security.userinfoservice.CustomUserDetailsService;
+import SANTA.backend.core.auth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

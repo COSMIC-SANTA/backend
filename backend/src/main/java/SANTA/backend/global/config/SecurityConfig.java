@@ -1,27 +1,23 @@
 package SANTA.backend.global.config;
 
-import SANTA.backend.global.jwt.JWTFilter;
-import SANTA.backend.global.jwt.JWTUtil;
-import SANTA.backend.global.jwt.LoginFilter;
-import SANTA.backend.global.jwt.LoginSuccessHandler;
-import SANTA.backend.global.security.oauth.handler.FailureHandler;
-import SANTA.backend.global.security.oauth.handler.HttpCookieOAuth2Auth2AuthorizationRequestRepository;
-import SANTA.backend.global.security.oauth.handler.SuccessHandler;
-import SANTA.backend.global.security.userinfoservice.CustomOauth2UserService;
-import SANTA.backend.global.security.userinfoservice.CustomUserDetailsService;
+import SANTA.backend.core.auth.jwt.JWTFilter;
+import SANTA.backend.core.auth.jwt.JWTUtil;
+import SANTA.backend.core.auth.jwt.LoginFilter;
+import SANTA.backend.core.auth.jwt.LoginSuccessHandler;
+import SANTA.backend.core.auth.oauth.handler.FailureHandler;
+import SANTA.backend.core.auth.oauth.handler.HttpCookieOAuth2Auth2AuthorizationRequestRepository;
+import SANTA.backend.core.auth.oauth.handler.SuccessHandler;
+import SANTA.backend.core.auth.service.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -95,7 +91,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/api/auth/sign-up","/abc").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth->oauth
                         .successHandler(successHandler)
