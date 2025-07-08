@@ -1,11 +1,15 @@
 package SANTA.backend.core.record.entity;
 
+import SANTA.backend.core.ranking.entity.RankingEntity;
 import SANTA.backend.core.user.entity.UserEntity;
 import SANTA.backend.core.record.domain.Record;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +29,9 @@ public class RecordEntity {
     private Long duration;
 
     private Long step;
+
+    @OneToMany(mappedBy = "record")
+    private List<RankingEntity> rankings = new ArrayList<>();
 
     @Builder
     public RecordEntity(Long recordId, UserEntity user, Long distance, Long duration, Long step) {
