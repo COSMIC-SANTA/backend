@@ -1,2 +1,4 @@
-package SANTA.backend.core.group.application;public interface GroupService {
+package SANTA.backend.core.group.application;
+
+public interface GroupService {
 }
