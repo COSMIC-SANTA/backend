@@ -1,5 +1,6 @@
 package SANTA.backend.core.record.domain;
 
+import SANTA.backend.core.record.entity.RecordEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,5 +24,14 @@ public class Record {
         this.distance = distance;
         this.duration = duration;
         this.step = step;
+    }
+
+    public static Record fromEntity(RecordEntity recordEntity) {
+        return Record.builder()
+                .id(recordEntity.getRecordId())
+                .userId(recordEntity.getUser().getUserId())
+                .distance(recordEntity.getDistance())
+                .step(recordEntity.getStep())
+                .build();
     }
 }
