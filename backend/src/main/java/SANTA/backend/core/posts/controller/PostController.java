@@ -1,0 +1,72 @@
+package SANTA.backend.core.posts.controller;
+
+import SANTA.backend.core.posts.dto.PostDTO;
+import SANTA.backend.core.posts.service.PostService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/api/community/board")
+public class PostController {
+    private  final PostService postService;
+
+    @GetMapping("/save")
+    public String saveForm(){
+        return "save";
+    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute PostDTO postDTO){
+        System.out.println("postDTO = "+ postDTO);
+        postService.save(postDTO);
+        return "redirect:/api/community/board/home";
+    }
+
+    @GetMapping("/")
+    public String findAll(Model model){//data가져올 땐 model객체 사용
+        //DB에서 전체 게시글 게이터를 가져와 list.html에 보여준다.
+        List<PostDTO> postDTOList= postService.findAll();
+        model.addAttribute("postList",postDTOList);
+        return "list";
+    }
+
+    //게시글 조회
+    @GetMapping("/{postId}")//현재 상태는 새로고침 하면 조회수가 올라가는 문제점이 있음
+    public String findById(@PathVariable Long postId,Model model){
+        //해당 게시글의 조회수를 하나 올리고(1) 게시글 데이터 가져와 detail.html에 출력(2)
+        postService.updateHits(postId); //(1)
+        PostDTO postDTO= postService.findBypostId(postId); //(2)
+        model.addAttribute("post",postDTO);
+        return "detail";
+    }
+
+    //게시글 수정
+    //상세화면에서 수정 버튼 클릭
+    //서버에서 해당 게시글의 정보를 가지고 수정 화면 출력
+    //제목, 내용 수정 입력 받아서 서버로 요청
+    //수정 처리
+    @GetMapping("/update/{postId}")
+    public String updateForm(@PathVariable Long postId,Model model){
+        PostDTO postDTO=postService.findBypostId(postId);
+        model.addAttribute("postUpdate",postDTO);
+        return "update";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute PostDTO postDTO, Model model){
+        PostDTO post= postService.update(postDTO);
+        model.addAttribute("post",post);
+        return "detail";
+    }
+
+    @GetMapping("/delete/{postId}")
+    public String delete(@PathVariable Long postId){
+        postService.delete(postId);
+        return "redirect:/api/community/board/";
+    }
+}
