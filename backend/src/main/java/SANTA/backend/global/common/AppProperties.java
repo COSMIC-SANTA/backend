@@ -6,12 +6,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppProperties {
 
     private final KoreaTourOrganization koreaTourOrganization = new KoreaTourOrganization();
+    private final JWT jwt = new JWT();
 
     public KoreaTourOrganization getKoreaTourOrganization() {
         return this.koreaTourOrganization;
     }
 
-    private static class KoreaTourOrganization {
+    public JWT getJwt(){
+        return this.jwt;
+    }
+
+    public static class KoreaTourOrganization {
         private String koreaTourInfoServiceEncodingKey;
         private String koreaTourInfoServiceDecodingKey;
 
@@ -30,5 +35,13 @@ public class AppProperties {
         public void setKoreaTourInfoServiceDecodingKey(String koreaTourInfoServiceDecodingKey) {
             this.koreaTourInfoServiceDecodingKey = koreaTourInfoServiceDecodingKey;
         }
+    }
+
+    public static class JWT{
+        private String secret;
+
+        public String getSecret(){return secret;}
+
+        public void setSecret(String secret){this.secret = secret;}
     }
 }
