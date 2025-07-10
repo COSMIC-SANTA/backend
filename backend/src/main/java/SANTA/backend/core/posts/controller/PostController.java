@@ -3,6 +3,10 @@ package SANTA.backend.core.posts.controller;
 import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -68,5 +72,19 @@ public class PostController {
     public String delete(@PathVariable Long postId){
         postService.delete(postId);
         return "redirect:/api/community/board/";
+    }
+
+    //페이징 처리 /post/paging?page=1이런 식으로 감
+    @GetMapping("/paging")
+    public String paging(@PageableDefault(page=1) Pageable pageable, Model model){
+        //pageable.getPageNumber();
+        Page<PostDTO> postList = postService.paging(pageable);
+        int blockLimit = 3; //보여질 페이지 번호 갯수
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
+        int endPage = ((startPage + blockLimit - 1) < postList.getTotalPages()) ? startPage + blockLimit - 1 : postList.getTotalPages();
+        model.addAttribute("postList",postList);
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage", endPage);
+        return "paging";
     }
 }

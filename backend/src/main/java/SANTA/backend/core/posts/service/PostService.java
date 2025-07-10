@@ -4,6 +4,10 @@ import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.entity.PostEntity;
 import SANTA.backend.core.posts.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,5 +62,17 @@ public class PostService {
 
     public void delete(Long postId) {
         postRepository.deleteById(postId);
+    }
+
+    public Page<PostDTO> paging(Pageable pageable) {
+        int page= pageable.getPageNumber()-1;
+        int pageLimit=3; //한 페이지에 보여지는 글 갯수
+        //한페이지당 3개씩 글을 보여주고 정렬 기준은 ID 기준으로 내림차순 정렬
+        Page<PostEntity> postEntities= postRepository.findAll(PageRequest.of(page,pageLimit, Sort.by(Sort.Direction.DESC,"postId")));
+
+
+        //목록 : id, author, title, hits, createdTime
+        Page<PostDTO> postDTOS= postEntities.map(post -> new PostDTO(post.getPostId(), post.getAuthor(), post.getTitle(), post.getPostHits(), post.getCreatedTime()));
+        return postDTOS;
     }
 }

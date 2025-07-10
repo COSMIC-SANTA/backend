@@ -21,6 +21,13 @@ public class PostDTO {
     private LocalDateTime postCreatedTime;
     private LocalDateTime postUpdatedTime;
 
+    public PostDTO(Long postId, String author, String title, int postHits, LocalDateTime postCreatedTime) {
+        this.postId = postId;
+        this.author = author;
+        this.title = title;
+        this.postHits = postHits;
+        this.postCreatedTime = postCreatedTime;
+    }
 
     public static PostDTO toPostDTO(PostEntity postEntity){
         PostDTO postDTO=new PostDTO();
