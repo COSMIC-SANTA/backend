@@ -17,7 +17,7 @@
     </tr>
     <tr th:each="board: ${postList}">
         <td th:text="${board.postId}"></td>
-        <td><a th:href="@{/api/community/board/{id}(id=${board.postId})}" th:text="${board.title}"></a></td>
+        <td><a th:href="@{|/api/community/board/${board.postId}|(page=${postList.number + 1})}" th:text="${board.title}"></a></td>
         <td th:text="${board.author}"></td>
         <td th:text="*{#temporals.format(board.postCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${board.postHits}"></td>

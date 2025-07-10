@@ -41,11 +41,12 @@ public class PostController {
 
     //게시글 조회
     @GetMapping("/{postId}")//현재 상태는 새로고침 하면 조회수가 올라가는 문제점이 있음
-    public String findById(@PathVariable Long postId,Model model){
+    public String findById(@PathVariable Long postId,Model model, @PageableDefault(page=1)Pageable pageable){
         //해당 게시글의 조회수를 하나 올리고(1) 게시글 데이터 가져와 detail.html에 출력(2)
         postService.updateHits(postId); //(1)
         PostDTO postDTO= postService.findBypostId(postId); //(2)
         model.addAttribute("post",postDTO);
+        model.addAttribute("page", pageable.getPageNumber());
         return "detail";
     }
 
