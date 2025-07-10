@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>detail</title>
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 </head>
 <body>
 <table>
@@ -35,9 +37,75 @@
 <button onclick="listReq()">목록</button>
 <button onclick="updateReq()">수정</button>
 <button onclick="deleteReq()">삭제</button>
+
+<!-- 댓글 작성 및 출력-->
+<div id="comment-write">
+    <input type="text" id="commentWriter" placeholder="작성자">
+    <input type="text" id="commentBody" placeholder="내용">
+    <button id="comment-write-btn" onclick="commentWriter()">댓글작성</button>
+
+</div>
+
+<div id="comment-list">
+    <table>
+        <tr>
+            <th>댓글번호</th>
+            <th>작성자</th>
+            <th>내용</th>
+            <th>작성시간</th>
+        </tr>
+        <tr th:each="comment: ${commentList}">
+            <td th:text="${comment.commentId}"></td>
+            <td th:text="${comment.commentWriter}"></td>
+            <td th:text="${comment.commentBody}"></td>
+            <td th:text="${comment.commentCreatedTime}"></td>
+        </tr>
+    </table>
+</div>
+
 </body>
 
 <script th:inline="javascript">
+    const commentWriter = () => {
+        const writer = document.getElementById("commentWriter").value;
+        const body = document.getElementById("commentBody").value;
+        console.log("작성자", writer);
+        console.log("내용", body);
+        const postId = [[${post.postId}]];
+        $.ajax({
+            type:"post",
+            url:"/api/community/comment/save",
+            data: {
+                "commentWriter": writer,
+                "commentBody": body,
+                "postId": postId
+            },
+            success: function (res) {
+               console.log("요청성공", res);
+               let output = "<table>";
+               output += "<tr><th>댓글번호</th>";
+               output += "<th>작성자</th>";
+               output += "<th>내용</th>";
+               output += "<th>작성시간</th></tr>";
+               for (let i in res) {
+                   output += "<tr>";
+                   output += "<td>" + res[i].commentId + "</td>";
+                   output += "<td>" + res[i].commentWriter + "</td>";
+                   output += "<td>" + res[i].commentBody + "</td>";
+                   output += "<td>" + res[i].commentCreatedTime + "</td>";
+                   output += "</tr>";
+               }
+               output += "</table>";
+               document.getElementById('comment-list').innerHTML = output;
+               document.getElementById('commentWriter').value = '';
+               document.getElementById('commentBody').value = '';
+           },
+           error: function (err) {
+               console.log("요청실패", err);
+           }
+        });
+    }
+
     const listReq = () => {
         console.log("목록 요청");
         const page = [[${page}]]

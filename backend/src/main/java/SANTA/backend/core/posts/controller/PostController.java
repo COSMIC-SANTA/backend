@@ -1,6 +1,8 @@
 package SANTA.backend.core.posts.controller;
 
+import SANTA.backend.core.posts.dto.CommentDTO;
 import SANTA.backend.core.posts.dto.PostDTO;
+import SANTA.backend.core.posts.service.CommentService;
 import SANTA.backend.core.posts.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
@@ -17,7 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/community/board")
 public class PostController {
-    private  final PostService postService;
+    private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("/save")
     public String saveForm(){
@@ -45,6 +48,10 @@ public class PostController {
         //해당 게시글의 조회수를 하나 올리고(1) 게시글 데이터 가져와 detail.html에 출력(2)
         postService.updateHits(postId); //(1)
         PostDTO postDTO= postService.findBypostId(postId); //(2)
+        //댓글 목록 가져옴
+        List<CommentDTO> commentDTOList=commentService.findAll(postId);
+        model.addAttribute("commentList",commentDTOList);
+
         model.addAttribute("post",postDTO);
         model.addAttribute("page", pageable.getPageNumber());
         return "detail";

@@ -31,6 +31,9 @@ public class PostEntity extends PostBaseEntity {
     @OneToMany(mappedBy="post")
     private List<LikeEntity> likes =new ArrayList<>();
 
+    @OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CommentEntity> commentEntiryList=new ArrayList<>();
+
     public static PostEntity tosaveEntity(PostDTO postDTO){
         PostEntity postEntity= new PostEntity();
         postEntity.setAuthor(postDTO.getAuthor());
