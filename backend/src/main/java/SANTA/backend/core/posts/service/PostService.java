@@ -59,10 +59,17 @@ public class PostService {
     }
 
     public PostDTO update(PostDTO postDTO) {
-        PostEntity postEntity=PostEntity.toUpdateEntity(postDTO);
-        postRepository.save(postEntity);
-        return findBypostId(postDTO.getPostId());
+        PostEntity existing = postRepository.findById(postDTO.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        // 필요한 필드만 업데이트
+        existing.setTitle(postDTO.getTitle());
+        existing.setBody(postDTO.getBody());
+
+        PostEntity updated = postRepository.save(existing);
+        return PostDTO.toPostDTO(updated);
     }
+
 
     public void delete(Long postId) {
         postRepository.deleteById(postId);

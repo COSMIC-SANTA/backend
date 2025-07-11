@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community/board")
 public class PostController {
@@ -36,6 +36,7 @@ public class PostController {
 
         return "save";
     }
+
     /*@PostMapping("/save")
 @ResponseBody
 public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
@@ -91,33 +92,25 @@ public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO)
     }
 
     @GetMapping("/")
-    public String findAll(Model model){//data가져올 땐 model객체 사용
-        //DB에서 전체 게시글 게이터를 가져와 list.html에 보여준다.
-        List<PostDTO> postDTOList= postService.findAll();
-        model.addAttribute("postList",postDTOList);
-        return "list";
+    public List<PostDTO> findAll() {
+        return postService.findAll();
     }
 
     //게시글 조회
-    @GetMapping("/{postId}")//현재 상태는 새로고침 하면 조회수가 올라가는 문제점이 있음
-    public String findById(@PathVariable Long postId,Model model, @PageableDefault(page=1)Pageable pageable){
-        //해당 게시글의 조회수를 하나 올리고(1) 게시글 데이터 가져와 detail.html에 출력(2)
-        postService.updateHits(postId); //(1)
-        PostDTO postDTO= postService.findBypostId(postId); //(2)
-        //댓글 목록 가져옴
-        List<CommentDTO> commentDTOList=commentService.findAll(postId);
-        model.addAttribute("commentList",commentDTOList);
-
-        model.addAttribute("post",postDTO);
-        model.addAttribute("page", pageable.getPageNumber());
-        return "detail";
+    @GetMapping("/{postId}")
+    public PostDTO findById(@PathVariable Long postId) {
+        postService.updateHits(postId); // 조회수 증가
+        return postService.findBypostId(postId);
     }
+
 
     //게시글 수정
     //상세화면에서 수정 버튼 클릭
     //서버에서 해당 게시글의 정보를 가지고 수정 화면 출력
     //제목, 내용 수정 입력 받아서 서버로 요청
     //수정 처리
+
+    //이부분 수정 되는지 확인할 수 있도록 고치기 필요. 아직 안 고침
     @GetMapping("/update/{postId}")
     public String updateForm(@PathVariable Long postId,Model model){
         PostDTO postDTO=postService.findBypostId(postId);
@@ -125,17 +118,15 @@ public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO)
         return "update";
     }
 
-    @PostMapping("/update")
-    public String update(@ModelAttribute PostDTO postDTO, Model model){
-        PostDTO post= postService.update(postDTO);
-        model.addAttribute("post",post);
-        return "detail";
+    @PutMapping("/update")
+    public PostDTO update(@RequestBody PostDTO postDTO) {
+        return postService.update(postDTO);
     }
 
-    @GetMapping("/delete/{postId}")
-    public String delete(@PathVariable Long postId){
+    @DeleteMapping("/delete/{postId}")
+    public Map<String, String> delete(@PathVariable Long postId) {
         postService.delete(postId);
-        return "redirect:/api/community/board/";
+        return Map.of("message", "삭제 성공");
     }
 
     //페이징 처리 /post/paging?page=1이런 식으로 감
