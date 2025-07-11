@@ -54,6 +54,7 @@ public class User {
         return User.builder()
                 .username(username)
                 .password(password)
+                .nickname(nickname)
                 .age(age)
                 .role(Role.ROLE_USER)
                 .level(Level.BEGINER)

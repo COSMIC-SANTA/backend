@@ -34,10 +34,10 @@ public class PostEntity extends PostBaseEntity {
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntiryList=new ArrayList<>();
 
-    public static PostEntity tosaveEntity(PostDTO postDTO){
-        PostEntity postEntity= new PostEntity();
-        postEntity.setAuthor(postDTO.getAuthor());
-        postEntity.setUserId(postDTO.getPostPass());
+    public static PostEntity tosaveEntity(PostDTO postDTO, Long userId, String nickname){
+        PostEntity postEntity = new PostEntity();
+        postEntity.setUserId(userId);          // 로그인한 사용자 ID
+        postEntity.setAuthor(nickname);        // 로그인한 사용자 닉네임
         postEntity.setTitle(postDTO.getTitle());
         postEntity.setBody(postDTO.getBody());
         postEntity.setPostHits(0);

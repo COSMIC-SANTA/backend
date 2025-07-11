@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class PostDTO {
     private Long postId;
     private String author;
-    private Long postPass; //password??
+    private Long postPass;
     private String title;
     private String body;
     private int postHits; //조회수

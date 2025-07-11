@@ -4,16 +4,24 @@ import SANTA.backend.core.posts.dto.CommentDTO;
 import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.service.CommentService;
 import SANTA.backend.core.posts.service.PostService;
+import SANTA.backend.core.user.application.UserService;
+import SANTA.backend.core.user.domain.Level;
+import SANTA.backend.core.user.domain.Role;
+import SANTA.backend.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,17 +29,65 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;
+    private final UserService userService;
 
     @GetMapping("/save")
     public String saveForm(){
+
         return "save";
     }
+    /*@PostMapping("/save")
+@ResponseBody
+public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
+    // 테스트용 mock 사용자
+    User mockUser = User.builder()
+            .userId(1L)
+            .username("testUser")
+            .password("1234")
+            .nickname("테스트유저")
+            .age(20)
+            .role(Role.ROLE_USER)
+            .level(Level.BEGINER)
+            .build();
+
+    // 게시글 저장 및 반환
+    PostDTO savedPost = postService.save(postDTO, mockUser);
+
+    // 응답 JSON 생성
+    Map<String, Object> postData = new HashMap<>();
+    postData.put("post_id", savedPost.getPostId());
+    postData.put("post_title", savedPost.getTitle());
+    postData.put("post_body", savedPost.getBody());
+    postData.put("post_author", savedPost.getAuthor());
+
+    Map<String, List<Map<String, Object>>> response = new HashMap<>();
+    response.put("post", List.of(postData));
+    return response;
+}
+*/
 
     @PostMapping("/save")
-    public String save(@ModelAttribute PostDTO postDTO){
-        System.out.println("postDTO = "+ postDTO);
-        postService.save(postDTO);
-        return "redirect:/api/community/board/home";
+    @ResponseBody
+    public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
+        // 현재 로그인 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+
+        // 게시글 저장
+        PostDTO savedPost = postService.save(postDTO, user);
+
+        // JSON 응답 형태 구성
+        Map<String, Object> postData = new HashMap<>();
+        postData.put("post_id", savedPost.getPostId());
+        postData.put("post_title", savedPost.getTitle());
+        postData.put("post_body", savedPost.getBody());
+        postData.put("post_author", savedPost.getAuthor());
+
+        Map<String, List<Map<String, Object>>> response = new HashMap<>();
+        response.put("post", List.of(postData));
+        return response;
     }
 
     @GetMapping("/")

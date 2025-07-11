@@ -3,6 +3,8 @@ package SANTA.backend.core.posts.service;
 import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.entity.PostEntity;
 import SANTA.backend.core.posts.repository.PostRepository;
+import SANTA.backend.core.user.domain.User;
+import SANTA.backend.core.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,10 +24,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public void save(PostDTO postDTO) {
-        PostEntity postEntity=PostEntity.tosaveEntity(postDTO);
-        postRepository.save(postEntity); //save는 JPArepository에서 상속받은 메서드
+    public PostDTO save(PostDTO postDTO, User user) {
+        PostEntity postEntity = PostEntity.tosaveEntity(postDTO, user.getUserId(), user.getNickname());
+        PostEntity savedEntity = postRepository.save(postEntity); // save 후 DB에 반영된 엔티티 받음
+        return PostDTO.toPostDTO(savedEntity); // 다시 DTO로 변환해서 반환
     }
 
     public List<PostDTO> findAll() {
