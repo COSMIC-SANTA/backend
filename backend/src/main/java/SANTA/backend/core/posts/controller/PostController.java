@@ -68,21 +68,16 @@ public class PostController {
     @PostMapping("/save")
     @ResponseBody
     public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
-        // 테스트용 mock 사용자
-        User mockUser = User.builder()
-                .userId(1L)
-                .username("testUser")
-                .password("1234")
-                .nickname("테스트유저")
-                .age(20)
-                .role(Role.ROLE_USER)
-                .level(Level.BEGINER)
-                .build();
+        // 현재 로그인 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
-        // 게시글 저장 및 반환
-        PostDTO savedPost = postService.save(postDTO, mockUser);
+        User user = userService.findByUsername(username);
 
-        // 응답 JSON 생성
+        // 게시글 저장
+        PostDTO savedPost = postService.save(postDTO, user);
+
+        // JSON 응답 형태 구성
         Map<String, Object> postData = new HashMap<>();
         postData.put("post_id", savedPost.getPostId());
         postData.put("post_title", savedPost.getTitle());

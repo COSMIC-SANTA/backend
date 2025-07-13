@@ -29,7 +29,9 @@ public class JoinService {
         if(findByUsername(username)!=null)
             throw new IllegalAccessException("이미 사용중인 아이디입니다.");
 
-        User user=User.registerUser(username,password,nickname,age);
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
+
+        User user = User.registerUser(username, encodedPassword, nickname, age);
 
         User joinUser=userRepository.join(user);
         return new JoinResponseDTO(joinUser);//repository에서 db로의 데이터 저장??

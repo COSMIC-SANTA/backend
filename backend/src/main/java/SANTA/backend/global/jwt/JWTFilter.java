@@ -52,7 +52,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String id=jwtUtil.getUserId(token);
         String username = jwtUtil.getUsername(token);
 
-        User user=userService.findById(id);
+        User user=userService.findById(Long.valueOf(id));
 
 
         //UserDetails에 회원 정보 객체 담기

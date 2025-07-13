@@ -46,8 +46,15 @@ public class CommentController {
     //테스트용
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody CommentDTO commentDTO) {
-        // 테스트용 nickname 직접 지정
-        commentDTO.setCommentWriter("테스트유저");  // 로그인 없이 nickname 강제 주입
+        // 로그인 사용자 이름 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        // username으로 사용자 정보 조회
+        User user = userService.findByUsername(username);
+
+        // 사용자 닉네임을 댓글 작성자(commentWriter)에 설정
+        commentDTO.setCommentWriter(user.getNickname());
 
         Long saveResult = commentService.save(commentDTO);
         if (saveResult != null) {
