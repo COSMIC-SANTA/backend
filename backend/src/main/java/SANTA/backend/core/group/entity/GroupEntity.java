@@ -1,6 +1,5 @@
 package SANTA.backend.core.group.entity;
 
-import SANTA.backend.core.group.domain.Interest;
 import SANTA.backend.core.group.domain.Level;
 import SANTA.backend.global.common.BaseEntity;
 import jakarta.persistence.*;
