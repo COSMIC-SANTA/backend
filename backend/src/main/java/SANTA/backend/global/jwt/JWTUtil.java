@@ -81,6 +81,7 @@ public class JWTUtil {
                 .claim("id",userDetails.getUserId())
                 .claim("username",userDetails.getUsername())
                 .claim("nickname",userDetails.getNickname())
+                .claim("interest",userDetails.getInterest())
                 .issuedAt(new Date(System.currentTimeMillis())) //발행 시간
                 .expiration(new Date(System.currentTimeMillis() + 60*60*10)) //소멸될 시간 설정
                 .signWith(secretKey)
