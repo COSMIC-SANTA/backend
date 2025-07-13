@@ -16,7 +16,7 @@ public class CafeEntity {
     @Id @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COURSE_ID")
     private CourseEntity courseEntity;
 

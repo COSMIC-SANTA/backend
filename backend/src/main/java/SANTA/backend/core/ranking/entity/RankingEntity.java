@@ -17,7 +17,7 @@ public class RankingEntity {
     @Id @GeneratedValue
     private Long rankingId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RECORD_ID")
     private RecordEntity record;
 

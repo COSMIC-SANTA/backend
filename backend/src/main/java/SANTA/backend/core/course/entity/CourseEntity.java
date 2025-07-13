@@ -24,11 +24,11 @@ public class CourseEntity {
     @Id @GeneratedValue
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRAFFIC_ID")
     private TrafficEntity trafficEntity;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MOUNTAIN_ID")
     private MountainEntity mountainEntity;
 
