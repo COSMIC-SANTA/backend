@@ -32,6 +32,7 @@ public class Plan {
         return Plan.builder()
                 .id(planEntity.getId())
                 .userId(planEntity.getUser().getUserId())
+                .courseId(planEntity.getCourse().getId())
                 .state(planEntity.getState())
                 .targetDate(planEntity.getTargetDate())
                 .build();

@@ -1,5 +1,6 @@
 package SANTA.backend.core.plan.entity;
 
+import SANTA.backend.core.course.entity.CourseEntity;
 import SANTA.backend.core.plan.domain.Plan;
 import SANTA.backend.core.plan.domain.PlanState;
 import SANTA.backend.core.user.entity.UserEntity;
@@ -23,6 +24,10 @@ public class PlanEntity {
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COURSE_ID")
+    private CourseEntity course;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "STATE")
     private PlanState state;
@@ -30,17 +35,19 @@ public class PlanEntity {
     private LocalDateTime targetDate;
 
     @Builder
-    public PlanEntity(Long id, UserEntity user, PlanState state, LocalDateTime targetDate) {
+    public PlanEntity(Long id, UserEntity user, CourseEntity course, PlanState state, LocalDateTime targetDate) {
         this.id = id;
         this.user = user;
+        this.course = course;
         this.state = state;
         this.targetDate = targetDate;
     }
 
-    public static PlanEntity from(Plan plan, UserEntity user) {
+    public static PlanEntity from(Plan plan, UserEntity user, CourseEntity course) {
         return PlanEntity.builder()
                 .id(plan.getId())
                 .user(user)
+                .course(course)
                 .state(plan.getState())
                 .targetDate(plan.getTargetDate())
                 .build();
