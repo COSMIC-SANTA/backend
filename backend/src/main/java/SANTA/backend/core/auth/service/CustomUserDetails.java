@@ -20,6 +20,10 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
         this.user = user;
     }
 
+    public User getUser(){
+        return user;
+    }
+
     public static CustomUserDetails create(User user) {
         return new CustomUserDetails(user);
     }

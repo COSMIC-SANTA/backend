@@ -1,5 +1,6 @@
 package SANTA.backend.core.posts.controller;
 
+import SANTA.backend.core.auth.service.CustomUserDetails;
 import SANTA.backend.core.posts.dto.CommentDTO;
 import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.service.CommentService;
@@ -70,9 +71,8 @@ public class PostController {
     public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
         // 현재 로그인 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userService.findByUsername(username);
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
 
         // 게시글 저장
         PostDTO savedPost = postService.save(postDTO, user);
