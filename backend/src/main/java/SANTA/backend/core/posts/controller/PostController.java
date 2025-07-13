@@ -3,6 +3,7 @@ package SANTA.backend.core.posts.controller;
 import SANTA.backend.core.posts.dto.CommentDTO;
 import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.service.CommentService;
+import SANTA.backend.core.posts.service.LikeService;
 import SANTA.backend.core.posts.service.PostService;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.Level;
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -30,44 +32,14 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final UserService userService;
+    private final LikeService likeService;
 
     @GetMapping("/save")
     public String saveForm(){
 
         return "save";
     }
-
     /*@PostMapping("/save")
-@ResponseBody
-public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
-    // 테스트용 mock 사용자
-    User mockUser = User.builder()
-            .userId(1L)
-            .username("testUser")
-            .password("1234")
-            .nickname("테스트유저")
-            .age(20)
-            .role(Role.ROLE_USER)
-            .level(Level.BEGINER)
-            .build();
-
-    // 게시글 저장 및 반환
-    PostDTO savedPost = postService.save(postDTO, mockUser);
-
-    // 응답 JSON 생성
-    Map<String, Object> postData = new HashMap<>();
-    postData.put("post_id", savedPost.getPostId());
-    postData.put("post_title", savedPost.getTitle());
-    postData.put("post_body", savedPost.getBody());
-    postData.put("post_author", savedPost.getAuthor());
-
-    Map<String, List<Map<String, Object>>> response = new HashMap<>();
-    response.put("post", List.of(postData));
-    return response;
-}
-*/
-
-    @PostMapping("/save")
     @ResponseBody
     public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
         // 현재 로그인 사용자 정보 가져오기
@@ -91,6 +63,37 @@ public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO)
         return response;
     }
 
+*/
+
+    @PostMapping("/save")
+    @ResponseBody
+    public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
+        // 테스트용 mock 사용자
+        User mockUser = User.builder()
+                .userId(1L)
+                .username("testUser")
+                .password("1234")
+                .nickname("테스트유저")
+                .age(20)
+                .role(Role.ROLE_USER)
+                .level(Level.BEGINER)
+                .build();
+
+        // 게시글 저장 및 반환
+        PostDTO savedPost = postService.save(postDTO, mockUser);
+
+        // 응답 JSON 생성
+        Map<String, Object> postData = new HashMap<>();
+        postData.put("post_id", savedPost.getPostId());
+        postData.put("post_title", savedPost.getTitle());
+        postData.put("post_body", savedPost.getBody());
+        postData.put("post_author", savedPost.getAuthor());
+
+        Map<String, List<Map<String, Object>>> response = new HashMap<>();
+        response.put("post", List.of(postData));
+        return response;
+    }
+
     @GetMapping("/")
     public List<PostDTO> findAll() {
         return postService.findAll();
@@ -98,9 +101,23 @@ public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO)
 
     //게시글 조회
     @GetMapping("/{postId}")
-    public PostDTO findById(@PathVariable Long postId) {
-        postService.updateHits(postId); // 조회수 증가
-        return postService.findBypostId(postId);
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getPostWithComments(@PathVariable Long postId) {
+        // 1. 조회수 증가
+        postService.updateHits(postId);
+
+        // 2. 게시글 데이터 조회
+        PostDTO postDTO = postService.findBypostId(postId);
+
+        // 3. 댓글 목록 조회
+        List<CommentDTO> commentDTOList = commentService.findAll(postId);
+
+        // 4. JSON 응답 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("post", postDTO);
+        response.put("comments", commentDTOList);
+
+        return ResponseEntity.ok(response);
     }
 
 
@@ -142,4 +159,5 @@ public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO)
         model.addAttribute("endPage", endPage);
         return "paging";
     }
+
 }

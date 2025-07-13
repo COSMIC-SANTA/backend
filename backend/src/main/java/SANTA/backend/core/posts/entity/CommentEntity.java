@@ -2,12 +2,11 @@ package SANTA.backend.core.posts.entity;
 
 import SANTA.backend.core.posts.dto.CommentDTO;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment_table")
 public class CommentEntity extends PostBaseEntity{
     @Id
@@ -24,12 +23,18 @@ public class CommentEntity extends PostBaseEntity{
     @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
-    public static CommentEntity toSaveEntity(CommentDTO commentDTO, PostEntity postEntity) {
-        CommentEntity commentEntiry = new CommentEntity();
-        commentEntiry.setCommentWriter(commentDTO.getCommentWriter());
-        commentEntiry.setCommentBody(commentDTO.getCommentBody());
+    @Builder
+    public CommentEntity(String commentWriter,String commentBody, PostEntity postEntity){
+        this.commentWriter=commentWriter;
+        this.commentBody=commentBody;
+        this.postEntity=postEntity;
+    }
 
-        commentEntiry.setPostEntity(postEntity);
-        return  commentEntiry;
+    public static CommentEntity toSaveEntity(CommentDTO commentDTO, PostEntity postEntity){
+        return CommentEntity.builder()
+                .commentWriter(commentDTO.getCommentWriter())
+                .commentBody(commentDTO.getCommentBody())
+                .postEntity(postEntity)
+                .build();
     }
 }

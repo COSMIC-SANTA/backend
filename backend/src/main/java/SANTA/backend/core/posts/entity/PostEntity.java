@@ -31,6 +31,7 @@ public class PostEntity extends PostBaseEntity {
     @OneToMany(mappedBy="post")
     private List<LikeEntity> likes =new ArrayList<>();
 
+    //이거 왜 DB에 안 나오지...?
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntiryList=new ArrayList<>();
 

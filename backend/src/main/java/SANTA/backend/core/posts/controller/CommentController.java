@@ -2,33 +2,72 @@ package SANTA.backend.core.posts.controller;
 
 import SANTA.backend.core.posts.dto.CommentDTO;
 import SANTA.backend.core.posts.service.CommentService;
+import SANTA.backend.core.user.application.UserService;
+import SANTA.backend.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community/comment")
 public class CommentController {
     private final CommentService commentService;
+    private final UserService userService;
 
+    // 댓글 저장 (POST /api/community/comment/save)
+//    @PostMapping("/save")
+//    public ResponseEntity<?> save(@RequestBody CommentDTO commentDTO) {
+//        // 로그인 사용자 이름 가져오기
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
+//
+//        // username으로 사용자 정보 조회
+//        User user = userService.findByUsername(username);
+//
+//        // 사용자 닉네임을 댓글 작성자(commentWriter)에 설정
+//        commentDTO.setCommentWriter(user.getNickname());
+//
+//        Long saveResult = commentService.save(commentDTO);
+//        if (saveResult != null) {
+//            List<CommentDTO> commentDTOList = commentService.findAll(commentDTO.getPostId());
+//            return ResponseEntity.ok(commentDTOList);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body("해당 게시글이 존재하지 않습니다.");
+//        }
+//    }
+
+    //테스트용
     @PostMapping("/save")
-    public ResponseEntity save(@ModelAttribute CommentDTO commentDTO){
+    public ResponseEntity<?> save(@RequestBody CommentDTO commentDTO) {
+        // 테스트용 nickname 직접 지정
+        commentDTO.setCommentWriter("테스트유저");  // 로그인 없이 nickname 강제 주입
+
         Long saveResult = commentService.save(commentDTO);
-        if (saveResult != null){
-            //작성 성공시 댓글 목록을 가져와서 리턴함.
-            //댓글 목록: 해당 게시긍의 댓글 전체. 기준은 ID.
-            List<CommentDTO> commentDTOList= commentService.findAll(commentDTO.getPostId());
-            return new ResponseEntity(commentDTOList, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+        if (saveResult != null) {
+            List<CommentDTO> commentDTOList = commentService.findAll(commentDTO.getPostId());
+            return ResponseEntity.ok(commentDTOList);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("해당 게시글이 존재하지 않습니다.");
+        }
+    }
+
+    // 특정 게시글 댓글 조회 (GET /api/community/comment/{postId})
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> findAll(@PathVariable Long postId) {
+        try {
+            List<CommentDTO> commentDTOList = commentService.findAll(postId);
+            return ResponseEntity.ok(commentDTOList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("해당 게시글이 존재하지 않거나 댓글을 찾을 수 없습니다.");
         }
     }
 }
