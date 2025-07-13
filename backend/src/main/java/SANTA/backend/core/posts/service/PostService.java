@@ -62,11 +62,17 @@ public class PostService {
         PostEntity existing = postRepository.findById(postDTO.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        // 필요한 필드만 업데이트
-        existing.setTitle(postDTO.getTitle());
-        existing.setBody(postDTO.getBody());
+        // Builder로 새 객체를 생성하되 기존 객체의 정보 일부를 유지
+        PostEntity updated = PostEntity.builder()
+                .postId(existing.getPostId())         // 유지해야 하는 ID
+                .userId(existing.getUserId())         // 원 작성자 유지
+                .author(existing.getAuthor())         // 작성자 유지
+                .postHits(existing.getPostHits())     // 기존 조회수 유지
+                .title(postDTO.getTitle())            // 수정된 제목
+                .body(postDTO.getBody())              // 수정된 내용
+                .build();
 
-        PostEntity updated = postRepository.save(existing);
+        postRepository.save(updated);
         return PostDTO.toPostDTO(updated);
     }
 

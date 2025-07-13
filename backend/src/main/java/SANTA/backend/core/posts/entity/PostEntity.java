@@ -2,15 +2,16 @@ package SANTA.backend.core.posts.entity;
 
 import SANTA.backend.core.posts.dto.PostDTO;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name="post_table")
 //데이터베이스 테이블 역할을 하는 클래스
 public class PostEntity extends PostBaseEntity {
@@ -29,30 +30,33 @@ public class PostEntity extends PostBaseEntity {
     private int postHits;
 
     @OneToMany(mappedBy="post")
+    @Builder.Default
     private List<LikeEntity> likes =new ArrayList<>();
 
     //이거 왜 DB에 안 나오지...?
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<CommentEntity> commentEntiryList=new ArrayList<>();
 
     public static PostEntity tosaveEntity(PostDTO postDTO, Long userId, String nickname){
-        PostEntity postEntity = new PostEntity();
-        postEntity.setUserId(userId);          // 로그인한 사용자 ID
-        postEntity.setAuthor(nickname);        // 로그인한 사용자 닉네임
-        postEntity.setTitle(postDTO.getTitle());
-        postEntity.setBody(postDTO.getBody());
-        postEntity.setPostHits(0);
-        return postEntity;
+        return PostEntity.builder()
+                .userId(userId)
+                .author(nickname)
+                .title(postDTO.getTitle())
+                .title(postDTO.getTitle())
+                .body(postDTO.getBody())
+                .postHits(0)
+                .build();
     }
 
     public static PostEntity toUpdateEntity(PostDTO postDTO) {
-        PostEntity postEntity= new PostEntity();
-        postEntity.setPostId(postDTO.getPostId());
-        postEntity.setAuthor(postDTO.getAuthor());
-        postEntity.setUserId(postDTO.getPostPass());
-        postEntity.setTitle(postDTO.getTitle());
-        postEntity.setBody(postDTO.getBody());
-        postEntity.setPostHits(postDTO.getPostHits());
-        return postEntity;
+        return PostEntity.builder()
+                .postId(postDTO.getPostId())
+                .userId(postDTO.getPostPass())
+                .author(postDTO.getAuthor())
+                .title(postDTO.getTitle())
+                .body(postDTO.getBody())
+                .postHits(postDTO.getPostHits())
+                .build();
     }
 }
