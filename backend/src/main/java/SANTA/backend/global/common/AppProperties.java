@@ -19,6 +19,7 @@ public class AppProperties {
     public static class KoreaTourOrganization {
         private String koreaTourInfoServiceEncodingKey;
         private String koreaTourInfoServiceDecodingKey;
+        private String koreaTourInfoServiceURL;
 
         public String getKoreaTourInfoServiceEncodingKey() {
             return koreaTourInfoServiceEncodingKey;
@@ -35,6 +36,16 @@ public class AppProperties {
         public void setKoreaTourInfoServiceDecodingKey(String koreaTourInfoServiceDecodingKey) {
             this.koreaTourInfoServiceDecodingKey = koreaTourInfoServiceDecodingKey;
         }
+
+        public void setKoreaTourInfoServiceURL(String koreaTourInfoServiceURL){
+            this.koreaTourInfoServiceURL = koreaTourInfoServiceURL;
+        }
+
+        public String getKoreaTourInfoServiceURL(){
+            return koreaTourInfoServiceURL;
+        }
+
+        public String getKoreaTourInfoServiceRoutingKey(){return koreaTourInfoServiceEncodingKey;}
     }
 
     public static class JWT{
