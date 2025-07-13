@@ -1,5 +1,7 @@
 package SANTA.backend.global.config;
 
+import SANTA.backend.global.common.AppProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -7,12 +9,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class RabbitMQConfig {
 
-    private static final String KOREAN_TOUR_INFO_SERVICE_QUEUE = "koreanTourInfoServiceQueue";
-    private static final String INFO_SERVICE_EXCHANGE = "infoServiceExchange";
-    private static final String INFO_SERVICE_DLX = "infoServiceDeadLetterExchange";
-    private static final String DLQ = "deadLetterQueue";
+    public static final String KOREAN_TOUR_INFO_SERVICE_QUEUE = "koreanTourInfoServiceQueue";
+    public static final String INFO_SERVICE_EXCHANGE = "infoServiceExchange";
+    public static final String INFO_SERVICE_DLX = "infoServiceDeadLetterExchange";
+    public static final String DLQ = "deadLetterQueue";
+
+    private final AppProperties appProperties;
 
     @Bean
     public Queue koreanTourInfoServiceQueue(){
@@ -39,7 +44,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding tourServiceBinding(){
-        return BindingBuilder.bind(koreanTourInfoServiceQueue()).to(infoServiceExchange()).with(KOREAN_TOUR_INFO_SERVICE_QUEUE);
+        return BindingBuilder.bind(koreanTourInfoServiceQueue()).to(infoServiceExchange()).with(appProperties.getKoreaTourOrganization().getKoreaTourInfoServiceRoutingKey());
     }
 
     @Bean
