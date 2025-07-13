@@ -1,2 +1,5 @@
-package SANTA.backend.global.utils.api;public class APIRequestProducer {
+package SANTA.backend.global.utils.api;
+
+public interface APIRequestProducer {
+    public void sendRequest();
 }
