@@ -34,7 +34,7 @@ public class UserEntity {
 
     private String location;
 
-    @OneToMany(mappedBy = "USER_ID")
+    @OneToMany(mappedBy = "userEntity")
     private List<UserGroupEntity> userGroups = new ArrayList<>();
 
     @Embedded

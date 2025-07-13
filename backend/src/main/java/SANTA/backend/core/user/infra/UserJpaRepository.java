@@ -21,7 +21,7 @@ public class UserJpaRepository implements UserRepository {
     public User join(User user) {
         UserEntity userEntity = UserEntity.from(user);
         em.persist(userEntity);
-        return user;
+        return User.fromEntity(userEntity);
     }
 
     @Override
