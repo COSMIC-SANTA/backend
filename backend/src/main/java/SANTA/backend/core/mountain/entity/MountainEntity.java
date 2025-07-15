@@ -1,8 +1,8 @@
 package SANTA.backend.core.mountain.entity;
 
 import SANTA.backend.core.mountain.domain.Difficulty;
-import SANTA.backend.core.mountain.domain.Interest;
 import SANTA.backend.core.mountain.domain.Mountain;
+import SANTA.backend.core.user.domain.Interest;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "MOUNTAIN")
 public class MountainEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     private Long visitCount;
@@ -34,7 +35,7 @@ public class MountainEntity {
     private Interest interest;
 
     @Builder
-    protected MountainEntity(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl) {
+    protected MountainEntity(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl, Interest interest) {
         this.id = id;
         this.visitCount = visitCount;
         this.sequence = sequence;
@@ -42,6 +43,7 @@ public class MountainEntity {
         this.difficulty = difficulty;
         this.location = location;
         this.imageUrl = imageUrl;
+        this.interest = interest;
     }
 
     public static MountainEntity from(Mountain mountain) {
@@ -53,6 +55,7 @@ public class MountainEntity {
                 .difficulty(mountain.getDifficulty())
                 .location(mountain.getLocation())
                 .imageUrl(mountain.getImageUrl())
+                .interest(mountain.getInterest())
                 .build();
     }
 }
