@@ -17,7 +17,7 @@ public class MountainApi {
     private final MountainService mountainService;
 
     @GetMapping("search/{mountainName}")
-    public ResponseEntity<MountainListSearchResponse> searchMountain(@PathVariable String mountainName){
+    public ResponseEntity<MountainListSearchResponse> searchMountain(@PathVariable("mountainName") String mountainName){
 
         MountainListSearchResponse response = mountainService.searchMountains(mountainName.trim());
         return ResponseEntity.ok(response);

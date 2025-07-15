@@ -1,5 +1,6 @@
 package SANTA.backend.core.auth.service;
 
+import SANTA.backend.core.user.domain.Interest;
 import SANTA.backend.core.user.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,6 +65,8 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
     public Long getUserId(){return user.getUserId();}
 
     public String getNickname(){return user.getNickname();}
+
+    public Interest getInterest(){return user.getInterest();}
 
     //계정에 관한 추가 설정들
     @Override

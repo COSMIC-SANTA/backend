@@ -11,7 +11,7 @@ public class Ranking {
 
     private Long recordId;
 
-    private Long rank;
+    private Long rankValue;
 
     private RankingType rankingType;
 
@@ -19,7 +19,7 @@ public class Ranking {
     protected Ranking(Long id, Long recordId, Long rank, RankingType rankingType) {
         this.id = id;
         this.recordId = recordId;
-        this.rank = rank;
+        this.rankValue = rank;
         this.rankingType = rankingType;
     }
 
@@ -27,7 +27,7 @@ public class Ranking {
         return Ranking.builder()
                 .id(rankingEntity.getRankingId())
                 .recordId(rankingEntity.getRecord().getRecordId())
-                .rank(rankingEntity.getRank())
+                .rank(rankingEntity.getRankValue())
                 .rankingType(rankingEntity.getRankingType())
                 .build();
     }
