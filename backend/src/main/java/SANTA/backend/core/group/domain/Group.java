@@ -1,6 +1,7 @@
 package SANTA.backend.core.group.domain;
 
 import SANTA.backend.core.group.entity.GroupEntity;
+import SANTA.backend.core.user.domain.Interest;
 import lombok.Builder;
 
 public class Group {
