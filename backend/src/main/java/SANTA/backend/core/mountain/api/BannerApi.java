@@ -21,7 +21,7 @@ public class BannerApi {
     @GetMapping("/banner")
     public ResponseEntity<BannerResponse> getBanner(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         Interest interest = customUserDetails.getInterest();
-        return bannerService.getInterestingMountains(interest);
+        return ResponseEntity.ok().body(bannerService.getInterestingMountains(interest));
     }
 
 }
