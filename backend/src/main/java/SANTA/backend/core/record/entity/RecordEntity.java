@@ -20,7 +20,7 @@ public class RecordEntity {
     @Id @GeneratedValue
     private Long recordId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
