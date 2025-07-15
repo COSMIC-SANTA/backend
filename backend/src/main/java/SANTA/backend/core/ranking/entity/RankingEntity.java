@@ -21,7 +21,7 @@ public class RankingEntity {
     @JoinColumn(name = "RECORD_ID")
     private RecordEntity record;
 
-    private Long rank;
+    private Long rankValue;
 
     @Enumerated(EnumType.STRING)
     private RankingType rankingType;
@@ -30,7 +30,7 @@ public class RankingEntity {
     public RankingEntity(Long rankingId, RecordEntity record, RankingType rankingType, Long rank) {
         this.rankingId = rankingId;
         this.record = record;
-        this.rank = rank;
+        this.rankValue = rank;
         this.rankingType = rankingType;
     }
 
@@ -38,7 +38,7 @@ public class RankingEntity {
         return RankingEntity.builder()
                 .rankingId(ranking.getId())
                 .record(record)
-                .rank(ranking.getRank())
+                .rank(ranking.getRankValue())
                 .rankingType(ranking.getRankingType())
                 .build();
     }
