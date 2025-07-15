@@ -2,6 +2,7 @@ package SANTA.backend.core.group.domain;
 
 import SANTA.backend.core.group.entity.GroupEntity;
 import SANTA.backend.core.user.domain.Interest;
+import SANTA.backend.core.user.domain.Level;
 import lombok.Builder;
 
 public class Group {
