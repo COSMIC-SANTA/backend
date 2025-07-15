@@ -28,7 +28,11 @@ public class MountainJPARepository implements MountainRepository {
     public void saveMountain(Mountain mountain) {
         MountainEntity mountainEntity = MountainEntity.from(mountain);
         em.persist(mountainEntity);
+    }
 
+    @Override
+    public Long findAllCount(){
+        return em.createQuery("select count(m) from MountainEntity m", Long.class).getSingleResult();
     }
 
 }
