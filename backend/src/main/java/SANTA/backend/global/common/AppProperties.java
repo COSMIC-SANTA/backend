@@ -20,6 +20,7 @@ public class AppProperties {
         private String koreaTourInfoServiceEncodingKey;
         private String koreaTourInfoServiceDecodingKey;
         private String koreaTourInfoServiceURL;
+        private String mobileAppName;
 
         public String getKoreaTourInfoServiceEncodingKey() {
             return koreaTourInfoServiceEncodingKey;
@@ -43,6 +44,14 @@ public class AppProperties {
 
         public String getKoreaTourInfoServiceURL(){
             return koreaTourInfoServiceURL;
+        }
+
+        public void setMobileAppName(String mobileAppName){
+            this.mobileAppName = mobileAppName;
+        }
+
+        public String getMobileAppName(){
+            return mobileAppName;
         }
 
         public String getKoreaTourInfoServiceRoutingKey(){return koreaTourInfoServiceEncodingKey;}
