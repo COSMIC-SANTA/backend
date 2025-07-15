@@ -1,12 +1,21 @@
 package SANTA.backend.context;
 
+import SANTA.backend.core.mountain.application.BannerService;
+import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@Import({MountainRepository.class})
-public abstract class RepositoryContext {
+
+@SpringBootTest
+public abstract class ServiceContext {
 
     @Autowired
-    MountainRepository mountainJPARepository;
+    protected MountainService mountainService;
+
+    @Autowired
+    protected BannerService bannerService;
+
+    @Autowired
+    protected MountainRepository mountainJPARepository;
 }
