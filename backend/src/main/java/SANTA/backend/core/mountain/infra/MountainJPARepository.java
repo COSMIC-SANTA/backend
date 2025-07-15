@@ -2,6 +2,7 @@ package SANTA.backend.core.mountain.infra;
 
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.domain.MountainRepository;
+import SANTA.backend.core.mountain.entity.MountainEntity;
 import SANTA.backend.core.user.domain.Interest;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,17 @@ public class MountainJPARepository implements MountainRepository {
 
     @Override
     public List<Mountain> findByInterest(Interest interest){
-        return em.createQuery("select m from MountainEntity m where m.interest =: interest", Mountain.class)
-                .setParameter("interest",interest)
+        List<MountainEntity> mountains = em.createQuery("select m from MountainEntity m where m.interest =: interest", MountainEntity.class)
+                .setParameter("interest", interest)
                 .getResultList();
+        return mountains.stream().map(Mountain::fromEntity).toList();
+    }
+
+    @Override
+    public void saveMountain(Mountain mountain) {
+        MountainEntity mountainEntity = MountainEntity.from(mountain);
+        em.persist(mountainEntity);
+
     }
 
 }
