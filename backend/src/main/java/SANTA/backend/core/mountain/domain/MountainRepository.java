@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MountainRepository {
     List<Mountain> findByInterest(Interest interest);
+
+    void saveMountain(Mountain mountain);
 }
