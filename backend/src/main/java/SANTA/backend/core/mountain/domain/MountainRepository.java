@@ -8,4 +8,6 @@ public interface MountainRepository {
     List<Mountain> findByInterest(Interest interest);
 
     void saveMountain(Mountain mountain);
+
+    Long findAllCount();
 }
