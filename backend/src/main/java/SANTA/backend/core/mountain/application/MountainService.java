@@ -1,5 +1,7 @@
 package SANTA.backend.core.mountain.application;
 
+import SANTA.backend.core.mountain.domain.Mountain;
+import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.core.mountain.dto.MountainListSearchResponse;
 import SANTA.backend.core.mountain.dto.external.ForestApiItem;
 import SANTA.backend.core.mountain.dto.external.ForestApiResponse;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -28,8 +31,11 @@ public class MountainService {
     @Value("${forest.api.key}")
     private String forestApiKey;
 
-    public MountainService(@Qualifier("forestApiClient") WebClient webClient) {
+    private final MountainRepository mountainRepository;
+
+    public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository) {
         this.webClient = webClient;
+        this.mountainRepository = mountainRepository;
     }
 
     public MountainListSearchResponse searchMountains(String keyword) {
@@ -60,5 +66,10 @@ public class MountainService {
         log.info("검색 결과 {}개 발견", items.size());
 
         return MountainListSearchResponse.from(items);
+    }
+
+    @Transactional
+    public void saveMountain(Mountain mountain) {
+        mountainRepository.saveMountain(mountain);
     }
 }
