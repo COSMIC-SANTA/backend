@@ -1,6 +1,7 @@
 package SANTA.backend.core.mountain.domain;
 
 import SANTA.backend.core.mountain.entity.MountainEntity;
+import SANTA.backend.core.user.domain.Interest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,10 +22,10 @@ public class Mountain {
 
     private String imageUrl;
 
-    private Long interestId;
+    private Interest interest;
 
     @Builder
-    protected Mountain(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl, Long interestId) {
+    protected Mountain(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl, Interest interest) {
         this.id = id;
         this.visitCount = visitCount;
         this.sequence = sequence;
@@ -32,7 +33,7 @@ public class Mountain {
         this.difficulty = difficulty;
         this.location = location;
         this.imageUrl = imageUrl;
-        this.interestId = interestId;
+        this.interest = interest;
     }
 
     public static Mountain fromEntity(MountainEntity mountainEntity) {
@@ -44,6 +45,7 @@ public class Mountain {
                 .difficulty(mountainEntity.getDifficulty())
                 .location(mountainEntity.getLocation())
                 .imageUrl(mountainEntity.getImageUrl())
+                .interest(mountainEntity.getInterest())
                 .build();
     }
 }
