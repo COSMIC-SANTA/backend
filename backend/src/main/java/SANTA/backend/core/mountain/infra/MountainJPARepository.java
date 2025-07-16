@@ -35,4 +35,10 @@ public class MountainJPARepository implements MountainRepository {
         return em.createQuery("select count(m) from MountainEntity m", Long.class).getSingleResult();
     }
 
+    @Override
+    public Mountain findById(Long mountainId) {
+        MountainEntity mountainEntity = em.find(MountainEntity.class, mountainId);
+        return Mountain.fromEntity(mountainEntity);
+    }
+
 }
