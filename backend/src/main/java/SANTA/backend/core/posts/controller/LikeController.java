@@ -1,5 +1,6 @@
 package SANTA.backend.core.posts.controller;
 
+import SANTA.backend.core.auth.service.CustomUserDetails;
 import SANTA.backend.core.posts.service.LikeService;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.User;
@@ -26,11 +27,10 @@ public class LikeController {
     public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable("postId") Long postId) {
         log.info("@@ 좋아요 추가 취소 실행");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.valueOf(authentication.getName()) ;
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
 
-        User user = userService.findById(userId);
-
-        Long likeCount = likeService.postLike(userId, postId);
+        Long likeCount = likeService.postLike(user.getUserId(), postId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "좋아요 처리 완료");

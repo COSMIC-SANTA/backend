@@ -40,31 +40,6 @@ public class PostController {
 
         return "save";
     }
-    /*@PostMapping("/save")
-    @ResponseBody
-    public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
-        // 현재 로그인 사용자 정보 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userService.findByUsername(username);
-
-        // 게시글 저장
-        PostDTO savedPost = postService.save(postDTO, user);
-
-        // JSON 응답 형태 구성
-        Map<String, Object> postData = new HashMap<>();
-        postData.put("post_id", savedPost.getPostId());
-        postData.put("post_title", savedPost.getTitle());
-        postData.put("post_body", savedPost.getBody());
-        postData.put("post_author", savedPost.getAuthor());
-
-        Map<String, List<Map<String, Object>>> response = new HashMap<>();
-        response.put("post", List.of(postData));
-        return response;
-    }
-
-*/
 
     @PostMapping("/save")
     @ResponseBody
@@ -142,6 +117,7 @@ public class PostController {
     }
 
     //페이징 처리 /post/paging?page=1이런 식으로 감
+    //이거 postman에서 확인할 수 있도록 하기
     @GetMapping("/paging")
     public String paging(@PageableDefault(page=1) Pageable pageable, Model model){
         //pageable.getPageNumber();
