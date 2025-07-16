@@ -1,35 +1,39 @@
 package SANTA.backend.global.utils.api;
 
 import SANTA.backend.global.utils.api.domain.TouristApiResponse;
+import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
 
 public interface APIRequester {
-    TouristApiResponse getContentByAreaCode2();
 
-    TouristApiResponse getContentByCategoryCode2();
+    public Mono<String> getContentByAreaCode2(int areaCode, String areaName, int rnum);
 
-    public TouristApiResponse getContentByAreaBasedList2();
+    public Mono<String> getContentByCategoryCode2();
 
-    TouristApiResponse getContentByLocationBasedList2();
+    public Mono<String> getContentByAreaBasedList2();
 
-    public TouristApiResponse getContentBySearchKeyword2();
+    public Mono<String> getContentByLocationBasedList2(Long mapX, Long mapY, Long radius);
 
-    TouristApiResponse getContentBySearchFestival2();
+    public Mono<String> getContentBySearchKeyword2(String keyword, int areaCode, int sigunguCode);
 
-    TouristApiResponse getContentBySearchStay2();
+    public Mono<String> getContentBySearchFestival2(LocalDateTime eventStartDate, LocalDateTime eventEndDate);
 
-    TouristApiResponse getContentByDetailCommon2();
+    public Mono<String> getContentBySearchStay2(int areaCode, String areaName);
 
-    TouristApiResponse getContentByDetailIntro2();
+    public Mono<String> getContentByDetailCommon2(int contentId);
 
-    TouristApiResponse getContentByDetailInfo2();
+    public Mono<String> getContentByDetailIntro2(int contentId, int contentTypeId);
 
-    TouristApiResponse getContentByDetailImage2();
+    public Mono<String> getContentByDetailInfo2(int contentId, int contentTypeId);
 
-    TouristApiResponse getContentByAreaBasedSyncList2();
+    public Mono<String> getContentByDetailImage2(int contentId);
 
-    TouristApiResponse getContentByDetailPetTour2();
+    public Mono<String> getContentByAreaBasedSyncList2();
 
-    TouristApiResponse getContentByLdongCode2();
+    public Mono<String> getContentByDetailPetTour2();
 
-    TouristApiResponse getContentByLclsSystemCode2();
+    public Mono<String> getContentByLdongCode2();
+
+    public Mono<String> getContentByLclsSystemCode2();
 }
