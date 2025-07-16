@@ -1,5 +1,8 @@
 package SANTA.backend.global.utils.api.domain;
 
+import lombok.Getter;
+
+@Getter
 public enum ContentTypeId {
     TOUR_PLACE(12),
     CULTURAL_FACILITY(14),
