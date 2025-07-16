@@ -12,7 +12,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest({MountainApi.class, BannerApi.class})
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public abstract class ControllerTest {
 
     @Autowired
