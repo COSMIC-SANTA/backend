@@ -25,5 +25,14 @@ public class ApiRequesterTest extends ServiceContext {
             assertThat(contentByAreaBasedList2).isNotNull();
             assertThat(contentByAreaBasedList2).contains("\"response\"");
         }
+
+        @Test
+        void 지역_코드를_조회할_수_있다(){
+            //when
+            String contentByAreaCode2 = apiRequester.getContentByAreaCode2(17L,1L).block();
+
+            //then
+            assertThat(contentByAreaCode2).isNotNull();
+        }
     }
 }
