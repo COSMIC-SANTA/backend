@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KoreanTourInfoServiceResponder implements APIRequester {
+public class KoreanTourInfoServiceResquester implements APIRequester {
 
     private final AppProperties appProperties;
     private final WebClientService webClientService;
