@@ -1,39 +1,43 @@
 package SANTA.backend.global.utils.api;
 
-import SANTA.backend.global.utils.api.domain.TouristApiResponse;
+import SANTA.backend.global.utils.api.domain.AreaCode;
+import SANTA.backend.global.utils.api.domain.Arrange;
+import SANTA.backend.global.utils.api.domain.ContentTypeId;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
 public interface APIRequester {
 
-    public Mono<String> getContentByAreaCode2(int areaCode, String areaName, int rnum);
+    Mono<String> getContentByAreaCode2(Long numOfRows, Long pageNo);
 
-    public Mono<String> getContentByCategoryCode2();
+    Mono<String> getContentByAreaCode2(Long numOfRows, Long pageNo, AreaCode areaCode);
 
-    public Mono<String> getContentByAreaBasedList2();
+    Mono<String> getContentByAreaCode2(Long numOfRows, Long pageNo, AreaCode areaCode, Long sigunguCode);
 
-    public Mono<String> getContentByLocationBasedList2(Long mapX, Long mapY, Long radius);
+    Mono<String> getContentByAreaBasedList2(Long numOfRows, Long pageNo, AreaCode areaCode, Long sigunguCode, Arrange arrange, ContentTypeId contentTypeId);
 
-    public Mono<String> getContentBySearchKeyword2(String keyword, int areaCode, int sigunguCode);
+    Mono<String> getContentByLocationBasedList2(Long numOfRows, Long pageNo, AreaCode areaCode, Long sigunguCode, Long radius, Double mapX, Double mapY);
 
-    public Mono<String> getContentBySearchFestival2(LocalDateTime eventStartDate, LocalDateTime eventEndDate);
+    Mono<String> getContentBySearchKeyword2(Long numOfRows, Long pageNo, String keyword, AreaCode areaCode, Long sigunguCode, Arrange arrange);
 
-    public Mono<String> getContentBySearchStay2(int areaCode, String areaName);
+    Mono<String> getContentBySearchFestival2(Long numOfRows, Long pageNo, LocalDateTime eventStartDate, LocalDateTime eventEndDate, Arrange arrange, AreaCode areaCode, Long sigunguCode);
 
-    public Mono<String> getContentByDetailCommon2(int contentId);
+    Mono<String> getContentBySearchStay2(Long numOfRows, Long pageNo, Arrange arrange, AreaCode areaCode, Long sigunguCode);
 
-    public Mono<String> getContentByDetailIntro2(int contentId, int contentTypeId);
+    Mono<String> getContentByDetailCommon2(Long numOfRows, Long pageNo, Long contentId);
 
-    public Mono<String> getContentByDetailInfo2(int contentId, int contentTypeId);
+    Mono<String> getContentByDetailIntro2(Long numOfRows, Long pageNo, long contentId, ContentTypeId contentTypeId);
 
-    public Mono<String> getContentByDetailImage2(int contentId);
+    Mono<String> getContentByDetailInfo2(Long numOfRows, Long pageNo, long contentId, ContentTypeId contentTypeId);
 
-    public Mono<String> getContentByAreaBasedSyncList2();
+    Mono<String> getContentByDetailImage2(Long numOfRows, Long pageNo, Long contentId);
 
-    public Mono<String> getContentByDetailPetTour2();
+    Mono<String> getContentByAreaBasedSyncList2(Long numOfRows, Long pageNo, AreaCode areaCode, Long sigunguCode, Arrange arrange, ContentTypeId contentTypeId);
 
-    public Mono<String> getContentByLdongCode2();
+    Mono<String> getContentByDetailPetTour2(Long numOfRows, Long pageNo, Long contentId);
 
-    public Mono<String> getContentByLclsSystemCode2();
+    Mono<String> getContentByLdongCode2();
+
+    Mono<String> getContentByLclsSystemCode2();
 }

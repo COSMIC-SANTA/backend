@@ -3,7 +3,7 @@ package SANTA.backend.global.utils.api.domain;
 import lombok.Getter;
 
 @Getter
-public enum Region {
+public enum AreaCode {
 
     SEOUL("1", "서울"),
     INCHEON("2", "인천"),
@@ -26,7 +26,7 @@ public enum Region {
     private final String code;
     private final String name;
 
-    Region(String code, String name) {
+    AreaCode(String code, String name) {
         this.code = code;
         this.name = name;
     }
