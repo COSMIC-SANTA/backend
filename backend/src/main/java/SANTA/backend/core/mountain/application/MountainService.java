@@ -95,13 +95,15 @@ public class MountainService {
         mountainRepository.saveMountain(mountain);
     }
 
+    @Transactional
+    public List<Mountain> findByName(String name){
+        return mountainRepository.findByName(name);
+    }
+
     @Transactional(readOnly = true)
     public MountainNearByResponse searchNearByPlacesById(Long mountainId) {
         String location = mountainRepository.findById(mountainId).getLocation();
-        List<Spot> locationSpots = spotRepository.findByLocation(location);
-        List<Restaurant> locationRestaurants = restaurantRepository.findByLocation(location);
-        List<Cafe> locationCafes = cafeRepository.findByLocation(location);
-        List<Stay> locationStays = stayRepository.findByLocation(location);
-        return MountainNearByResponse.fromDomain(locationSpots,locationRestaurants,locationCafes,locationStays);
+        Mono<MountainNearByResponse> mountainNearByResponseMono = apiRequester.searchNearByPlacesByLocation(location);
+        return mountainNearByResponseMono.block();
     }
 }
