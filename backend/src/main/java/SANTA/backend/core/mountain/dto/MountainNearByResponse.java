@@ -13,7 +13,7 @@ public record MountainNearByResponse(
         List<CafeDTO> cafeDTO,
         List<StayDTO> stayDTO
 ) {
-    public static MountainNearByResponse fromDomain(List<Spot> spots, List<Restaurant> restaurants, List<Cafe> cafes, List<Stay> stays){
+    public static MountainNearByResponse fromDomain(List<Restaurant> restaurants, List<Stay> stays, List<Cafe> cafes, List<Spot> spots){
         List<TouristSpotDTO> spotDTOS = spots.stream().map(spot -> new TouristSpotDTO(spot.getId(), spot.getName(), spot.getLocation(), spot.getImageUrl(), spot.getSequence())).toList();
         List<RestaurantDTO> restaurantDTOS = restaurants.stream().map(restaurant -> new RestaurantDTO(restaurant.getId(), restaurant.getName(), restaurant.getLocation(), restaurant.getImageUrl(), restaurant.getSequence())).toList();
         List<CafeDTO> cafeDTOS = cafes.stream().map(cafe -> new CafeDTO(cafe.getId(), cafe.getName(), cafe.getLocation(), cafe.getImageUrl(), cafe.getSequence())).toList();
