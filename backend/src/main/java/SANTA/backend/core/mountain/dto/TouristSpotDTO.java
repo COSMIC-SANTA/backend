@@ -5,7 +5,7 @@ public record TouristSpotDTO(
         String name,
         String location,
         String imageUrl,
-        int sequence
+        Long sequence
 ) {
 
 }

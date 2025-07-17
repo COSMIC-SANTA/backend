@@ -5,6 +5,6 @@ public record CafeDTO(
         String name,
         String location,
         String imageUrl,
-        int sequence
+        Long sequence
 ) {
 }

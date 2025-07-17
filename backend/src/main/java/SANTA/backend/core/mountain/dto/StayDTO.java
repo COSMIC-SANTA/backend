@@ -5,6 +5,6 @@ public record StayDTO(
         String name,
         String location,
         String imageUrl,
-        int sequence
+        Long sequence
 ) {
 }
