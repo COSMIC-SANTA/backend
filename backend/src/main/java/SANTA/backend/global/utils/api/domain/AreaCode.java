@@ -31,4 +31,13 @@ public enum AreaCode {
         this.name = name;
     }
 
+    public static AreaCode selectAreaCode(String province) {
+
+        for (AreaCode areaCode : AreaCode.values()) {
+            if (areaCode.name.equals(province)) {
+                return areaCode;
+            }
+        }
+        throw new IllegalArgumentException("해당하는 지역 이름이 없습니다: " + province);
+    }
 }
