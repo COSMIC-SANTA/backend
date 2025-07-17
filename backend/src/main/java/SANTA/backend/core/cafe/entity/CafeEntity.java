@@ -15,14 +15,13 @@ import lombok.NoArgsConstructor;
 public class CafeEntity extends BasePlaceEntity {
 
     @Builder
-    protected CafeEntity(Long id, CourseEntity courseEntity, Long sequence, String name, String location, String imageUrl) {
-        super(id, courseEntity, sequence, name, location, imageUrl);
+    protected CafeEntity(Long id, Long sequence, String name, String location, String imageUrl) {
+        super(id, sequence, name, location, imageUrl);
     }
 
-    public static CafeEntity from(Cafe cafe, CourseEntity courseEntity) {
+    public static CafeEntity from(Cafe cafe) {
         return CafeEntity.builder()
                 .id(cafe.getId())
-                .courseEntity(courseEntity)
                 .sequence(cafe.getSequence())
                 .name(cafe.getName())
                 .location(cafe.getLocation())
