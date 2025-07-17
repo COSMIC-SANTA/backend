@@ -19,6 +19,7 @@ import SANTA.backend.global.exception.type.ExternalApiException;
 import SANTA.backend.global.exception.type.DataNotFoundException;
 
 import SANTA.backend.global.utils.api.APIRequester;
+import SANTA.backend.global.utils.api.KoreanTourInfoServiceRequester;
 import org.springframework.core.codec.DecodingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,15 +47,17 @@ public class MountainService {
     private final StayRepository stayRepository;
     private final CafeRepository cafeRepository;
     private final SpotRepository spotRepository;
+    private final APIRequester apiRequester;
 
     public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository, RestaurantRepository restaurantRepository,
-                           StayRepository stayRepository, CafeRepository cafeRepository, SpotRepository spotRepository) {
+                           StayRepository stayRepository, CafeRepository cafeRepository, SpotRepository spotRepository, APIRequester apiRequester) {
         this.webClient = webClient;
         this.mountainRepository = mountainRepository;
         this.restaurantRepository = restaurantRepository;
         this.stayRepository = stayRepository;
         this.cafeRepository = cafeRepository;
         this.spotRepository = spotRepository;
+        this.apiRequester = apiRequester;
     }
 
     public MountainListSearchResponse searchMountains(String keyword) {
