@@ -15,14 +15,13 @@ import lombok.NoArgsConstructor;
 public class StayEntity extends BasePlaceEntity {
 
     @Builder
-    protected StayEntity(Long id, CourseEntity courseEntity, Long sequence, String name, String location, String imageUrl) {
-        super(id, courseEntity, sequence, name, location, imageUrl);
+    protected StayEntity(Long id, Long sequence, String name, String location, String imageUrl) {
+        super(id, sequence, name, location, imageUrl);
     }
 
-    public static StayEntity from(Stay stay, CourseEntity courseEntity) {
+    public static StayEntity from(Stay stay) {
         return StayEntity.builder()
                 .id(stay.getId())
-                .courseEntity(courseEntity)
                 .sequence(stay.getSequence())
                 .name(stay.getName())
                 .location(stay.getLocation())
