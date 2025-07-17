@@ -12,4 +12,6 @@ public interface MountainRepository {
     Long findAllCount();
 
     Mountain findById(Long mountainId);
+
+    List<Mountain> findByName(String name);
 }

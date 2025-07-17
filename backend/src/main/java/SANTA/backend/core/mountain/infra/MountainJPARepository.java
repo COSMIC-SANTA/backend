@@ -41,4 +41,12 @@ public class MountainJPARepository implements MountainRepository {
         return Mountain.fromEntity(mountainEntity);
     }
 
+    @Override
+    public List<Mountain> findByName(String name) {
+        List<MountainEntity> mountainEntities = em.createQuery("select m from MountainEntity m where m.name =: name", MountainEntity.class)
+                .setParameter("name", name)
+                .getResultList();
+        return mountainEntities.stream().map(Mountain::fromEntity).toList();
+    }
+
 }
