@@ -2,6 +2,8 @@ package SANTA.backend.core.posts.service;
 
 import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.entity.PostEntity;
+import SANTA.backend.core.posts.entity.PostFileEntity;
+import SANTA.backend.core.posts.repository.PostFileRepository;
 import SANTA.backend.core.posts.repository.PostRepository;
 import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.user.domain.UserRepository;
@@ -12,7 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +30,35 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostFileRepository postFileRepository;
 
-    public PostDTO save(PostDTO postDTO, User user) {
-        PostEntity postEntity = PostEntity.tosaveEntity(postDTO, user.getUserId(), user.getNickname());
-        PostEntity savedEntity = postRepository.save(postEntity); // save 후 DB에 반영된 엔티티 받음
-        return PostDTO.toPostDTO(savedEntity); // 다시 DTO로 변환해서 반환
+    public PostDTO save(PostDTO postDTO, User user) throws IOException {
+
+        if(postDTO.getPostFile() == null ||postDTO.getPostFile().isEmpty()){
+            //파일 첨부 없음
+            PostEntity postEntity = PostEntity.tosaveEntity(postDTO, user.getUserId(), user.getNickname());
+            PostEntity savedEntity = postRepository.save(postEntity); // save 후 DB에 반영된 엔티티 받음
+            return PostDTO.toPostDTO(savedEntity); // 다시 DTO로 변환해서 반환
+        }else{
+            //파일첨부 있음
+            PostEntity postEntity =PostEntity.toSaveFileEntity(postDTO,user.getUserId(), user.getNickname());
+            Long savedId=postRepository.save(postEntity).getPostId();
+            PostEntity post=postRepository.findById(savedId).get();
+            for(MultipartFile postFile:postDTO.getPostFile()){
+                String originalFilename=postFile.getOriginalFilename();
+                String storedFileName= System.currentTimeMillis()+"_"+originalFilename;
+                //안2. String storedFileName = UUID.randomUUID() + "_" + originalFilename;
+                String savePath="C:/Users/User/Desktop/springtemp_img/"+storedFileName; // C:/springboot_img/파일이름.jpg이렇게 저장되게 함.->이거 바꾸든가 하자
+                postFile.transferTo(new File(savePath));//savePath로 파일을 넘긴다.
+
+                PostFileEntity postFileEntity=PostFileEntity.toPostFileEntity(post, originalFilename,storedFileName);
+                postFileRepository.save(postFileEntity);
+            }
+            return PostDTO.toPostDTO(post);
+        }
     }
 
+    @Transactional
     public List<PostDTO> findAll() {
        List<PostEntity> postEntityList = postRepository.findAll();
        //Entity로 온 객체들을 다시 DTO로 바꿔 받아야 함
@@ -47,6 +74,7 @@ public class PostService {
         postRepository.updateHits(postId);
     }
 
+    @Transactional
     public PostDTO findBypostId(Long postId) {
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
         if(optionalPostEntity.isPresent()){

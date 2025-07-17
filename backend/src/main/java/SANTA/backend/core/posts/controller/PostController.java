@@ -7,21 +7,18 @@ import SANTA.backend.core.posts.service.CommentService;
 import SANTA.backend.core.posts.service.LikeService;
 import SANTA.backend.core.posts.service.PostService;
 import SANTA.backend.core.user.application.UserService;
-import SANTA.backend.core.user.domain.Level;
-import SANTA.backend.core.user.domain.Role;
 import SANTA.backend.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +40,7 @@ public class PostController {
 
     @PostMapping("/save")
     @ResponseBody
-    public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
+    public Map<String, List<Map<String, Object>>> save(@ModelAttribute PostDTO postDTO) throws IOException {
         // 현재 로그인 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

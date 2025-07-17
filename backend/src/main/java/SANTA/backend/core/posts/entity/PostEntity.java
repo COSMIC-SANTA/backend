@@ -38,6 +38,12 @@ public class PostEntity extends PostBaseEntity {
     @Builder.Default
     private List<CommentEntity> commentEntiryList=new ArrayList<>();
 
+    private int fileAttached;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "postEntity",cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<PostFileEntity> postFileEntityList=new ArrayList<>();
+
     public static PostEntity tosaveEntity(PostDTO postDTO, Long userId, String nickname){
         return PostEntity.builder()
                 .userId(userId)
@@ -46,6 +52,7 @@ public class PostEntity extends PostBaseEntity {
                 .title(postDTO.getTitle())
                 .body(postDTO.getBody())
                 .postHits(0)
+                .fileAttached(0)
                 .build();
     }
 
@@ -57,6 +64,18 @@ public class PostEntity extends PostBaseEntity {
                 .title(postDTO.getTitle())
                 .body(postDTO.getBody())
                 .postHits(postDTO.getPostHits())
+                .build();
+    }
+
+    public static PostEntity toSaveFileEntity(PostDTO postDTO,Long userId, String nickname) {
+        return PostEntity.builder()
+                .userId(userId)
+                .author(nickname)
+                .title(postDTO.getTitle())
+                .title(postDTO.getTitle())
+                .body(postDTO.getBody())
+                .postHits(0)
+                .fileAttached(1)
                 .build();
     }
 }
