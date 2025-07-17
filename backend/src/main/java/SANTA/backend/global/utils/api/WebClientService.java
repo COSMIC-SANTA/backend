@@ -1,17 +1,14 @@
 package SANTA.backend.global.utils.api;
 
-import SANTA.backend.global.utils.api.domain.AreaCode;
-import SANTA.backend.global.utils.api.domain.Arrange;
-import SANTA.backend.global.utils.api.domain.ContentTypeId;
-import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.net.URL;
+import java.util.List;
 
 @Component
 public class WebClientService {
@@ -22,11 +19,21 @@ public class WebClientService {
         this.webClient = webClient;
     }
 
-    public Mono<String> request(URI uri) {
-        return webClient.get()
+    public Mono<JsonNode> request(URI uri) {
+        Mono<String> stringMono = webClient.get()
                 .uri(uri)
                 .retrieve()
                 .bodyToMono(String.class);
+        return stringMono.map(json -> {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(json);
+
+                return root.path("response").path("body").path("items").path("item");
+            } catch (Exception e) {
+                throw new RuntimeException("JSON 파싱 오류", e);
+            }
+        });
     }
 
 }
