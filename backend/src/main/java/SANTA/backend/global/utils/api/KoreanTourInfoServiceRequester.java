@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 @RequiredArgsConstructor
-public class KoreanTourInfoServiceRequester extends KoreanTourInfoServiceURIGenerator{
+public class KoreanTourInfoServiceRequester extends URIGenerator {
 
     private final AppProperties appProperties;
     private final WebClientService webClientService;
@@ -89,15 +89,15 @@ public class KoreanTourInfoServiceRequester extends KoreanTourInfoServiceURIGene
                                       @Nullable ContentTypeId contentTypeId, @Nullable AreaCode areaCode, @Nullable Long sigunguCode,
                                       @Nullable Long radius, @Nullable Double mapX, @Nullable Double mapY, @Nullable String keyword,
                                       @Nullable String eventStartDate, @Nullable String eventEndDate, @Nullable Long contentId) {
-        String url = appProperties.getKoreaTourOrganization().getKoreaTourInfoServiceURL();
-        String key = appProperties.getKoreaTourOrganization().getKoreaTourInfoServiceEncodingKey();
+        String url = appProperties.getKoreaTourOrganization().getUrl();
+        String key = appProperties.getKoreaTourOrganization().getEncodingKey();
         String mobileOs = MobileOS.WEB.name();
         String mobileAppName = appProperties.getKoreaTourOrganization().getMobileAppName();
 
         long safeNumOfRows = (numOfRows != null) ? numOfRows : 10L;
         long safePageNo = (pageNo != null) ? pageNo : 1L;
 
-        URI uri = URIGenerator(url, operation.name(), key, mobileOs, mobileAppName, safeNumOfRows, safePageNo,
+        URI uri = KoreanTourInfoServiceURIGenerator(url, operation.name(), key, mobileOs, mobileAppName, safeNumOfRows, safePageNo,
                 arrange, contentTypeId, areaCode, sigunguCode,radius,mapX,mapY,keyword,eventStartDate,eventEndDate,contentId);
 
         return webClientService.request(uri);

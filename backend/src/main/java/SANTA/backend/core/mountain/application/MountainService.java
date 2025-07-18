@@ -106,4 +106,9 @@ public class MountainService {
         Mono<MountainNearByResponse> mountainNearByResponseMono = apiRequester.searchNearByPlacesByLocation(location,pageNo);
         return mountainNearByResponseMono.block();
     }
+
+    @Transactional
+    public void saveMountains(List<Mountain> mountains) {
+        mountainRepository.saveMountains(mountains);
+    }
 }

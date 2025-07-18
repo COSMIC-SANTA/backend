@@ -2,6 +2,7 @@ package SANTA.backend.global.utils.api;
 
 import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.cafe.domain.Cafe;
+import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
+    private final MountainInfoServiceRequester mountainInfoServiceRequester;
     private static final Long numOfRows = 20L;
 
     @Override
@@ -39,6 +41,18 @@ public class ApiRequesterImpl implements APIRequester {
                     return Mono.zip(restaurantsMono, staysMono, cafesMono, spotsMono)
                             .map(tuple -> MountainNearByResponse.fromDomain(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4()));
                 });
+    }
+
+    @Override
+    public List<Mountain> getMountains() {
+        Mono<JsonNode> mountains = mountainInfoServiceRequester.getMountains();
+        return extractMountains(mountains).block();
+    }
+
+    @Override
+    public List<Mountain> getMountains(String locationName) {
+        Mono<JsonNode> mountains = mountainInfoServiceRequester.getMountains(locationName);
+        return List.of();
     }
 
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
@@ -77,6 +91,20 @@ public class ApiRequesterImpl implements APIRequester {
                     }
                     return Mono.empty();
                 });
+    }
+
+    private Mono<List<Mountain>> extractMountains(Mono<JsonNode> json){
+        return json.map(jsonNodes -> {
+            List<Mountain> mountains = new ArrayList<>();
+            if(jsonNodes.isArray()){
+                for (JsonNode jsonNode : jsonNodes) {
+                    String mountainName = jsonNode.path("mtnm").asText();
+                    String location = jsonNode.path("areanm").asText().split(",")[0].trim();
+                    mountains.add(Mountain.builder().name(mountainName).location(location).build());
+                }
+            }
+            return mountains;
+        });
     }
 
 }

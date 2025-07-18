@@ -14,4 +14,6 @@ public interface MountainRepository {
     Mountain findById(Long mountainId);
 
     List<Mountain> findByName(String name);
+
+    void saveMountains(List<Mountain> mountains);
 }

@@ -25,7 +25,6 @@ public abstract class BasePlaceEntity {
 
     protected String imageUrl;
 
-
     protected BasePlaceEntity(Long id, Long sequence, String name, String location, String imageUrl) {
         this.id = id;
         this.sequence = sequence;
