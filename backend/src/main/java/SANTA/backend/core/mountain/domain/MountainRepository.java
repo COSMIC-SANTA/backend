@@ -10,4 +10,10 @@ public interface MountainRepository {
     void saveMountain(Mountain mountain);
 
     Long findAllCount();
+
+    Mountain findById(Long mountainId);
+
+    List<Mountain> findByName(String name);
+
+    void saveMountains(List<Mountain> mountains);
 }

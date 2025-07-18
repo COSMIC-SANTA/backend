@@ -13,8 +13,9 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String KOREAN_TOUR_INFO_SERVICE_QUEUE = "koreanTourInfoServiceQueue";
-    public static final String INFO_SERVICE_EXCHANGE = "infoServiceExchange";
-    public static final String INFO_SERVICE_DLX = "infoServiceDeadLetterExchange";
+    public static final String MOUNTAIN_INFO_QUEUE = "mountainInfoQueue";
+    public static final String INFO_EXCHANGE = "infoExchange";
+    public static final String INFO_DLX = "infoDeadLetterExchange";
     public static final String DLQ = "deadLetterQueue";
 
     private final AppProperties appProperties;
@@ -22,7 +23,15 @@ public class RabbitMQConfig {
     @Bean
     public Queue koreanTourInfoServiceQueue(){
         return QueueBuilder.durable(KOREAN_TOUR_INFO_SERVICE_QUEUE)
-                .withArgument("x-dead-letter-exchange",INFO_SERVICE_DLX)
+                .withArgument("x-dead-letter-exchange", INFO_DLX)
+                .withArgument("x-dead-letter-routing-key",DLQ)
+                .build();
+    }
+
+    @Bean
+    public Queue mountainInfoQueue(){
+        return QueueBuilder.durable(MOUNTAIN_INFO_QUEUE)
+                .withArgument("x-dead-letter-exchange",INFO_DLX)
                 .withArgument("x-dead-letter-routing-key",DLQ)
                 .build();
     }
@@ -34,17 +43,22 @@ public class RabbitMQConfig {
 
     @Bean
     public TopicExchange infoServiceExchange(){
-        return new TopicExchange(INFO_SERVICE_EXCHANGE);
+        return new TopicExchange(INFO_EXCHANGE);
     }
 
     @Bean
     public TopicExchange deadLetterExchange(){
-        return new TopicExchange(INFO_SERVICE_DLX);
+        return new TopicExchange(INFO_DLX);
     }
 
     @Bean
-    public Binding tourServiceBinding(){
-        return BindingBuilder.bind(koreanTourInfoServiceQueue()).to(infoServiceExchange()).with(appProperties.getKoreaTourOrganization().getKoreaTourInfoServiceRoutingKey());
+    public Binding tourInfoBinding(){
+        return BindingBuilder.bind(koreanTourInfoServiceQueue()).to(infoServiceExchange()).with(appProperties.getKoreaTourOrganization().getRoutingKey());
+    }
+
+    @Bean
+    public Binding mountainInfoBinding(){
+        return BindingBuilder.bind(mountainInfoQueue()).to(infoServiceExchange()).with(appProperties.getForest().getRoutingKey());
     }
 
     @Bean

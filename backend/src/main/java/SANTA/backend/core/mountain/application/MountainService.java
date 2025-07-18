@@ -1,14 +1,25 @@
 package SANTA.backend.core.mountain.application;
 
+import SANTA.backend.core.cafe.domain.Cafe;
+import SANTA.backend.core.cafe.domain.CafeRepository;
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.core.mountain.dto.MountainListSearchResponse;
+import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.external.ForestApiItem;
 import SANTA.backend.core.mountain.dto.external.ForestApiResponse;
+import SANTA.backend.core.restaurant.domain.Restaurant;
+import SANTA.backend.core.restaurant.domain.RestaurantRepository;
+import SANTA.backend.core.spot.domain.Spot;
+import SANTA.backend.core.spot.domain.SpotRepository;
+import SANTA.backend.core.stay.domain.Stay;
+import SANTA.backend.core.stay.domain.StayRepository;
 import SANTA.backend.global.exception.ErrorCode;
 import SANTA.backend.global.exception.type.ExternalApiException;
 import SANTA.backend.global.exception.type.DataNotFoundException;
 
+import SANTA.backend.global.utils.api.APIRequester;
+import SANTA.backend.global.utils.api.KoreanTourInfoServiceRequester;
 import org.springframework.core.codec.DecodingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,10 +43,21 @@ public class MountainService {
     private String forestApiKey;
 
     private final MountainRepository mountainRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final StayRepository stayRepository;
+    private final CafeRepository cafeRepository;
+    private final SpotRepository spotRepository;
+    private final APIRequester apiRequester;
 
-    public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository) {
+    public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository, RestaurantRepository restaurantRepository,
+                           StayRepository stayRepository, CafeRepository cafeRepository, SpotRepository spotRepository, APIRequester apiRequester) {
         this.webClient = webClient;
         this.mountainRepository = mountainRepository;
+        this.restaurantRepository = restaurantRepository;
+        this.stayRepository = stayRepository;
+        this.cafeRepository = cafeRepository;
+        this.spotRepository = spotRepository;
+        this.apiRequester = apiRequester;
     }
 
     public MountainListSearchResponse searchMountains(String keyword) {
@@ -71,5 +93,22 @@ public class MountainService {
     @Transactional
     public void saveMountain(Mountain mountain) {
         mountainRepository.saveMountain(mountain);
+    }
+
+    @Transactional
+    public List<Mountain> findByName(String name){
+        return mountainRepository.findByName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public MountainNearByResponse searchNearByPlacesById(Long mountainId, Long pageNo) {
+        String location = mountainRepository.findById(mountainId).getLocation();
+        Mono<MountainNearByResponse> mountainNearByResponseMono = apiRequester.searchNearByPlacesByLocation(location,pageNo);
+        return mountainNearByResponseMono.block();
+    }
+
+    @Transactional
+    public void saveMountains(List<Mountain> mountains) {
+        mountainRepository.saveMountains(mountains);
     }
 }

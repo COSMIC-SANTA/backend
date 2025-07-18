@@ -1,5 +1,6 @@
 package SANTA.backend.core.spot.entity;
 
+import SANTA.backend.core.basePlace.entity.BasePlaceEntity;
 import SANTA.backend.core.course.entity.CourseEntity;
 import SANTA.backend.core.spot.domain.Spot;
 import jakarta.persistence.*;
@@ -11,37 +12,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "SPOT")
-public class SpotEntity {
-
-    @Id @GeneratedValue
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COURSE_ID")
-    private CourseEntity courseEntity;
-
-    private Long sequence;
-
-    private String name;
-
-    private String location;
-
-    private String imageUrl;
+public class SpotEntity extends BasePlaceEntity {
 
     @Builder
-    protected SpotEntity(Long id, CourseEntity courseEntity, Long sequence, String name, String location, String imageUrl) {
-        this.id = id;
-        this.courseEntity = courseEntity;
-        this.sequence = sequence;
-        this.name = name;
-        this.location = location;
-        this.imageUrl = imageUrl;
+    protected SpotEntity(Long id, Long sequence, String name, String location, String imageUrl) {
+        super(id, sequence, name, location, imageUrl);
     }
 
-    public static SpotEntity from(Spot spot, CourseEntity courseEntity) {
+    public static SpotEntity from(Spot spot) {
         return SpotEntity.builder()
                 .id(spot.getId())
-                .courseEntity(courseEntity)
                 .sequence(spot.getSequence())
                 .name(spot.getName())
                 .location(spot.getLocation())

@@ -31,8 +31,35 @@ public class MountainJPARepository implements MountainRepository {
     }
 
     @Override
+    public void saveMountains(List<Mountain> mountains) {
+        int batchSize = 100;
+        List<MountainEntity> mountainEntities = mountains.stream().map(MountainEntity::from).toList();
+        for(int i=0; i<mountainEntities.size(); i++){
+            em.persist(mountainEntities.get(i));
+            if(i%batchSize==0){
+                em.flush();
+                em.clear();
+            }
+        }
+    }
+
+    @Override
     public Long findAllCount(){
         return em.createQuery("select count(m) from MountainEntity m", Long.class).getSingleResult();
+    }
+
+    @Override
+    public Mountain findById(Long mountainId) {
+        MountainEntity mountainEntity = em.find(MountainEntity.class, mountainId);
+        return Mountain.fromEntity(mountainEntity);
+    }
+
+    @Override
+    public List<Mountain> findByName(String name) {
+        List<MountainEntity> mountainEntities = em.createQuery("select m from MountainEntity m where m.name =: name", MountainEntity.class)
+                .setParameter("name", name)
+                .getResultList();
+        return mountainEntities.stream().map(Mountain::fromEntity).toList();
     }
 
 }
