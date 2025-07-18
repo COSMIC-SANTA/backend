@@ -89,8 +89,8 @@ public class KoreanTourInfoServiceRequester extends KoreanTourInfoServiceURIGene
                                       @Nullable ContentTypeId contentTypeId, @Nullable AreaCode areaCode, @Nullable Long sigunguCode,
                                       @Nullable Long radius, @Nullable Double mapX, @Nullable Double mapY, @Nullable String keyword,
                                       @Nullable String eventStartDate, @Nullable String eventEndDate, @Nullable Long contentId) {
-        String url = appProperties.getKoreaTourOrganization().getKoreaTourInfoServiceURL();
-        String key = appProperties.getKoreaTourOrganization().getKoreaTourInfoServiceEncodingKey();
+        String url = appProperties.getKoreaTourOrganization().getUrl();
+        String key = appProperties.getKoreaTourOrganization().getEncodingKey();
         String mobileOs = MobileOS.WEB.name();
         String mobileAppName = appProperties.getKoreaTourOrganization().getMobileAppName();
 
