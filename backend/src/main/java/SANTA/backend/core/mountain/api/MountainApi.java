@@ -23,9 +23,9 @@ public class MountainApi {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{mountainId}/details")
-    public ResponseEntity<MountainNearByResponse> mountainNearBy(@PathVariable("mountainId") Long mountainId){
-        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountainId);
+    @GetMapping("/{mountainId}/details/{pageNo}")
+    public ResponseEntity<MountainNearByResponse> mountainNearBy(@PathVariable("mountainId") Long mountainId, @PathVariable("pageNo") Long pageNo){
+        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountainId,pageNo);
         return ResponseEntity.ok().body(mountainNearByResponse);
     }
 }
