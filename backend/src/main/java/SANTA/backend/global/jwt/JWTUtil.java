@@ -1,6 +1,7 @@
 package SANTA.backend.global.jwt;
 
 import SANTA.backend.core.auth.service.CustomUserDetails;
+import SANTA.backend.global.common.AppProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -18,8 +19,8 @@ public class JWTUtil {
 
     private SecretKey secretKey;
 
-    public JWTUtil(JWTProperties jwtProperties) {
-        String secret = jwtProperties.getSecret();
+    public JWTUtil(AppProperties appProperties) {
+        String secret = appProperties.getJwt().getSecret();
         this.secretKey = new SecretKeySpec(
                 secret.getBytes(StandardCharsets.UTF_8),
                 Jwts.SIG.HS256.key().build().getAlgorithm()
