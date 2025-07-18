@@ -23,26 +23,25 @@ public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
     private static final Long numOfRows = 20L;
-    private static final Long pageNo = 1L;
 
     @Override
-    public Mono<MountainNearByResponse> searchNearByPlacesByLocation(String location) {
+    public Mono<MountainNearByResponse> searchNearByPlacesByLocation(String location, Long pageNo) {
         String[] locations = location.split(" ");
         AreaCode areaCode = AreaCode.selectAreaCode(locations[0]);
 
         return getSigunguCode(areaCode, locations[1])
                 .flatMap(sigunguCode -> {
-                    Mono<List<Restaurant>> restaurantsMono = extractPlacesMono(ContentTypeId.RESTAURANT, areaCode, sigunguCode);
-                    Mono<List<Stay>> staysMono = extractPlacesMono(ContentTypeId.STAY, areaCode, sigunguCode);
-                    Mono<List<Cafe>> cafesMono = extractPlacesMono(ContentTypeId.CULTURAL_FACILITY, areaCode, sigunguCode);
-                    Mono<List<Spot>> spotsMono = extractPlacesMono(ContentTypeId.TOUR_PLACE, areaCode, sigunguCode);
+                    Mono<List<Restaurant>> restaurantsMono = extractPlacesMono(numOfRows, pageNo, ContentTypeId.RESTAURANT, areaCode, sigunguCode);
+                    Mono<List<Stay>> staysMono = extractPlacesMono(numOfRows, pageNo, ContentTypeId.STAY, areaCode, sigunguCode);
+                    Mono<List<Cafe>> cafesMono = extractPlacesMono(numOfRows, pageNo, ContentTypeId.CULTURAL_FACILITY, areaCode, sigunguCode);
+                    Mono<List<Spot>> spotsMono = extractPlacesMono(numOfRows, pageNo, ContentTypeId.TOUR_PLACE, areaCode, sigunguCode);
 
                     return Mono.zip(restaurantsMono, staysMono, cafesMono, spotsMono)
                             .map(tuple -> MountainNearByResponse.fromDomain(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4()));
                 });
     }
 
-    private <T extends BasePlace> Mono<List<T>> extractPlacesMono(ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
+    private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
         return koreanTourInfoServiceRequester
                 .getContentByAreaBasedList2(numOfRows, pageNo, areaCode, sigunguCode, Arrange.A, typeId)
                 .map(jsonNode -> {
