@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MountainDataScheduler {
 
-    private final RabbitMQRequester rabbitMQRequester;
-
-    @Scheduled(cron = "0 0 0 0 1 * *", zone = "Asia/Seoul")
-    public void updateMountainDataMonthly(){
-        rabbitMQRequester.updateMountain(null);
-    }
+//    private final RabbitMQRequester rabbitMQRequester;
+//
+//    @Scheduled(cron = "0 0 0 0 1 * *", zone = "Asia/Seoul")
+//    public void updateMountainDataMonthly(){
+//        rabbitMQRequester.updateMountain(null);
+//    }
 }
