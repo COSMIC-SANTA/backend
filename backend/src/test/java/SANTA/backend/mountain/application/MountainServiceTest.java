@@ -29,7 +29,7 @@ public class MountainServiceTest extends ServiceContext {
         List<Mountain> mountains = mountainService.findByName(name);
 
         //when
-        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountains.get(0).getId());
+        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountains.get(0).getId(),1L);
         System.out.println(mountainNearByResponse);
 
         //then
