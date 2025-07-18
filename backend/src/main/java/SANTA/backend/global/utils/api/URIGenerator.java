@@ -5,12 +5,11 @@ import SANTA.backend.global.utils.api.domain.Arrange;
 import SANTA.backend.global.utils.api.domain.ContentTypeId;
 import jakarta.annotation.Nullable;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
 
-public abstract class KoreanTourInfoServiceURIGenerator {
+public abstract class URIGenerator {
 
     private static final String JSON = "json";
 
