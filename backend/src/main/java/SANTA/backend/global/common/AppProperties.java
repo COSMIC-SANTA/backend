@@ -57,7 +57,7 @@ public class AppProperties {
             return mobileAppName;
         }
 
-        public String getKoreaTourInfoServiceRoutingKey(){return encodingKey;}
+        public String getRoutingKey(){return encodingKey;}
     }
 
     public static class JWT{
@@ -85,6 +85,10 @@ public class AppProperties {
         }
 
         public String getKey(){
+            return this.key;
+        }
+
+        public String getRoutingKey(){
             return this.key;
         }
     }
