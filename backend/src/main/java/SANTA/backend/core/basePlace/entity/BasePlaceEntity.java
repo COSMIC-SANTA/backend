@@ -33,6 +33,7 @@ public abstract class BasePlaceEntity {
         this.imageUrl = imageUrl;
     }
 
+
     public void assignToCourse(CourseEntity courseEntity) {
         this.courseEntity = courseEntity;
     }
