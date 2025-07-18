@@ -101,9 +101,9 @@ public class MountainService {
     }
 
     @Transactional(readOnly = true)
-    public MountainNearByResponse searchNearByPlacesById(Long mountainId) {
+    public MountainNearByResponse searchNearByPlacesById(Long mountainId, Long pageNo) {
         String location = mountainRepository.findById(mountainId).getLocation();
-        Mono<MountainNearByResponse> mountainNearByResponseMono = apiRequester.searchNearByPlacesByLocation(location);
+        Mono<MountainNearByResponse> mountainNearByResponseMono = apiRequester.searchNearByPlacesByLocation(location,pageNo);
         return mountainNearByResponseMono.block();
     }
 }
