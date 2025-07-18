@@ -6,6 +6,7 @@ import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.global.config.RabbitMQConfig;
 import SANTA.backend.global.utils.api.APIRequester;
 import SANTA.backend.global.utils.api.KoreanTourInfoServiceRequester;
+import SANTA.backend.global.utils.api.MountainInfoServiceRequester;
 import jakarta.persistence.EntityManager;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,4 +35,7 @@ public abstract class ServiceContext {
 
     @Autowired
     protected KoreanTourInfoServiceRequester  koreanTourInfoServiceRequester;
+
+    @Autowired
+    protected MountainInfoServiceRequester mountainInfoServiceRequester;
 }
