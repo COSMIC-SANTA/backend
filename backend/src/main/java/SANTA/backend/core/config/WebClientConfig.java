@@ -17,6 +17,8 @@ import java.time.Duration;
 @Configuration
 public class WebClientConfig {
 
+    static int byteCount = 10*1024*1024;
+
     @Bean("forestApiClient")
     public WebClient webClient(@Value("${forest.api.url}") String baseUrl) {
         return WebClient.builder()
@@ -39,6 +41,7 @@ public class WebClientConfig {
         return WebClient.builder()
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .codecs(clientCodecConfigurer -> clientCodecConfigurer.defaultCodecs().maxInMemorySize(byteCount))
                 .clientConnector(new ReactorClientHttpConnector(
                         HttpClient.create()
                                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
