@@ -1,15 +1,14 @@
 package SANTA.backend.mountain.api;
 
-import SANTA.backend.context.ControllerTest;
 import SANTA.backend.context.ServiceContext;
-import SANTA.backend.global.utils.api.domain.TouristApiResponse;
-
-import org.assertj.core.api.Assertions;
+import SANTA.backend.global.utils.api.domain.AreaCode;
+import SANTA.backend.global.utils.api.domain.Arrange;
+import SANTA.backend.global.utils.api.domain.ContentTypeId;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ApiRequesterTest extends ServiceContext {
 
@@ -19,11 +18,30 @@ public class ApiRequesterTest extends ServiceContext {
         @Test
         void 지역으로_호출할_수_있다() {
             //when
-            String contentByAreaBasedList2 = apiRequester.getContentByAreaBasedList2().block();
+            Long numOfRows = 20L, pageNo = 1L, sigunguCode = 1L;
+            JsonNode contentByAreaBasedList1 = koreanTourInfoServiceRequester.getContentByAreaBasedList2(numOfRows, pageNo, AreaCode.SEOUL, sigunguCode, Arrange.A, ContentTypeId.RESTAURANT).block();
+            JsonNode contentByAreaBasedList2 = koreanTourInfoServiceRequester.getContentByAreaBasedList2(numOfRows, pageNo, AreaCode.SEOUL, sigunguCode, Arrange.A, ContentTypeId.STAY).block();
+            JsonNode contentByAreaBasedList3 = koreanTourInfoServiceRequester.getContentByAreaBasedList2(numOfRows, pageNo, AreaCode.SEOUL, sigunguCode, Arrange.A, ContentTypeId.CULTURAL_FACILITY).block();
+            JsonNode contentByAreaBasedList4 = koreanTourInfoServiceRequester.getContentByAreaBasedList2(numOfRows, pageNo, AreaCode.SEOUL, sigunguCode, Arrange.A, ContentTypeId.TOUR_PLACE).block();
+            System.out.println(contentByAreaBasedList1);
+            System.out.println(contentByAreaBasedList2);
+            System.out.println(contentByAreaBasedList3);
+            System.out.println(contentByAreaBasedList4);
+
 
             //then
-            assertThat(contentByAreaBasedList2).isNotNull();
-            assertThat(contentByAreaBasedList2).contains("\"response\"");
+            assertThat(contentByAreaBasedList1).isNotNull();
+        }
+
+        @Test
+        void 지역_코드를_조회할_수_있다() {
+            //when
+            JsonNode block = koreanTourInfoServiceRequester.getContentByAreaCode2(17L, 1L).block();
+            JsonNode block1 = koreanTourInfoServiceRequester.getContentByAreaCode2(10L, 1L, AreaCode.BUSAN).block();
+            System.out.println(block1);
+
+            //then
+            assertThat(block).isNotNull();
         }
     }
 }

@@ -25,6 +25,7 @@ public abstract class BasePlaceEntity {
 
     protected String imageUrl;
 
+
     protected BasePlaceEntity(Long id, Long sequence, String name, String location, String imageUrl) {
         this.id = id;
         this.sequence = sequence;
@@ -32,6 +33,7 @@ public abstract class BasePlaceEntity {
         this.location = location;
         this.imageUrl = imageUrl;
     }
+
 
     public void assignToCourse(CourseEntity courseEntity) {
         this.courseEntity = courseEntity;
