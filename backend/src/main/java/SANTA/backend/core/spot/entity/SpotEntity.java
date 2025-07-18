@@ -15,14 +15,13 @@ import lombok.NoArgsConstructor;
 public class SpotEntity extends BasePlaceEntity {
 
     @Builder
-    protected SpotEntity(Long id, CourseEntity courseEntity, Long sequence, String name, String location, String imageUrl) {
-        super(id, courseEntity, sequence, name, location, imageUrl);
+    protected SpotEntity(Long id, Long sequence, String name, String location, String imageUrl) {
+        super(id, sequence, name, location, imageUrl);
     }
 
-    public static SpotEntity from(Spot spot, CourseEntity courseEntity) {
+    public static SpotEntity from(Spot spot) {
         return SpotEntity.builder()
                 .id(spot.getId())
-                .courseEntity(courseEntity)
                 .sequence(spot.getSequence())
                 .name(spot.getName())
                 .location(spot.getLocation())
