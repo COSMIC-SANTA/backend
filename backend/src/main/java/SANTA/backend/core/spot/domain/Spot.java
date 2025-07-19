@@ -1,32 +1,16 @@
 package SANTA.backend.core.spot.domain;
 
+import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.spot.entity.SpotEntity;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class Spot {
-
-    private Long id;
-
-    private Long courseId;
-
-    private Long sequence;
-
-    private String name;
-
-    private String location;
-
-    private String imageUrl;
+public class Spot extends BasePlace {
 
     @Builder
-    protected Spot(Long id, Long courseId, Long sequence, String name, String location, String imageUrl) {
-        this.id = id;
-        this.courseId = courseId;
-        this.sequence = sequence;
-        this.name = name;
-        this.location = location;
-        this.imageUrl = imageUrl;
+    protected Spot(Long id, Long courseId, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+        super(id, courseId, sequence, name, location, imageUrl, mapX, mapY);
     }
 
     public static Spot fromEntity(SpotEntity spotEntity) {
@@ -37,6 +21,8 @@ public class Spot {
                 .name(spotEntity.getName())
                 .location(spotEntity.getLocation())
                 .imageUrl(spotEntity.getImageUrl())
+                .mapX(spotEntity.getMapX())
+                .mapY(spotEntity.getMapY())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package SANTA.backend.core.stay.entity;
 
+import SANTA.backend.core.basePlace.entity.BasePlaceEntity;
 import SANTA.backend.core.course.entity.CourseEntity;
 import SANTA.backend.core.stay.domain.Stay;
 import jakarta.persistence.*;
@@ -11,41 +12,22 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "STAY")
-public class StayEntity {
-
-    @Id @GeneratedValue
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COURSE_ID")
-    private CourseEntity courseEntity;
-
-    private Long sequence;
-
-    private String name;
-
-    private String location;
-
-    private String imageUrl;
+public class StayEntity extends BasePlaceEntity {
 
     @Builder
-    protected StayEntity(Long id, CourseEntity courseEntity, Long sequence, String name, String location, String imageUrl) {
-        this.id = id;
-        this.courseEntity = courseEntity;
-        this.sequence = sequence;
-        this.name = name;
-        this.location = location;
-        this.imageUrl = imageUrl;
+    protected StayEntity(Long id, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+        super(id, sequence, name, location, imageUrl, mapX, mapY);
     }
 
-    public static StayEntity from(Stay stay, CourseEntity courseEntity) {
+    public static StayEntity from(Stay stay) {
         return StayEntity.builder()
                 .id(stay.getId())
-                .courseEntity(courseEntity)
                 .sequence(stay.getSequence())
                 .name(stay.getName())
                 .location(stay.getLocation())
                 .imageUrl(stay.getImageUrl())
+                .mapX(stay.getMapX())
+                .mapY(stay.getMapY())
                 .build();
     }
 }
