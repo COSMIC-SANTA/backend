@@ -9,8 +9,8 @@ import lombok.Getter;
 public class Cafe extends BasePlace {
 
     @Builder
-    protected Cafe(Long id, Long courseId, Long sequence, String name, String location, String imageUrl) {
-        super(id, courseId, sequence, name, location, imageUrl);
+    protected Cafe(Long id, Long courseId, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+        super(id, courseId, sequence, name, location, imageUrl, mapX, mapY);
     }
 
     public static Cafe fromEntity(CafeEntity cafeEntity) {
@@ -21,6 +21,8 @@ public class Cafe extends BasePlace {
                 .name(cafeEntity.getName())
                 .location(cafeEntity.getLocation())
                 .imageUrl(cafeEntity.getImageUrl())
+                .mapX(cafeEntity.getMapX())
+                .mapX(cafeEntity.getMapY())
                 .build();
     }
 }
