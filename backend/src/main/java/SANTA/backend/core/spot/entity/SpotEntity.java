@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class SpotEntity extends BasePlaceEntity {
 
     @Builder
-    protected SpotEntity(Long id, Long sequence, String name, String location, String imageUrl) {
-        super(id, sequence, name, location, imageUrl);
+    protected SpotEntity(Long id, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+        super(id, sequence, name, location, imageUrl, mapX, mapY);
     }
 
     public static SpotEntity from(Spot spot) {
@@ -26,6 +26,8 @@ public class SpotEntity extends BasePlaceEntity {
                 .name(spot.getName())
                 .location(spot.getLocation())
                 .imageUrl(spot.getImageUrl())
+                .mapX(spot.getMapX())
+                .mapY(spot.getMapY())
                 .build();
     }
 }

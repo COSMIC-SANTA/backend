@@ -14,10 +14,10 @@ public record MountainNearByResponse(
         List<StayDTO> stayDTO
 ) {
     public static MountainNearByResponse fromDomain(List<Restaurant> restaurants, List<Stay> stays, List<Cafe> cafes, List<Spot> spots){
-        List<TouristSpotDTO> spotDTOS = spots.stream().map(spot -> new TouristSpotDTO(spot.getId(), spot.getName(), spot.getLocation(), spot.getImageUrl(), spot.getSequence())).toList();
-        List<RestaurantDTO> restaurantDTOS = restaurants.stream().map(restaurant -> new RestaurantDTO(restaurant.getId(), restaurant.getName(), restaurant.getLocation(), restaurant.getImageUrl(), restaurant.getSequence())).toList();
-        List<CafeDTO> cafeDTOS = cafes.stream().map(cafe -> new CafeDTO(cafe.getId(), cafe.getName(), cafe.getLocation(), cafe.getImageUrl(), cafe.getSequence())).toList();
-        List<StayDTO> stayDTOS = stays.stream().map(stay -> new StayDTO(stay.getId(), stay.getName(), stay.getLocation(), stay.getImageUrl(), stay.getSequence())).toList();
+        List<TouristSpotDTO> spotDTOS = spots.stream().map(spot -> new TouristSpotDTO(spot.getId(), spot.getName(), spot.getLocation(), spot.getImageUrl(), spot.getSequence(), spot.getMapX(), spot.getMapY())).toList();
+        List<RestaurantDTO> restaurantDTOS = restaurants.stream().map(restaurant -> new RestaurantDTO(restaurant.getId(), restaurant.getName(), restaurant.getLocation(), restaurant.getImageUrl(), restaurant.getSequence(), restaurant.getMapX(), restaurant.getMapY())).toList();
+        List<CafeDTO> cafeDTOS = cafes.stream().map(cafe -> new CafeDTO(cafe.getId(), cafe.getName(), cafe.getLocation(), cafe.getImageUrl(), cafe.getSequence(), cafe.getMapX(), cafe.getMapY())).toList();
+        List<StayDTO> stayDTOS = stays.stream().map(stay -> new StayDTO(stay.getId(), stay.getName(), stay.getLocation(), stay.getImageUrl(), stay.getSequence(), stay.getMapX(), stay.getMapY())).toList();
         return new MountainNearByResponse(spotDTOS,restaurantDTOS,cafeDTOS,stayDTOS);
     }
 }
