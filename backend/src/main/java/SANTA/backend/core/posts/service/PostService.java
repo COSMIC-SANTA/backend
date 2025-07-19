@@ -86,7 +86,7 @@ public class PostService {
         }
     }
 
-    public PostDTO update(PostDTO postDTO) {
+    public PostDTO update(PostDTO postDTO) throws IOException {
         PostEntity existing = postRepository.findById(postDTO.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
@@ -96,11 +96,27 @@ public class PostService {
                 .userId(existing.getUserId())         // 원 작성자 유지
                 .author(existing.getAuthor())         // 작성자 유지
                 .postHits(existing.getPostHits())     // 기존 조회수 유지
+                .commentEntityList(existing.getCommentEntityList())
                 .title(postDTO.getTitle())            // 수정된 제목
                 .body(postDTO.getBody())              // 수정된 내용
                 .build();
 
-        postRepository.save(updated);
+        PostEntity saved = postRepository.save(updated);
+
+        // 새 파일 첨부가 있을 경우 추가 저장
+        if (postDTO.getPostFile() != null && !postDTO.getPostFile().isEmpty()) {
+            for (MultipartFile postFile : postDTO.getPostFile()) {
+                String originalFileName = postFile.getOriginalFilename();
+                String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
+                String savePath = "C:/Users/User/Desktop/springtemp_img/" + storedFileName;
+
+                postFile.transferTo(new File(savePath));  // 실제 파일 저장
+
+                PostFileEntity postFileEntity = PostFileEntity.toPostFileEntity(saved, originalFileName, storedFileName);
+                postFileRepository.save(postFileEntity);
+            }
+        }
+
         return PostDTO.toPostDTO(updated);
     }
 
@@ -114,7 +130,6 @@ public class PostService {
         int pageLimit=3; //한 페이지에 보여지는 글 갯수
         //한페이지당 3개씩 글을 보여주고 정렬 기준은 ID 기준으로 내림차순 정렬
         Page<PostEntity> postEntities= postRepository.findAll(PageRequest.of(page,pageLimit, Sort.by(Sort.Direction.DESC,"postId")));
-
 
         //목록 : id, author, title, hits, createdTime
         Page<PostDTO> postDTOS= postEntities.map(post -> new PostDTO(post.getPostId(), post.getAuthor(), post.getTitle(), post.getPostHits(), post.getCreatedTime()));

@@ -4,8 +4,13 @@ import SANTA.backend.core.posts.dto.CommentDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment_table")
 public class CommentEntity extends PostBaseEntity{
@@ -22,6 +27,10 @@ public class CommentEntity extends PostBaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private PostEntity postEntity;
+
+    @OneToMany(mappedBy="commentId")
+    @Builder.Default
+    private List<LikeEntity> likes =new ArrayList<>();
 
     @Builder
     public CommentEntity(String commentWriter,String commentBody, PostEntity postEntity){

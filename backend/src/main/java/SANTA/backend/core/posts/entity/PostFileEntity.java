@@ -16,17 +16,17 @@ public class PostFileEntity extends BaseEntity {
     private Long fileId;
 
     private String originalFileName;
-    private String storedFilename;
+    private String storedFileName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="board_id")
+    @JoinColumn(name="post_id")
     private PostEntity postEntity;
 
-    public static PostFileEntity toPostFileEntity(PostEntity postEntity,String originalFileName, String storedFilename){
+    public static PostFileEntity toPostFileEntity(PostEntity postEntity,String originalFileName, String storedFileName){
         return PostFileEntity.builder()
                 .postEntity(postEntity)
                 .originalFileName(originalFileName)
-                .storedFilename(storedFilename)
+                .storedFileName(storedFileName)
                 .build();
     }
 }

@@ -36,7 +36,7 @@ public class PostEntity extends PostBaseEntity {
     //이거 왜 DB에 안 나오지...?
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    private List<CommentEntity> commentEntiryList=new ArrayList<>();
+    private List<CommentEntity> commentEntityList=new ArrayList<>();
 
     private int fileAttached;
 

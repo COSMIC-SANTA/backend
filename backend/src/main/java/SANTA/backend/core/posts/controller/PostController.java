@@ -103,7 +103,7 @@ public class PostController {
     }
 
     @PutMapping("/update")
-    public PostDTO update(@RequestBody PostDTO postDTO) {
+    public PostDTO update(@ModelAttribute PostDTO postDTO) throws IOException {
         return postService.update(postDTO);
     }
 
@@ -116,16 +116,23 @@ public class PostController {
     //페이징 처리 /post/paging?page=1이런 식으로 감
     //이거 postman에서 확인할 수 있도록 하기
     @GetMapping("/paging")
-    public String paging(@PageableDefault(page=1) Pageable pageable, Model model){
+    @ResponseBody
+    public Map<String, Object> paging(@PageableDefault(page=1) Pageable pageable){
         //pageable.getPageNumber();
         Page<PostDTO> postList = postService.paging(pageable);
-        int blockLimit = 3; //보여질 페이지 번호 갯수
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
+
+        int blockLimit = 3;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
         int endPage = ((startPage + blockLimit - 1) < postList.getTotalPages()) ? startPage + blockLimit - 1 : postList.getTotalPages();
-        model.addAttribute("postList",postList);
-        model.addAttribute("startPage",startPage);
-        model.addAttribute("endPage", endPage);
-        return "paging";
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("postList", postList.getContent()); // 실제 게시글 리스트
+        response.put("currentPage", postList.getNumber() + 1); // 0부터 시작하므로 +1
+        response.put("totalPages", postList.getTotalPages());
+        response.put("startPage", startPage);
+        response.put("endPage", endPage);
+
+        return response;
     }
 
 }

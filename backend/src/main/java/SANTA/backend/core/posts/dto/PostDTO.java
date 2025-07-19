@@ -57,7 +57,7 @@ public class PostDTO {
             postDTO.setFileAttached(postEntity.getFileAttached());
             for(PostFileEntity postFileEntity:postEntity.getPostFileEntityList()) {
                 originalFileNameList.add(postFileEntity.getOriginalFileName());
-                storedFileNameList.add(postFileEntity.getStoredFilename());
+                storedFileNameList.add(postFileEntity.getStoredFileName());
             }
             postDTO.setOriginalFilename(originalFileNameList);
             postDTO.setStoredFilename(storedFileNameList);
