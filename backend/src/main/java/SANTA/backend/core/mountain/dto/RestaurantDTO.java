@@ -5,6 +5,8 @@ public record RestaurantDTO(
         String name,
         String location,
         String imageUrl,
-        Long sequence
+        Long sequence,
+        Double mapX,
+        Double mapY
 ) {
 }

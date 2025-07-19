@@ -25,12 +25,18 @@ public abstract class BasePlaceEntity {
 
     protected String imageUrl;
 
-    protected BasePlaceEntity(Long id, Long sequence, String name, String location, String imageUrl) {
+    protected Double mapX;
+
+    protected Double mapY;
+
+    protected BasePlaceEntity(Long id, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
         this.id = id;
         this.sequence = sequence;
         this.name = name;
         this.location = location;
         this.imageUrl = imageUrl;
+        this.mapX = mapX;
+        this.mapY = mapY;
     }
 
 

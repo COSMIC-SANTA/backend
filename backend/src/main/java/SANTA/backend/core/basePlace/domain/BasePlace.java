@@ -16,12 +16,18 @@ public abstract class BasePlace {
 
     protected String imageUrl;
 
-    protected BasePlace(Long id, Long courseId, Long sequence, String name, String location, String imageUrl) {
+    protected Double mapX;
+
+    protected Double mapY;
+
+    protected BasePlace(Long id, Long courseId, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
         this.id = id;
         this.courseId = courseId;
         this.sequence = sequence;
         this.name = name;
         this.location = location;
         this.imageUrl = imageUrl;
+        this.mapX = mapX;
+        this.mapY = mapY;
     }
 }

@@ -65,12 +65,14 @@ public class ApiRequesterImpl implements APIRequester {
                             String name = node.path("title").asText();
                             String location = node.path("addr1").asText();
                             String imageUrl = node.path("firstimage").asText();
+                            Double mapX = node.path("mapX").asDouble();
+                            Double mapY = node.path("mapY").asDouble();
 
                             switch (typeId) {
-                                case RESTAURANT -> list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).build());
-                                case STAY -> list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).build());
-                                case CULTURAL_FACILITY -> list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).build());
-                                case TOUR_PLACE -> list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).build());
+                                case RESTAURANT -> list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
+                                case STAY -> list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
+                                case CULTURAL_FACILITY -> list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
+                                case TOUR_PLACE -> list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
                             }
                         }
                     }

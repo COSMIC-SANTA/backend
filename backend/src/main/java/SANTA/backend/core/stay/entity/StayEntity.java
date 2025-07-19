@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class StayEntity extends BasePlaceEntity {
 
     @Builder
-    protected StayEntity(Long id, Long sequence, String name, String location, String imageUrl) {
-        super(id, sequence, name, location, imageUrl);
+    protected StayEntity(Long id, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+        super(id, sequence, name, location, imageUrl, mapX, mapY);
     }
 
     public static StayEntity from(Stay stay) {
@@ -26,6 +26,8 @@ public class StayEntity extends BasePlaceEntity {
                 .name(stay.getName())
                 .location(stay.getLocation())
                 .imageUrl(stay.getImageUrl())
+                .mapX(stay.getMapX())
+                .mapY(stay.getMapY())
                 .build();
     }
 }
