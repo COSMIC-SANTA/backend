@@ -24,6 +24,10 @@ public class Mountain {
 
     private Interest interest;
 
+    private Double mapX;
+
+    private Double mapY;
+
     @Builder
     protected Mountain(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl, Interest interest) {
         this.id = id;

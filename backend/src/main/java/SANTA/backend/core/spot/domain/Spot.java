@@ -9,8 +9,8 @@ import lombok.Getter;
 public class Spot extends BasePlace {
 
     @Builder
-    protected Spot(Long id, Long courseId, Long sequence, String name, String location, String imageUrl) {
-        super(id, courseId, sequence, name, location, imageUrl);
+    protected Spot(Long id, Long courseId, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+        super(id, courseId, sequence, name, location, imageUrl, mapX, mapY);
     }
 
     public static Spot fromEntity(SpotEntity spotEntity) {
@@ -21,6 +21,8 @@ public class Spot extends BasePlace {
                 .name(spotEntity.getName())
                 .location(spotEntity.getLocation())
                 .imageUrl(spotEntity.getImageUrl())
+                .mapX(spotEntity.getMapX())
+                .mapY(spotEntity.getMapY())
                 .build();
     }
 }

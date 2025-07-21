@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class CafeEntity extends BasePlaceEntity {
 
     @Builder
-    protected CafeEntity(Long id, Long sequence, String name, String location, String imageUrl) {
-        super(id, sequence, name, location, imageUrl);
+    protected CafeEntity(Long id, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+        super(id, sequence, name, location, imageUrl, mapX, mapY);
     }
 
     public static CafeEntity from(Cafe cafe) {
@@ -26,6 +26,8 @@ public class CafeEntity extends BasePlaceEntity {
                 .name(cafe.getName())
                 .location(cafe.getLocation())
                 .imageUrl(cafe.getImageUrl())
+                .mapX(cafe.getMapX())
+                .mapY(cafe.getMapY())
                 .build();
     }
 }
