@@ -9,12 +9,12 @@ import lombok.Getter;
 @Table(name = "chatting_room_user")
 public class ChattingRoomUserEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue @Column(name = "chatting_room_user_id")
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id")
     UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    ChattingRoomEntity chatting;
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "chatting_room_id")
+    ChattingRoomEntity chattingRoom;
 }

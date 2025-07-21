@@ -11,16 +11,19 @@ import java.util.List;
 @Table(name = "chatting_room")
 public class ChattingRoomEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue @JoinColumn(name = "chatting_room_id")
     private Long id;
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "sub_title")
     private String subTitle;
 
+    @Column(name = "client_url")
     private String clientUrl;
 
-    @OneToMany
+    @OneToMany(mappedBy = "chattingRoom", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ChattingRoomUserEntity> chattingRoomUserEntities = new ArrayList<>();
 
 }
