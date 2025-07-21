@@ -23,7 +23,7 @@ public class ChattingRoomEntity {
     @Column(name = "client_url")
     private String clientUrl;
 
-    @OneToMany(mappedBy = "chattingRoom", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chattingRoomEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ChattingRoomUserEntity> chattingRoomUserEntities = new ArrayList<>();
 
 }

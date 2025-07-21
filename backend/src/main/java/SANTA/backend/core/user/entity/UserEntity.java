@@ -1,7 +1,7 @@
 package SANTA.backend.core.user.entity;
 
 import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
-import SANTA.backend.core.group.entity.UserGroupEntity;
+import SANTA.backend.core.group.entity.GroupUserEntity;
 import SANTA.backend.core.user.domain.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,10 +35,10 @@ public class UserEntity {
 
     private String location;
 
-    @OneToMany(mappedBy = "userEntity")
-    private List<UserGroupEntity> userGroups = new ArrayList<>();
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GroupUserEntity> userGroups = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChattingRoomUserEntity> userChattings = new ArrayList<>();
 
     @Embedded

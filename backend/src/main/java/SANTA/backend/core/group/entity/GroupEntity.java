@@ -28,7 +28,7 @@ public class GroupEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     Level level;
 
-    @OneToMany(mappedBy = "groupEntity")
-    List<UserGroupEntity> userGroupEntities = new ArrayList<>();
+    @OneToMany(mappedBy = "groupEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<GroupUserEntity> userGroupEntities = new ArrayList<>();
 
 }

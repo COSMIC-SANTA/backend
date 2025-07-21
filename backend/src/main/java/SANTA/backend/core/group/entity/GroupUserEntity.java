@@ -8,9 +8,9 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "USER_GROUP")
-public class UserGroupEntity extends BaseEntity{
+public class GroupUserEntity extends BaseEntity{
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue @Column(name = "group_user_id")
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

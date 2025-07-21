@@ -13,8 +13,8 @@ public class ChattingRoomUserEntity {
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id")
-    UserEntity user;
+    UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "chatting_room_id")
-    ChattingRoomEntity chattingRoom;
+    ChattingRoomEntity chattingRoomEntity;
 }
