@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Table(name = "group")
 public class GroupEntity extends BaseEntity {
 
     @Id @GeneratedValue

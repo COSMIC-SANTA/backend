@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "USER_GROUP")
+@Table(name = "group_user")
 public class GroupUserEntity extends BaseEntity{
 
     @Id @GeneratedValue @Column(name = "group_user_id")
