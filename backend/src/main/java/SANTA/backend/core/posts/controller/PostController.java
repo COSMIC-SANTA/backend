@@ -121,7 +121,7 @@ public class PostController {
         //pageable.getPageNumber();
         Page<PostDTO> postList = postService.paging(pageable);
 
-        int blockLimit = 3;
+        int blockLimit = 10;
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
         int endPage = ((startPage + blockLimit - 1) < postList.getTotalPages()) ? startPage + blockLimit - 1 : postList.getTotalPages();
 

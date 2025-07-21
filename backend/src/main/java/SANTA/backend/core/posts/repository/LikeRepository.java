@@ -9,7 +9,7 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
     Optional<LikeEntity> findByUserIdAndPost_PostId(Long userId, Long postId);
     Long countByPost_PostId(Long postId);
 
-    Optional<LikeEntity> findByUserIdAndPost_CommentId(Long userId, Long commentId);
+    Optional<LikeEntity> findByUserIdAndComment_CommentId(Long userId, Long commentId);
     Long countByComment_CommentId(Long commentId);
 }
 

@@ -36,13 +36,13 @@ public class LikeService {
 
     @Transactional
     public Long commentLike(Long userId, Long commmentId){
-        LikeEntity like = likeRepository.findByUserIdAndPost_CommentId(userId, commmentId).orElse(null);
+        LikeEntity like = likeRepository.findByUserIdAndComment_CommentId(userId, commmentId).orElse(null);
         if (like == null) {
             CommentEntity comment = commentRepository.findById(commmentId)
                     .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다"));
             LikeEntity newLike = LikeEntity.builder()
                     .userId(userId)
-                    .commentId(comment)
+                    .comment(comment)
                     .build();
             likeRepository.save(newLike);
         } else {
@@ -52,18 +52,18 @@ public class LikeService {
     }
 
 
-//    public void addLike(Long postId, Long userId) {
-//        PostEntity post = postRepository.findById(postId)
-//                .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
-//
-//        // 중복 좋아요 체크 등 필요하면 추가 가능
-//        LikeEntity like = LikeEntity.builder()
-//                .userId(userId)
-//                .post(post)
-//                .build();
-//
-//        likeRepository.save(like);
-//    }
+    public void addLike(Long postId, Long userId) {
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
+
+        // 중복 좋아요 체크 등 필요하면 추가 가능
+        LikeEntity like = LikeEntity.builder()
+                .userId(userId)
+                .post(post)
+                .build();
+
+        likeRepository.save(like);
+    }
 
     public long countLikes(Long postId) {
         return likeRepository.countByPost_PostId(postId);

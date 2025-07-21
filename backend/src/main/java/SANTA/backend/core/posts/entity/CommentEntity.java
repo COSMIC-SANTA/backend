@@ -23,12 +23,23 @@ public class CommentEntity extends PostBaseEntity{
     @Lob
     private String commentBody;
 
+    @Enumerated(EnumType.STRING)
+    private CommentType commentType;
+
     //Post : Comment - 1:N
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
-    @OneToMany(mappedBy="commentId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="parent_comment_id")
+    private CommentEntity parent;
+
+    @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL)
+    private List<CommentEntity> children=new ArrayList<>();
+
+    //좋아요
+    @OneToMany(mappedBy="comment")
     @Builder.Default
     private List<LikeEntity> likes =new ArrayList<>();
 
@@ -39,11 +50,13 @@ public class CommentEntity extends PostBaseEntity{
         this.postEntity=postEntity;
     }
 
-    public static CommentEntity toSaveEntity(CommentDTO commentDTO, PostEntity postEntity){
+    public static CommentEntity toSaveEntity(CommentDTO commentDTO, PostEntity postEntity, CommentEntity parent){
         return CommentEntity.builder()
                 .commentWriter(commentDTO.getCommentWriter())
                 .commentBody(commentDTO.getCommentBody())
                 .postEntity(postEntity)
+                .commentType(commentDTO.getCommentType())
+                .parent(parent)
                 .build();
     }
 }

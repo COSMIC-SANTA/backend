@@ -40,7 +40,7 @@ public class LikeController {
     }
 
     //댓글 좋아요 실행
-    @PostMapping("/{commentId}/like")
+    @PostMapping("/{commentId}/commentlike")
     public ResponseEntity<Map<String, Object>> commentLike(@PathVariable("commentId") Long commentId) {
         log.info("@@ 좋아요 추가 취소 실행");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -67,7 +67,7 @@ public class LikeController {
     }
 
     // 댓글 좋아요 개수 확인
-    @GetMapping("/{commentId}/like/count")
+    @GetMapping("/{commentId}/commentlike/count")
     public ResponseEntity<Map<String, Object>> commentcountLikes(@PathVariable("commentId") Long commentId) {
         long count = likeService.countcommentLikes(commentId);
 
