@@ -135,4 +135,10 @@ public class PostController {
         return response;
     }
 
+    @GetMapping("/bestposts")
+    public ResponseEntity<List<PostDTO>> getPopularPosts() {
+        List<PostDTO> posts = postService.findPopularPostsLast7Days();
+        return ResponseEntity.ok(posts);
+    }
+
 }

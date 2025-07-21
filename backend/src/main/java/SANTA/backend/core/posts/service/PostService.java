@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -127,7 +128,7 @@ public class PostService {
 
     public Page<PostDTO> paging(Pageable pageable) {
         int page= pageable.getPageNumber()-1;
-        int pageLimit=3; //한 페이지에 보여지는 글 갯수
+        int pageLimit=10; //한 페이지에 보여지는 글 갯수
         //한페이지당 3개씩 글을 보여주고 정렬 기준은 ID 기준으로 내림차순 정렬
         Page<PostEntity> postEntities= postRepository.findAll(PageRequest.of(page,pageLimit, Sort.by(Sort.Direction.DESC,"postId")));
 
@@ -135,4 +136,18 @@ public class PostService {
         Page<PostDTO> postDTOS= postEntities.map(post -> new PostDTO(post.getPostId(), post.getAuthor(), post.getTitle(), post.getPostHits(), post.getCreatedTime()));
         return postDTOS;
     }
+
+    @Transactional(readOnly = true)
+    public List<PostDTO> findPopularPostsLast7Days() {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+        Pageable topTen = PageRequest.of(0, 10); // 상위 10개
+        List<PostEntity> entities = postRepository.findTopPostsLast7Days(sevenDaysAgo, topTen);
+
+        List<PostDTO> dtoList = new ArrayList<>();
+        for (PostEntity entity : entities) {
+            dtoList.add(PostDTO.toPostDTO(entity));
+        }
+        return dtoList;
+    }
+
 }

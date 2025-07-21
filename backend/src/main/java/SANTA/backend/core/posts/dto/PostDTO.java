@@ -22,6 +22,7 @@ public class PostDTO {
     private String title;
     private String body;
     private int postHits; //조회수
+    private int likeCount; //좋아요 수
     private LocalDateTime postCreatedTime;
     private LocalDateTime postUpdatedTime;
 
@@ -49,6 +50,8 @@ public class PostDTO {
         postDTO.setPostHits(postEntity.getPostHits());
         postDTO.setPostCreatedTime(postEntity.getCreatedTime());
         postDTO.setPostUpdatedTime(postEntity.getUpdatedTime());
+        postDTO.setLikeCount(postEntity.getLikes().size());
+
         if(postEntity.getFileAttached()==0){
             postDTO.setFileAttached(postEntity.getFileAttached());
         }else{
