@@ -1,5 +1,6 @@
 package SANTA.backend.core.user.entity;
 
+import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
 import SANTA.backend.core.group.entity.UserGroupEntity;
 import SANTA.backend.core.user.domain.*;
 import jakarta.persistence.*;
@@ -36,6 +37,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userEntity")
     private List<UserGroupEntity> userGroups = new ArrayList<>();
+
+    @OneToMany
+    private List<ChattingRoomUserEntity> userChattings = new ArrayList<>();
 
     @Embedded
     Medal medal;
