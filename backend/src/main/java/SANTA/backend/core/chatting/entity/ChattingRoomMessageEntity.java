@@ -3,8 +3,8 @@ package SANTA.backend.core.chatting.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "chatting_message")
-public class ChattingMessageEntity {
+@Table(name = "chatting_room_message")
+public class ChattingRoomMessageEntity {
 
     @Id
     @GeneratedValue
@@ -13,7 +13,5 @@ public class ChattingMessageEntity {
     private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ChattingRoomEntity chattingRoom;
-
-    private
+    private ChattingRoomUserEntity chattingRoomUser;
 }
