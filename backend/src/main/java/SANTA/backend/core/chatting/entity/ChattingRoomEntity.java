@@ -8,19 +8,19 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(name = "chatting")
-public class ChattingEntity {
+@Table(name = "chatting_room")
+public class ChattingRoomEntity {
 
     @Id @GeneratedValue
     private Long id;
-
-    @OneToMany
-    private List<UserChattingEntity> userChattingEntities = new ArrayList<>();
 
     private String title;
 
     private String subTitle;
 
     private String clientUrl;
+
+    @OneToMany
+    private List<ChattingRoomUserEntity> chattingRoomUserEntities = new ArrayList<>();
 
 }
