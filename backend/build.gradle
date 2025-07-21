@@ -54,3 +54,11 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('copyConfig', Copy) {
+	from 'config'
+	include '*.yml'
+	into 'src/main/resources'
+}
+
+processResources.dependsOn('copyConfig')
