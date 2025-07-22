@@ -9,6 +9,7 @@ import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.User;
 import jakarta.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,21 +20,12 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ChattingService {
 
-    private final TopicExchange chattingExchange;
     private final ChattingRepository chattingRepository;
-    private final AmqpAdmin amqpAdmin;
     private final UserService userService;
     private final ChattingSender chattingSender;
-
-    public ChattingService(@Qualifier("chattingExchange")TopicExchange chattingExchange, ChattingRepository chattingRepository, AmqpAdmin amqpAdmin, UserService userService, ChattingSender chattingSender) {
-        this.chattingExchange = chattingExchange;
-        this.chattingRepository = chattingRepository;
-        this.amqpAdmin = amqpAdmin;
-        this.userService = userService;
-        this.chattingSender = chattingSender;
-    }
 
     @Transactional(readOnly = true)
     public List<ChattingRoomResponseDto> getChattingRoomList() {
