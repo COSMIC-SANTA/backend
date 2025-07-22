@@ -1,22 +1,62 @@
-package SANTA.backend.core.chatting.domain;
+    package SANTA.backend.core.chatting.domain;
 
-import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
-import lombok.Getter;
+    import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
+    import lombok.Builder;
+    import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.List;
+    import java.util.Optional;
 
-@Getter
-public class ChattingRoom {
+    @Getter
+    public class ChattingRoom {
 
-    private Long id;
+        private Long id;
 
-    private String title;
+        private String title;
 
-    private String subTitle;
+        private String subTitle;
 
-    private String clientUrl;
+        private String clientUrl;
 
-    private List<ChattingRoomUserEntity> chattingRoomUserEntities = new ArrayList<>();
+        private Integer userNum;
 
-}
+        private List<ChattingRoomUser> chattingRoomUsers = new ArrayList<>();
+
+        @Builder
+        private ChattingRoom(Long id, String title, String subTitle, String clientUrl, Integer userNum ,List<ChattingRoomUser> chattingRoomUsers) {
+            this.id = id;
+            this.title = title;
+            this.subTitle = subTitle;
+            this.clientUrl = clientUrl;
+            this.userNum = userNum;
+            this.chattingRoomUsers = chattingRoomUsers;
+        }
+
+        public static ChattingRoom from(ChattingRoomEntity chattingRoomEntity) {
+            return ChattingRoom.builder()
+                    .id(chattingRoomEntity.getId())
+                    .title(chattingRoomEntity.getTitle())
+                    .subTitle(chattingRoomEntity.getSubTitle())
+                    .clientUrl(chattingRoomEntity.getClientUrl())
+                    .userNum(chattingRoomEntity.getUserNum())
+                    .chattingRoomUsers(
+                            Optional.ofNullable(chattingRoomEntity.getChattingRoomUserEntities())
+                                    .orElse(Collections.emptyList())
+                                    .stream()
+                                    .map(ChattingRoomUser::from)
+                                    .toList()
+                    )
+                    .build();
+        }
+
+        public static ChattingRoom createChattingRoom(String title, String subTitle){
+            return ChattingRoom.builder()
+                    .title(title)
+                    .subTitle(subTitle)
+                    .userNum(0)
+                    .chattingRoomUsers(new ArrayList<>())
+                    .build();
+        }
+    }
