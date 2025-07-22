@@ -31,7 +31,7 @@ public class ChattingApi {
     }
 
     @MessageMapping("/{roomId}")
-    public void sendMessage(@PathVariable("roomId")Long roomId, @ResponseBody String message){
+    public void sendMessage(@PathVariable("roomId")Long roomId, @RequestBody String message){
         chattingService.sendMessage(roomId, message);
     }
 }
