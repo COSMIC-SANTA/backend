@@ -1,7 +1,5 @@
 package SANTA.backend.core.user.entity;
 
-import SANTA.backend.core.chatting.domain.ChattingRoom;
-import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
 import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
 import SANTA.backend.core.group.entity.GroupUserEntity;
 import SANTA.backend.core.user.domain.*;
@@ -11,10 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter//Entity는 setter설정XXX
@@ -65,8 +60,8 @@ public class UserEntity {
     private Level level;
 
     @Builder
-    public UserEntity(Long userId, String username, String password, String nickname, int age, Role role, String location, List<GroupUserEntity> groupUserEntities,
-                      List<ChattingRoomUserEntity> chattingRoomUserEntities, Medal medal, Interest interest, Level level) {
+    public UserEntity(Long userId, String username, String password, String nickname, int age, Role role, String location, Medal medal,
+                      Interest interest, Level level) {
         this.id = userId;
         this.username = username;
         this.password = password;
@@ -74,8 +69,6 @@ public class UserEntity {
         this.age = age;
         this.role = role;
         this.location = location;
-        this.groupUsers = groupUserEntities;
-        this.chattingRoomUsers = chattingRoomUserEntities;
         this.medal = medal;
         this.interest = interest;
         this.level = level;
@@ -89,20 +82,6 @@ public class UserEntity {
                 .age(user.getAge())
                 .role(user.getRole())
                 .location(user.getLocation())
-                .groupUserEntities(
-                        Optional.ofNullable(user.getGroupUsers())
-                                .orElse(Collections.emptyList())
-                                .stream()
-                                .map(GroupUserEntity::from)
-                                .collect(Collectors.toList())
-                )
-                .chattingRoomUserEntities(
-                        Optional.ofNullable(user.getChattingRoomUsers())
-                                .orElse(Collections.emptyList())
-                                .stream()
-                                .map(ChattingRoomUserEntity::from)
-                                .collect(Collectors.toList())
-                )
                 .medal(user.getMedal())
                 .interest(user.getInterest())
                 .level(user.getLevel())

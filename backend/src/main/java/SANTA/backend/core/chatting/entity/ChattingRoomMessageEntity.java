@@ -1,6 +1,5 @@
 package SANTA.backend.core.chatting.entity;
 
-import SANTA.backend.core.chatting.domain.ChattingRoomMessage;
 import SANTA.backend.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -26,16 +25,19 @@ public class ChattingRoomMessageEntity extends BaseEntity {
     private ChattingRoomUserEntity chattingRoomUser;
 
     @Builder
-    private ChattingRoomMessageEntity(Long id, String message, ChattingRoomUserEntity chattingRoomUserEntity) {
+    public ChattingRoomMessageEntity(Long id, String message, ChattingRoomUserEntity chattingRoomUserEntity) {
         this.id = id;
         this.message = message;
         this.chattingRoomUser = chattingRoomUserEntity;
     }
 
-    public static ChattingRoomMessageEntity from(ChattingRoomMessage chattingRoomMessage){
-        return ChattingRoomMessageEntity.builder()
-                .message(chattingRoomMessage.getMessage())
-                .chattingRoomUserEntity(ChattingRoomUserEntity.from(chattingRoomMessage.getChattingRoomUser()))
+    public static ChattingRoomMessageEntity createChattingRoomMessage(String message, ChattingRoomUserEntity chattingRoomUser){
+        ChattingRoomMessageEntity chattingRoomMessage = ChattingRoomMessageEntity.builder()
+                .message(message)
+                .chattingRoomUserEntity(chattingRoomUser)
                 .build();
+        chattingRoomUser.getChattingRoomMessageEntities().add(chattingRoomMessage);
+        chattingRoomMessage.chattingRoomUser = chattingRoomUser;
+        return chattingRoomMessage;
     }
 }

@@ -1,9 +1,6 @@
 package SANTA.backend.core.chatting.infra;
 
 import SANTA.backend.core.chatting.domain.ChattingRepository;
-import SANTA.backend.core.chatting.domain.ChattingRoom;
-import SANTA.backend.core.chatting.domain.ChattingRoomMessage;
-import SANTA.backend.core.chatting.domain.ChattingRoomUser;
 import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
 import SANTA.backend.core.chatting.entity.ChattingRoomMessageEntity;
 import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
@@ -22,43 +19,37 @@ public class ChattingJPARepository implements ChattingRepository {
     private final EntityManager em;
 
     @Override
-    public List<ChattingRoom> findAllRooms() {
-        List<ChattingRoomEntity> chattingRooms = em.createQuery("select cr from ChattingRoomEntity cr", ChattingRoomEntity.class).getResultList();
-        return chattingRooms.stream().map(ChattingRoom::from).toList();
+    public List<ChattingRoomEntity> findAllRooms() {
+        return em.createQuery("select cr from ChattingRoomEntity cr", ChattingRoomEntity.class).getResultList();
     }
 
     @Override
-    public List<ChattingRoom> findByName(String roomName) {
-        List<ChattingRoomEntity> chattingRooms = em.createQuery("select cr from ChattingRoomEntity cr where cr.title =: roomName", ChattingRoomEntity.class)
+    public List<ChattingRoomEntity> findByName(String roomName) {
+        return em.createQuery("select cr from ChattingRoomEntity cr where cr.title =: roomName", ChattingRoomEntity.class)
                 .setParameter("roomName", roomName)
                 .getResultList();
-        return chattingRooms.stream().map(ChattingRoom::from).toList();
     }
 
     @Override
-    public ChattingRoom saveChattingRoom(ChattingRoom chattingRoom) {
-        ChattingRoomEntity chattingRoomEntity = ChattingRoomEntity.from(chattingRoom);
+    public ChattingRoomEntity saveChattingRoom(ChattingRoomEntity chattingRoomEntity) {
         em.persist(chattingRoomEntity);
-        return ChattingRoom.from(chattingRoomEntity);
+        return chattingRoomEntity;
     }
 
     @Override
-    public ChattingRoom findById(Long chattingRoomId) {
-        ChattingRoomEntity chattingRoomEntity = em.find(ChattingRoomEntity.class, chattingRoomId);
-        return ChattingRoom.from(chattingRoomEntity);
+    public ChattingRoomEntity findById(Long chattingRoomId) {
+        return em.find(ChattingRoomEntity.class, chattingRoomId);
     }
 
     @Override
-    public ChattingRoomUser saveChattingRoomUser(ChattingRoomUser chattingRoomUser) {
-        ChattingRoomUserEntity chattingRoomUserEntity = ChattingRoomUserEntity.from(chattingRoomUser);
-        em.persist(chattingRoomUserEntity);
-        return ChattingRoomUser.from(chattingRoomUserEntity);
+    public ChattingRoomUserEntity saveChattingRoomUser(ChattingRoomUserEntity chattingRoomUser) {
+        em.persist(chattingRoomUser);
+        return chattingRoomUser;
     }
 
     @Override
-    public ChattingRoomUser findChattingRoomUser(Long roomId, Long userId) {
-        ChattingRoomUserEntity chattingRoomUserEntity =
-                em.createQuery("""
+    public ChattingRoomUserEntity findChattingRoomUser(Long roomId, Long userId) {
+        return em.createQuery("""
         select cru
         from ChattingRoomUserEntity cru
         join fetch cru.userEntity ue
@@ -68,20 +59,16 @@ public class ChattingJPARepository implements ChattingRepository {
                         .setParameter("userId", userId)
                         .setParameter("roomId", roomId)
                         .getSingleResult();
-
-        return ChattingRoomUser.from(chattingRoomUserEntity);
     }
 
     @Override
-    public void saveChattingRoomMessage(ChattingRoomMessage chattingRoomMessage) {
-        ChattingRoomMessageEntity chattingRoomMessageEntity = ChattingRoomMessageEntity.from(chattingRoomMessage);
+    public void saveChattingRoomMessage(ChattingRoomMessageEntity chattingRoomMessageEntity) {
         em.persist(chattingRoomMessageEntity);
     }
 
     @Override
-    public List<ChattingRoomMessage> getChattingRoomMessageByRoomId(Long roomId) {
-        List<ChattingRoomMessageEntity> chattings =
-                em.createQuery("""
+    public List<ChattingRoomMessageEntity> getChattingRoomMessageByRoomId(Long roomId) {
+        return em.createQuery("""
         select crm 
         from ChattingRoomMessageEntity crm
         join fetch crm.chattingRoomUser cru
@@ -90,7 +77,5 @@ public class ChattingJPARepository implements ChattingRepository {
         """, ChattingRoomMessageEntity.class)
                         .setParameter("roomId", roomId)
                         .getResultList();
-
-        return chattings.stream().map(ChattingRoomMessage::from).toList();
     }
 }

@@ -35,7 +35,6 @@ public class GroupUserEntity extends BaseEntity{
     public static GroupUserEntity from(GroupUser groupUser){
         return GroupUserEntity.builder()
                 .groupEntity(GroupEntity.from(groupUser.getGroup()))
-                .userEntity(UserEntity.from(groupUser.getUser()))
                 .build();
     }
 }

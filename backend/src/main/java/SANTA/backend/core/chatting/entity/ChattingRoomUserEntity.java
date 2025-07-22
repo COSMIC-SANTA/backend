@@ -1,7 +1,6 @@
 package SANTA.backend.core.chatting.entity;
 
-import SANTA.backend.core.chatting.domain.ChattingRoomMessage;
-import SANTA.backend.core.chatting.domain.ChattingRoomUser;
+import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.user.entity.UserEntity;
 import SANTA.backend.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -34,24 +33,22 @@ public class ChattingRoomUserEntity extends BaseEntity {
     List<ChattingRoomMessageEntity> chattingRoomMessageEntities = new ArrayList<>();
 
     @Builder
-    private ChattingRoomUserEntity(Long id, UserEntity userEntity, ChattingRoomEntity chattingRoomEntity, List<ChattingRoomMessageEntity> chattingRoomMessageEntities){
+    public ChattingRoomUserEntity(Long id, UserEntity userEntity, ChattingRoomEntity chattingRoomEntity, List<ChattingRoomMessageEntity> chattingRoomMessageEntities){
         this.id = id;
         this.userEntity = userEntity;
         this.chattingRoomEntity = chattingRoomEntity;
         this.chattingRoomMessageEntities = chattingRoomMessageEntities;
     }
 
-    public static ChattingRoomUserEntity from(ChattingRoomUser chattingRoomUser){
-        return ChattingRoomUserEntity.builder()
-                .userEntity(UserEntity.from(chattingRoomUser.getUser()))
-                .chattingRoomEntity(ChattingRoomEntity.from(chattingRoomUser.getChattingRoom()))
-                .chattingRoomMessageEntities(
-                        Optional.ofNullable(chattingRoomUser.getChattingRoomMessages())
-                                .orElse(Collections.emptyList())
-                                .stream()
-                                .map(ChattingRoomMessageEntity::from)
-                                .collect(Collectors.toList())
-                )
+    //연관관계 편의 메서드
+    public static ChattingRoomUserEntity createChattingRoomUser(UserEntity userEntity, ChattingRoomEntity chattingRoom){
+        ChattingRoomUserEntity chattingRoomUser = ChattingRoomUserEntity.builder()
+                .userEntity(userEntity)
+                .chattingRoomEntity(chattingRoom)
                 .build();
+        userEntity.getChattingRoomUsers().add(chattingRoomUser);
+        chattingRoom.getChattingRoomUserEntities().add(chattingRoomUser);
+        return chattingRoomUser;
     }
+
 }

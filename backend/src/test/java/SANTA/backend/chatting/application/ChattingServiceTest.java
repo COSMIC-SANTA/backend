@@ -1,20 +1,15 @@
 package SANTA.backend.chatting.application;
 
 import SANTA.backend.context.ServiceContext;
-import SANTA.backend.core.chatting.domain.ChattingRoom;
 import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
-import io.jsonwebtoken.impl.io.Streams;
-import org.assertj.core.api.Assertions;
+import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
+import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
+import SANTA.backend.core.user.domain.User;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -39,7 +34,7 @@ public class ChattingServiceTest extends ServiceContext {
             List<ChattingRoomResponseDto> chattingRoomList = chattingService.getChattingRoomList();
 
             //then
-            Assertions.assertThat(chattingRoomList).size().isEqualTo(2);
+            assertThat(chattingRoomList).size().isEqualTo(2);
         }
 
         @Test @Transactional
@@ -58,8 +53,8 @@ public class ChattingServiceTest extends ServiceContext {
             List<ChattingRoomResponseDto> chattingRoomByName = chattingService.getChattingRoomByName(title);
 
             //then
-            Assertions.assertThat(chattingRoomByName).extracting(ChattingRoomResponseDto::chattingRoomName).containsExactlyInAnyOrder("title1");
-            Assertions.assertThat(chattingRoomByName).size().isEqualTo(1);
+            assertThat(chattingRoomByName).extracting(ChattingRoomResponseDto::chattingRoomName).containsExactlyInAnyOrder("title1");
+            assertThat(chattingRoomByName).size().isEqualTo(1);
         }
 
     }
@@ -73,10 +68,39 @@ public class ChattingServiceTest extends ServiceContext {
             String subTitle = "chattingSubTitle";
 
             //when
-            ChattingRoom chattingRoom = chattingService.createChattingRoom(title, subTitle);
+            ChattingRoomEntity chattingRoom = chattingService.createChattingRoom(title, subTitle);
 
             //then
-            assertThat(chattingRoom).extracting(ChattingRoom::getId).isNotNull();
+            assertThat(chattingRoom).extracting(ChattingRoomEntity::getId).isNotNull();
+        }
+    }
+
+    @Nested
+    class 채팅방_참가_테스트{
+        @Test @Transactional
+        void 채팅방에_참가할_수_있다(){
+            //given
+            String username = "user1";
+            String password = "password1";
+            String nickName = "nickName";
+            User user = User.registerUser(username,password,nickName);
+
+            String title = "title1";
+            String subTitle = "subTitle1";
+
+            //when
+            User registerUser = userService.register(user);
+            ChattingRoomEntity chattingRoom = chattingService.createChattingRoom(title, subTitle);
+
+            Long chattingRoomId = chattingRoom.getId();
+            Long myId = registerUser.getUserId();
+            ChattingRoomUserEntity chattingRoomUser = chattingService.participateChattingRoom(chattingRoomId, myId);
+
+            //then
+            assertThat(chattingRoomUser).extracting(ChattingRoomUserEntity::getChattingRoomEntity).isEqualTo(chattingRoom);
+            assertThat(chattingRoomUser.getUserEntity()).isNotNull();
+            assertThat(chattingRoomUser.getUserEntity().getId()).isEqualTo(myId);
+            System.out.println(chattingRoomUser.getUserEntity().getId());
         }
     }
 }

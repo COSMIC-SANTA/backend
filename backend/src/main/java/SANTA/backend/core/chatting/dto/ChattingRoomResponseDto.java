@@ -1,6 +1,6 @@
 package SANTA.backend.core.chatting.dto;
 
-import SANTA.backend.core.chatting.domain.ChattingRoom;
+import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
 
 public record ChattingRoomResponseDto(
         Long id,
@@ -8,7 +8,7 @@ public record ChattingRoomResponseDto(
         Integer memberNum
 ) {
 
-    public static ChattingRoomResponseDto fromDomain(ChattingRoom chattingRoom){
+    public static ChattingRoomResponseDto fromEntity(ChattingRoomEntity chattingRoom){
         return new ChattingRoomResponseDto(chattingRoom.getId(), chattingRoom.getTitle(), chattingRoom.getUserNum());
     }
 }

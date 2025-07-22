@@ -1,21 +1,25 @@
 package SANTA.backend.core.chatting.domain;
 
+import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
+import SANTA.backend.core.chatting.entity.ChattingRoomMessageEntity;
+import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
+
 import java.util.List;
 
 public interface ChattingRepository {
-    List<ChattingRoom> findAllRooms();
+    List<ChattingRoomEntity> findAllRooms();
 
-    List<ChattingRoom> findByName(String roomName);
+    List<ChattingRoomEntity> findByName(String roomName);
 
-    ChattingRoom saveChattingRoom(ChattingRoom chattingRoom);
+    ChattingRoomEntity saveChattingRoom(ChattingRoomEntity chattingRoom);
 
-    ChattingRoom findById(Long chattingRoomId);
+    ChattingRoomEntity findById(Long chattingRoomId);
 
-    ChattingRoomUser saveChattingRoomUser(ChattingRoomUser chattingRoomUser);
+    ChattingRoomUserEntity saveChattingRoomUser(ChattingRoomUserEntity chattingRoomUser);
 
-    ChattingRoomUser findChattingRoomUser(Long roomId, Long userId);
+    ChattingRoomUserEntity findChattingRoomUser(Long roomId, Long userId);
 
-    void saveChattingRoomMessage(ChattingRoomMessage chattingRoomMessage);
+    void saveChattingRoomMessage(ChattingRoomMessageEntity chattingRoomMessage);
 
-    List<ChattingRoomMessage> getChattingRoomMessageByRoomId(Long roomId);
+    List<ChattingRoomMessageEntity> getChattingRoomMessageByRoomId(Long roomId);
 }

@@ -10,9 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -50,20 +48,13 @@ public class GroupEntity extends BaseEntity {
         this.groupUserEntities = groupUserEntities;
     }
 
-    public static GroupEntity from(Group group){
+    public static GroupEntity from(Group group) {
         return GroupEntity.builder()
                 .location(group.getLocation())
                 .title(group.getTitle())
                 .age(group.getAge())
                 .interest(group.getInterest())
                 .level(group.getLevel())
-                .groupUserEntities(
-                        Optional.ofNullable(group.getGroupUsers())
-                                .orElse(Collections.emptyList())
-                                .stream()
-                                .map(GroupUserEntity::from)
-                                .toList()
-                )
                 .build();
     }
 }
