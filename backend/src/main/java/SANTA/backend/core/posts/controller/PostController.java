@@ -37,11 +37,11 @@ public class PostController {
     @GetMapping("/save")
     public String saveForm(){
 
-        return "save";
+        return "saveChattingRoom";
     }
-    /*@PostMapping("/save")
+    /*@PostMapping("/saveChattingRoom")
     @ResponseBody
-    public Map<String, List<Map<String, Object>>> save(@RequestBody PostDTO postDTO) {
+    public Map<String, List<Map<String, Object>>> saveChattingRoom(@RequestBody PostDTO postDTO) {
         // 현재 로그인 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -49,7 +49,7 @@ public class PostController {
         User user = userService.findByUsername(username);
 
         // 게시글 저장
-        PostDTO savedPost = postService.save(postDTO, user);
+        PostDTO savedPost = postService.saveChattingRoom(postDTO, user);
 
         // JSON 응답 형태 구성
         Map<String, Object> postData = new HashMap<>();
