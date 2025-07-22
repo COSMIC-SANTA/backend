@@ -28,7 +28,7 @@ public class PostService {
 
     public PostDTO save(PostDTO postDTO, User user) {
         PostEntity postEntity = PostEntity.tosaveEntity(postDTO, user.getUserId(), user.getNickname());
-        PostEntity savedEntity = postRepository.save(postEntity); // save 후 DB에 반영된 엔티티 받음
+        PostEntity savedEntity = postRepository.save(postEntity); // saveChattingRoom 후 DB에 반영된 엔티티 받음
         return PostDTO.toPostDTO(savedEntity); // 다시 DTO로 변환해서 반환
     }
 
