@@ -1,14 +1,20 @@
 package SANTA.backend.core.chatting.entity;
 
+import SANTA.backend.core.chatting.domain.ChattingRoomMessage;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "chatting_room_message")
+@NoArgsConstructor
 public class ChattingRoomMessageEntity {
 
     @Id
-    @GeneratedValue @Column(name = "chatting_room_message_id")
+    @GeneratedValue
+    @Column(name = "chatting_room_message_id")
     private Long id;
 
     @Column(name = "message")
@@ -17,4 +23,18 @@ public class ChattingRoomMessageEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatting_room_user_id")
     private ChattingRoomUserEntity chattingRoomUser;
+
+    @Builder
+    private ChattingRoomMessageEntity(Long id, String message, ChattingRoomUserEntity chattingRoomUserEntity) {
+        this.id = id;
+        this.message = message;
+        this.chattingRoomUser = chattingRoomUserEntity;
+    }
+
+    public static ChattingRoomMessageEntity from(ChattingRoomMessage chattingRoomMessage){
+        return ChattingRoomMessageEntity.builder()
+                .message(chattingRoomMessage.getMessage())
+                .chattingRoomUserEntity(ChattingRoomUserEntity.from(chattingRoomMessage.getChattingRoomUser()))
+                .build();
+    }
 }
