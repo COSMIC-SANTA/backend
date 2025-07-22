@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -49,7 +50,7 @@ public class ChattingRoomUserEntity extends BaseEntity {
                                 .orElse(Collections.emptyList())
                                 .stream()
                                 .map(ChattingRoomMessageEntity::from)
-                                .toList()
+                                .collect(Collectors.toList())
                 )
                 .build();
     }

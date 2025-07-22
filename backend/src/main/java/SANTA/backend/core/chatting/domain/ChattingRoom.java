@@ -9,6 +9,7 @@
     import java.util.Collections;
     import java.util.List;
     import java.util.Optional;
+    import java.util.stream.Collectors;
 
     @Getter
     public class ChattingRoom {
@@ -58,7 +59,7 @@
                                     .orElse(Collections.emptyList())
                                     .stream()
                                     .map(ChattingRoomUser::from)
-                                    .toList()
+                                    .collect(Collectors.toList())
                     )
                     .build();
         }
