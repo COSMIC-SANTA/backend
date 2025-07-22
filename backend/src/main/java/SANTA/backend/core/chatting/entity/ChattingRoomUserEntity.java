@@ -3,6 +3,7 @@ package SANTA.backend.core.chatting.entity;
 import SANTA.backend.core.chatting.domain.ChattingRoomMessage;
 import SANTA.backend.core.chatting.domain.ChattingRoomUser;
 import SANTA.backend.core.user.entity.UserEntity;
+import SANTA.backend.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Entity
 @Table(name = "chatting_room_user")
 @NoArgsConstructor
-public class ChattingRoomUserEntity {
+public class ChattingRoomUserEntity extends BaseEntity {
 
     @Id @GeneratedValue @Column(name = "chatting_room_user_id")
     Long id;
