@@ -2,8 +2,10 @@ package SANTA.backend.core.chatting.infra;
 
 import SANTA.backend.core.chatting.domain.ChattingRepository;
 import SANTA.backend.core.chatting.domain.ChattingRoom;
+import SANTA.backend.core.chatting.domain.ChattingRoomMessage;
 import SANTA.backend.core.chatting.domain.ChattingRoomUser;
 import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
+import SANTA.backend.core.chatting.entity.ChattingRoomMessageEntity;
 import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -51,5 +53,44 @@ public class ChattingJPARepository implements ChattingRepository {
         ChattingRoomUserEntity chattingRoomUserEntity = ChattingRoomUserEntity.from(chattingRoomUser);
         em.persist(chattingRoomUserEntity);
         return ChattingRoomUser.from(chattingRoomUserEntity);
+    }
+
+    @Override
+    public ChattingRoomUser findChattingRoomUser(Long roomId, Long userId) {
+        ChattingRoomUserEntity chattingRoomUserEntity =
+                em.createQuery("""
+        select cru
+        from ChattingRoomUserEntity cru
+        join fetch cru.userEntity ue
+        join fetch cru.chattingRoomEntity cr
+        where ue.id = :userId and cr.id = :roomId
+        """, ChattingRoomUserEntity.class)
+                        .setParameter("userId", userId)
+                        .setParameter("roomId", roomId)
+                        .getSingleResult();
+
+        return ChattingRoomUser.from(chattingRoomUserEntity);
+    }
+
+    @Override
+    public void saveChattingRoomMessage(ChattingRoomMessage chattingRoomMessage) {
+        ChattingRoomMessageEntity chattingRoomMessageEntity = ChattingRoomMessageEntity.from(chattingRoomMessage);
+        em.persist(chattingRoomMessageEntity);
+    }
+
+    @Override
+    public List<ChattingRoomMessage> getChattingRoomMessageByRoomId(Long roomId) {
+        List<ChattingRoomMessageEntity> chattings =
+                em.createQuery("""
+        select crm 
+        from ChattingRoomMessageEntity crm
+        join fetch crm.chattingRoomUser cru
+        join fetch cru.chattingRoomEntity cre
+        where cre.id = :roomId
+        """, ChattingRoomMessageEntity.class)
+                        .setParameter("roomId", roomId)
+                        .getResultList();
+
+        return chattings.stream().map(ChattingRoomMessage::from).toList();
     }
 }
