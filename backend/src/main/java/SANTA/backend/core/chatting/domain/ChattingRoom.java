@@ -4,6 +4,7 @@
     import lombok.Builder;
     import lombok.Getter;
 
+    import java.time.LocalDateTime;
     import java.util.ArrayList;
     import java.util.Collections;
     import java.util.List;
@@ -22,15 +23,24 @@
 
         private Integer userNum;
 
+        private LocalDateTime createdAt;
+
+        private LocalDateTime modifiedAt;
+
         private List<ChattingRoomUser> chattingRoomUsers = new ArrayList<>();
 
+        private static String clientBaseUrl = "spring/getMessage/";
+
         @Builder
-        private ChattingRoom(Long id, String title, String subTitle, String clientUrl, Integer userNum ,List<ChattingRoomUser> chattingRoomUsers) {
+        private ChattingRoom(Long id, String title, String subTitle, String clientUrl, Integer userNum ,LocalDateTime createdAt, LocalDateTime modifiedAt,
+                             List<ChattingRoomUser> chattingRoomUsers) {
             this.id = id;
             this.title = title;
             this.subTitle = subTitle;
             this.clientUrl = clientUrl;
             this.userNum = userNum;
+            this.createdAt = createdAt;
+            this.modifiedAt = modifiedAt;
             this.chattingRoomUsers = chattingRoomUsers;
         }
 
@@ -41,6 +51,8 @@
                     .subTitle(chattingRoomEntity.getSubTitle())
                     .clientUrl(chattingRoomEntity.getClientUrl())
                     .userNum(chattingRoomEntity.getUserNum())
+                    .createdAt(chattingRoomEntity.getCreatedAt())
+                    .modifiedAt(chattingRoomEntity.getModifiedAt())
                     .chattingRoomUsers(
                             Optional.ofNullable(chattingRoomEntity.getChattingRoomUserEntities())
                                     .orElse(Collections.emptyList())
@@ -58,5 +70,9 @@
                     .userNum(0)
                     .chattingRoomUsers(new ArrayList<>())
                     .build();
+        }
+
+        public String getClientUrl(){
+            return clientBaseUrl+id;
         }
     }
