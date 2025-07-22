@@ -12,4 +12,10 @@ public interface ChattingRepository {
     ChattingRoom findById(Long chattingRoomId);
 
     ChattingRoomUser saveChattingRoomUser(ChattingRoomUser chattingRoomUser);
+
+    ChattingRoomUser findChattingRoomUser(Long roomId, Long userId);
+
+    void saveChattingRoomMessage(ChattingRoomMessage chattingRoomMessage);
+
+    List<ChattingRoomMessage> getChattingRoomMessageByRoomId(Long roomId);
 }
