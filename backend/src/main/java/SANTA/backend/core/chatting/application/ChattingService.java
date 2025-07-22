@@ -4,6 +4,7 @@ import SANTA.backend.core.chatting.domain.ChattingRepository;
 import SANTA.backend.core.chatting.domain.ChattingRoom;
 import SANTA.backend.core.chatting.domain.ChattingRoomMessage;
 import SANTA.backend.core.chatting.domain.ChattingRoomUser;
+import SANTA.backend.core.chatting.dto.ChattingRoomMessageResponseDto;
 import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.User;
@@ -20,14 +21,14 @@ import java.util.List;
 @Slf4j
 public class ChattingService {
 
-    private final TopicExchange topicExchange;
+    private final TopicExchange chattingExchange;
     private final ChattingRepository chattingRepository;
     private final AmqpAdmin amqpAdmin;
     private final UserService userService;
     private final ChattingSender chattingSender;
 
-    public ChattingService(@Qualifier("chattingExchange")TopicExchange topicExchange, ChattingRepository chattingRepository, AmqpAdmin amqpAdmin, UserService userService, ChattingSender chattingSender) {
-        this.topicExchange = topicExchange;
+    public ChattingService(@Qualifier("chattingExchange")TopicExchange chattingExchange, ChattingRepository chattingRepository, AmqpAdmin amqpAdmin, UserService userService, ChattingSender chattingSender) {
+        this.chattingExchange = chattingExchange;
         this.chattingRepository = chattingRepository;
         this.amqpAdmin = amqpAdmin;
         this.userService = userService;
@@ -50,7 +51,6 @@ public class ChattingService {
     public ChattingRoom createChattingRoom(String title, @Nullable String subTitle) {
         ChattingRoom chattingRoom = ChattingRoom.createChattingRoom(title, subTitle);
         ChattingRoom savedChattingRoom = chattingRepository.saveChattingRoom(chattingRoom);
-        createRoomQueue(savedChattingRoom.getTitle(), savedChattingRoom.getId());
         log.warn("만들어진 채팅방의 id ={}",savedChattingRoom.getId());
         return savedChattingRoom;
     }
@@ -64,20 +64,17 @@ public class ChattingService {
     }
 
     @Transactional
-    public void sendMessage(Long roomId, String message){
-        ChattingRoomMessage chattingRoomMessage = ChattingRoomMessage.createChattingRoomMessage(message,)
-
+    public void sendMessage(Long roomId, Long userId, String message){
+        ChattingRoomUser chattingRoomUser = chattingRepository.findChattingRoomUser(roomId,userId);
+        ChattingRoomMessage chattingRoomMessage = ChattingRoomMessage.createChattingRoomMessage(message,chattingRoomUser);
+        //Todo 채팅메시지를 Sender를 통해 subscriber들에게 publish
+        chattingSender.sendMessage(roomId,chattingRoomMessage);
+        chattingRepository.saveChattingRoomMessage(chattingRoomMessage);
     }
 
-    private void createRoomQueue(String title, Long roomId) {
-        String routingKey = roomId.toString();
-        Queue newQueue = QueueBuilder.durable(title).build();
-        bindQueue(newQueue,routingKey);
-    }
-
-    private void bindQueue(Queue newQueue,String routingKey) {
-        Binding binding = BindingBuilder.bind(newQueue).to(topicExchange).with(routingKey);
-        amqpAdmin.declareQueue(newQueue);
-        amqpAdmin.declareBinding(binding);
+    @Transactional
+    public List<ChattingRoomMessageResponseDto> getChattingRoomMessageByRoomId(Long roomId) {
+        List<ChattingRoomMessage> chattingRoomMessages = chattingRepository.getChattingRoomMessageByRoomId(roomId);
+        return chattingRoomMessages.stream().map(ChattingRoomMessageResponseDto::from).toList();
     }
 }
