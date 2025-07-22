@@ -1,5 +1,7 @@
 package SANTA.backend.context;
 
+import SANTA.backend.core.chatting.application.ChattingService;
+import SANTA.backend.core.chatting.domain.ChattingRepository;
 import SANTA.backend.core.mountain.application.BannerService;
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.domain.MountainRepository;
@@ -38,4 +40,10 @@ public abstract class ServiceContext {
 
     @Autowired
     protected MountainInfoServiceRequester mountainInfoServiceRequester;
+
+    @Autowired
+    protected ChattingService chattingService;
+
+    @Autowired
+    protected ChattingRepository chattingRepository;
 }
