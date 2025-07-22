@@ -1,6 +1,7 @@
 package SANTA.backend.core.chatting.application;
 
 import SANTA.backend.core.chatting.domain.ChattingRepository;
+import SANTA.backend.core.chatting.dto.ChattingRoomMessageDto;
 import SANTA.backend.core.chatting.dto.ChattingRoomMessageResponseDto;
 import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
 import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
@@ -58,8 +59,9 @@ public class ChattingService {
     public void sendMessage(Long roomId, Long userId, String message){
         ChattingRoomUserEntity chattingRoomUser = chattingRepository.findChattingRoomUser(roomId,userId);
         ChattingRoomMessageEntity chattingRoomMessage = ChattingRoomMessageEntity.createChattingRoomMessage(message,chattingRoomUser);
+        ChattingRoomMessageDto chattingRoomMessageDto = ChattingRoomMessageDto.from(chattingRoomMessage);
         //Todo 채팅메시지를 Sender를 통해 subscriber들에게 publish
-        chattingSender.sendMessage(roomId,chattingRoomMessage);
+        chattingSender.sendMessage(roomId,chattingRoomMessageDto);
         chattingRepository.saveChattingRoomMessage(chattingRoomMessage);
     }
 

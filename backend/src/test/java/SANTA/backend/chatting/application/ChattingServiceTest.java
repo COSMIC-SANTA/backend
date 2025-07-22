@@ -1,10 +1,12 @@
 package SANTA.backend.chatting.application;
 
 import SANTA.backend.context.ServiceContext;
+import SANTA.backend.core.chatting.dto.ChattingRoomMessageResponseDto;
 import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
 import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
 import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
 import SANTA.backend.core.user.domain.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,6 +103,37 @@ public class ChattingServiceTest extends ServiceContext {
             assertThat(chattingRoomUser.getUserEntity()).isNotNull();
             assertThat(chattingRoomUser.getUserEntity().getId()).isEqualTo(myId);
             System.out.println(chattingRoomUser.getUserEntity().getId());
+        }
+    }
+
+    @Nested
+    class 채팅_전송_테스트{
+
+        @Test
+        void 채팅방에서_채팅을_전송할_수_있다(){
+            //given
+            String username = "user1";
+            String password = "password1";
+            String nickName = "nickName";
+            User user = User.registerUser(username,password,nickName);
+
+            String title = "title1";
+            String subTitle = "subTitle1";
+
+            //when
+            User registerUser = userService.register(user);
+            ChattingRoomEntity chattingRoom = chattingService.createChattingRoom(title, subTitle);
+
+            Long chattingRoomId = chattingRoom.getId();
+            Long myId = registerUser.getUserId();
+            ChattingRoomUserEntity chattingRoomUser = chattingService.participateChattingRoom(chattingRoomId, myId);
+
+            String message = "This is message!";
+            chattingService.sendMessage(chattingRoomId,myId,message);
+
+            //then
+            List<ChattingRoomMessageResponseDto> chattingRoomMessageByRoomId = chattingService.getChattingRoomMessageByRoomId(chattingRoomId);
+            assertThat(chattingRoomMessageByRoomId).size().isEqualTo(1);
         }
     }
 }
