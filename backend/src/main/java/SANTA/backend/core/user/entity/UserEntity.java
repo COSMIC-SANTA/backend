@@ -1,5 +1,7 @@
 package SANTA.backend.core.user.entity;
 
+import SANTA.backend.core.chatting.domain.ChattingRoom;
+import SANTA.backend.core.chatting.entity.ChattingRoomEntity;
 import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
 import SANTA.backend.core.group.entity.GroupUserEntity;
 import SANTA.backend.core.user.domain.*;
@@ -9,7 +11,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter//Entity는 setter설정XXX
@@ -18,7 +23,8 @@ import java.util.List;
 public class UserEntity {
 
     @Id
-    @GeneratedValue @Column(name = "user_id")
+    @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "username")
@@ -33,7 +39,8 @@ public class UserEntity {
     @Column(name = "age")
     private int age;
 
-    @Enumerated(EnumType.STRING) @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
     @Column(name = "location")
@@ -45,18 +52,21 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChattingRoomUserEntity> chattingRoomUsers = new ArrayList<>();
 
-    @Embedded @Column(name = "medal")
+    @Embedded
+    @Column(name = "medal")
     Medal medal;
 
-    @Enumerated(EnumType.STRING) @Column(name = "interest")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "interest")
     private Interest interest;
 
-    @Enumerated(EnumType.STRING) @Column(name = "level")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "level")
     private Level level;
 
     @Builder
     public UserEntity(Long userId, String username, String password, String nickname, int age, Role role, String location, List<GroupUserEntity> groupUserEntities,
-                      List<ChattingRoomUserEntity> chattingRoomEntities, Medal medal, Interest interest, Level level) {
+                      List<ChattingRoomUserEntity> chattingRoomUserEntities, Medal medal, Interest interest, Level level) {
         this.id = userId;
         this.username = username;
         this.password = password;
@@ -65,13 +75,13 @@ public class UserEntity {
         this.role = role;
         this.location = location;
         this.groupUsers = groupUserEntities;
-        this.chattingRoomUsers= chattingRoomEntities;
+        this.chattingRoomUsers = chattingRoomUserEntities;
         this.medal = medal;
         this.interest = interest;
         this.level = level;
     }
 
-    public static UserEntity from(User user){
+    public static UserEntity from(User user) {
         return UserEntity.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
@@ -79,7 +89,20 @@ public class UserEntity {
                 .age(user.getAge())
                 .role(user.getRole())
                 .location(user.getLocation())
-                .groupUserEntities(user.getGroupUsers().stream().map(GroupUserEntity::from).toList())
+                .groupUserEntities(
+                        Optional.ofNullable(user.getGroupUsers())
+                                .orElse(Collections.emptyList())
+                                .stream()
+                                .map(GroupUserEntity::from)
+                                .collect(Collectors.toList())
+                )
+                .chattingRoomUserEntities(
+                        Optional.ofNullable(user.getChattingRoomUsers())
+                                .orElse(Collections.emptyList())
+                                .stream()
+                                .map(ChattingRoomUserEntity::from)
+                                .collect(Collectors.toList())
+                )
                 .medal(user.getMedal())
                 .interest(user.getInterest())
                 .level(user.getLevel())
