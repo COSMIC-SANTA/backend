@@ -29,24 +29,21 @@ public class ChattingRoomEntity extends BaseEntity {
     @Column(name = "sub_title")
     private String subTitle;
 
-    @Column(name = "client_url")
-    private String clientUrl;
+    @Column(name = "client_bawe_url")
+    private String clienBasetUrl;
 
     @Column(name = "user_num")
     private Integer userNum;
-
-    @Transient
-    private static String clientBaseUrl = "/spring/getMessage/";
 
     @OneToMany(mappedBy = "chattingRoomEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ChattingRoomUserEntity> chattingRoomUserEntities = new ArrayList<>();
 
     @Builder
-    public ChattingRoomEntity(Long id, String title, String subTitle, String clientUrl, Integer userNum, List<ChattingRoomUserEntity> chattingRoomUserEntities) {
+    public ChattingRoomEntity(Long id, String title, String subTitle, String clientBaseUrl, Integer userNum, List<ChattingRoomUserEntity> chattingRoomUserEntities) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
-        this.clientUrl = clientUrl;
+        this.clienBasetUrl = clientBaseUrl;
         this.userNum = userNum;
         this.chattingRoomUserEntities = chattingRoomUserEntities;
     }
@@ -57,10 +54,11 @@ public class ChattingRoomEntity extends BaseEntity {
                 .subTitle(subTitle)
                 .userNum(0)
                 .chattingRoomUserEntities(new ArrayList<>())
+                .clientBaseUrl("/getMessage/")
                 .build();
     }
 
     public String getClientUrl(){
-        return clientBaseUrl+id;
+        return this.clienBasetUrl+id;
     }
 }
