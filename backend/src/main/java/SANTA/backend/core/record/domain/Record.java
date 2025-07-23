@@ -29,7 +29,7 @@ public class Record {
     public static Record fromEntity(RecordEntity recordEntity) {
         return Record.builder()
                 .id(recordEntity.getRecordId())
-                .userId(recordEntity.getUser().getUserId())
+                .userId(recordEntity.getUser().getId())
                 .distance(recordEntity.getDistance())
                 .step(recordEntity.getStep())
                 .build();

@@ -31,7 +31,7 @@ public class Plan {
     public static Plan fromEntity(PlanEntity planEntity) {
         return Plan.builder()
                 .id(planEntity.getId())
-                .userId(planEntity.getUser().getUserId())
+                .userId(planEntity.getUser().getId())
                 .courseId(planEntity.getCourse().getId())
                 .state(planEntity.getState())
                 .targetDate(planEntity.getTargetDate())

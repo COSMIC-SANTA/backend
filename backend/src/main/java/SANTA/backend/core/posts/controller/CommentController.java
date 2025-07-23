@@ -20,9 +20,9 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
 
-    // 댓글 저장 (POST /api/community/comment/save)
-//    @PostMapping("/save")
-//    public ResponseEntity<?> save(@RequestBody CommentDTO commentDTO) {
+    // 댓글 저장 (POST /api/community/comment/saveChattingRoom)
+//    @PostMapping("/saveChattingRoom")
+//    public ResponseEntity<?> saveChattingRoom(@RequestBody CommentDTO commentDTO) {
 //        // 로그인 사용자 이름 가져오기
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        String username = authentication.getName();
@@ -33,7 +33,7 @@ public class CommentController {
 //        // 사용자 닉네임을 댓글 작성자(commentWriter)에 설정
 //        commentDTO.setCommentWriter(user.getNickname());
 //
-//        Long saveResult = commentService.save(commentDTO);
+//        Long saveResult = commentService.saveChattingRoom(commentDTO);
 //        if (saveResult != null) {
 //            List<CommentDTO> commentDTOList = commentService.findAll(commentDTO.getPostId());
 //            return ResponseEntity.ok(commentDTOList);

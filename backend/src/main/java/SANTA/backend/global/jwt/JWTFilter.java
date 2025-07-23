@@ -49,7 +49,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         //토큰에서 username과 role 획득
-        String id=jwtUtil.getUserId(token);
+        Long id=jwtUtil.getUserId(token);
         String username = jwtUtil.getUsername(token);
 
         User user=userService.findById(id);

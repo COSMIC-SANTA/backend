@@ -53,4 +53,23 @@ public class UserJpaRepository implements UserRepository {
     public User findByNickname(String nickname) {
         return null;
     }
+
+    @Override
+    public UserEntity findEntityById(Long id) {
+        return em.find(UserEntity.class,id);
+    }
+
+    @Override
+    public List<UserEntity> findEntityByUsername(String username) {
+        return em.createQuery("select ue from UserEntity ue where ue.username =: username", UserEntity.class)
+                .setParameter("username",username)
+                .getResultList();
+    }
+
+    @Override
+    public List<UserEntity> findEntityByNickname(String nickname) {
+        return em.createQuery("select ue from UserEntity ue where ue.nickname =: nickname", UserEntity.class)
+                .setParameter("nickname",nickname)
+                .getResultList();
+    }
 }

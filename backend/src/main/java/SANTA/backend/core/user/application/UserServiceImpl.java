@@ -2,6 +2,7 @@ package SANTA.backend.core.user.application;
 
 import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.user.domain.UserRepository;
+import SANTA.backend.core.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User findById(String userId){
-        return userRepository.findById(Long.valueOf(userId));
+    public User findById(Long userId){
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    public UserEntity findEntityById(Long userId) {
+        return userRepository.findEntityById(userId);
     }
 
     @Override

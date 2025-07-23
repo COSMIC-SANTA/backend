@@ -22,22 +22,22 @@ public class User {
 
     @Builder
     protected User(Long userId, String username, String password, String nickname, int age, Role role, String location, Medal medal, Interest interest, Level level) {
-        this.userId=userId;
-        this.username=username;
-        this.password=password;
-        this.nickname=nickname;
-        this.age=age;
-        this.role=role;
-        this.location=location;
-        this.medal=medal;
-        this.interest=interest;
-        this.level=level;
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.age = age;
+        this.role = role;
+        this.location = location;
+        this.medal = medal;
+        this.interest = interest;
+        this.level = level;
 
     }
 
-    public static User fromEntity(UserEntity userEntity){
-        return  User.builder()
-                .userId(userEntity.getUserId())
+    public static User fromEntity(UserEntity userEntity) {
+        return User.builder()
+                .userId(userEntity.getId())
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .nickname(userEntity.getNickname())
@@ -50,7 +50,7 @@ public class User {
                 .build();
     }
 
-    public static User registerUser( String username, String password, String nickname, int age){
+    public static User registerUser(String username, String password, String nickname, int age) {
         return User.builder()
                 .username(username)
                 .password(password)
@@ -61,7 +61,7 @@ public class User {
                 .build();
     }
 
-    public static User registerUser( String username, String password, String nickname){
+    public static User registerUser(String username, String password, String nickname) {
         return User.builder()
                 .username(username)
                 .password(password)
