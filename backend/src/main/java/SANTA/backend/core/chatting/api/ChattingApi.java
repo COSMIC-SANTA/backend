@@ -4,9 +4,11 @@ import SANTA.backend.core.auth.service.CustomUserDetails;
 import SANTA.backend.core.chatting.application.ChattingService;
 import SANTA.backend.core.chatting.dto.ChattingRoomMessageResponseDto;
 import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
+import SANTA.backend.core.chatting.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +35,12 @@ public class ChattingApi {
         return ResponseEntity.ok().body(chattingRooms);
     }
 
-    @MessageMapping("/{roomId}")
-    public void sendMessage(@PathVariable("roomId") Long roomId, @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody String message) {
-        chattingService.sendMessage(roomId, customUserDetails.getUserId(), message);
+    @MessageMapping("/chat")
+    public void sendMessage(@RequestBody MessageDto token) {
+        Long roomId = token.roomId();
+        Long userId = token.userId();
+        String message = token.message();
+        chattingService.sendMessage(roomId, userId, message);
     }
 
     @GetMapping("{roomId}")
