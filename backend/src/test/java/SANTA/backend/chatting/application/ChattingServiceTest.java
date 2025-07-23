@@ -112,13 +112,13 @@ public class ChattingServiceTest extends ServiceContext {
         @Test
         void 채팅방에서_채팅을_전송할_수_있다(){
             //given
-            String username = "user1";
-            String password = "password1";
+            String username = "user2";
+            String password = "password2";
             String nickName = "nickName";
             User user = User.registerUser(username,password,nickName);
 
-            String title = "title1";
-            String subTitle = "subTitle1";
+            String title = "title2";
+            String subTitle = "subTitle2";
 
             //when
             User registerUser = userService.register(user);
