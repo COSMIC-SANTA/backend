@@ -95,14 +95,14 @@ public class PostController {
     //수정 처리
 
     //이부분 수정 되는지 확인할 수 있도록 고치기 필요. 아직 안 고침
-    @GetMapping("/update/{postId}")
-    public String updateForm(@PathVariable Long postId,Model model){
-        PostDTO postDTO=postService.findBypostId(postId);
-        model.addAttribute("postUpdate",postDTO);
-        return "update";
-    }
+//    @GetMapping("/update/{postId}")
+//    public String updateForm(@PathVariable Long postId,Model model){
+//        PostDTO postDTO=postService.findBypostId(postId);
+//        model.addAttribute("postUpdate",postDTO);
+//        return "update";
+//    }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public PostDTO update(@ModelAttribute PostDTO postDTO) throws IOException {
         return postService.update(postDTO);
     }

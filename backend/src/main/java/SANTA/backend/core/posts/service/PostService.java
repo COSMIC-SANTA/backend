@@ -30,7 +30,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final PostFileRepository postFileRepository;
 
     public PostDTO save(PostDTO postDTO, User user) throws IOException {
@@ -87,22 +86,21 @@ public class PostService {
         }
     }
 
+    @Transactional
     public PostDTO update(PostDTO postDTO) throws IOException {
         PostEntity existing = postRepository.findById(postDTO.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        // Builder로 새 객체를 생성하되 기존 객체의 정보 일부를 유지
-        PostEntity updated = PostEntity.builder()
-                .postId(existing.getPostId())         // 유지해야 하는 ID
-                .userId(existing.getUserId())         // 원 작성자 유지
-                .author(existing.getAuthor())         // 작성자 유지
-                .postHits(existing.getPostHits())     // 기존 조회수 유지
-                .commentEntityList(existing.getCommentEntityList())
-                .title(postDTO.getTitle())            // 수정된 제목
-                .body(postDTO.getBody())              // 수정된 내용
-                .build();
+        PostEntity updated = PostEntity.toUpdateEntity(postDTO, existing);
 
         PostEntity saved = postRepository.save(updated);
+        // 기존 파일 삭제
+        List<PostFileEntity> existingFiles = postFileRepository.findByPostEntity(existing);
+        for (PostFileEntity file : existingFiles) {
+            File storedFile = new File("C:/Users/User/Desktop/springtemp_img/" + file.getStoredFileName());
+            if (storedFile.exists()) storedFile.delete();
+            postFileRepository.delete(file);
+        }
 
         // 새 파일 첨부가 있을 경우 추가 저장
         if (postDTO.getPostFile() != null && !postDTO.getPostFile().isEmpty()) {
@@ -115,10 +113,11 @@ public class PostService {
 
                 PostFileEntity postFileEntity = PostFileEntity.toPostFileEntity(saved, originalFileName, storedFileName);
                 postFileRepository.save(postFileEntity);
+
+                saved.getPostFileEntityList().add(postFileEntity);
             }
         }
-
-        return PostDTO.toPostDTO(updated);
+        return PostDTO.toPostDTO(saved);
     }
 
 

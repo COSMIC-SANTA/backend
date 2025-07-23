@@ -52,20 +52,19 @@ public class PostDTO {
         postDTO.setPostUpdatedTime(postEntity.getUpdatedTime());
         postDTO.setLikeCount(postEntity.getLikes().size());
 
-        if(postEntity.getFileAttached()==0){
-            postDTO.setFileAttached(postEntity.getFileAttached());
-        }else{
-            List<String> originalFileNameList=new ArrayList<>();
-            List<String> storedFileNameList=new ArrayList<>();
-            postDTO.setFileAttached(postEntity.getFileAttached());
-            for(PostFileEntity postFileEntity:postEntity.getPostFileEntityList()) {
-                originalFileNameList.add(postFileEntity.getOriginalFileName());
-                storedFileNameList.add(postFileEntity.getStoredFileName());
+        if (postEntity.getPostFileEntityList() != null && !postEntity.getPostFileEntityList().isEmpty()) {
+            List<String> originalFileNameList = new ArrayList<>();
+            List<String> storedFileNameList = new ArrayList<>();
+            for (PostFileEntity fileEntity : postEntity.getPostFileEntityList()) {
+                originalFileNameList.add(fileEntity.getOriginalFileName());
+                storedFileNameList.add(fileEntity.getStoredFileName());
             }
             postDTO.setOriginalFilename(originalFileNameList);
             postDTO.setStoredFilename(storedFileNameList);
+            postDTO.setFileAttached(1);
+        } else {
+            postDTO.setFileAttached(0);
         }
-
         return postDTO;
     }
 
