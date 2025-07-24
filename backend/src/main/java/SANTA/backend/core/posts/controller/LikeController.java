@@ -20,7 +20,6 @@ import java.util.Map;
 @Slf4j
 public class LikeController {
     private final LikeService likeService;
-    private final UserService userService;
 
     // 좋아요 추가 or 취소 (토글 방식)
     @PostMapping("/{postId}/like")
