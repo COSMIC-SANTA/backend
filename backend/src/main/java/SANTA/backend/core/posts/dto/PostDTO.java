@@ -67,5 +67,4 @@ public class PostDTO {
         }
         return postDTO;
     }
-
 }
