@@ -1,5 +1,6 @@
 package SANTA.backend.core.basePlace.entity;
 
+import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.course.entity.CourseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,18 +26,16 @@ public abstract class BasePlaceEntity {
 
     protected String imageUrl;
 
-    protected Double mapX;
+    @Embedded
+    protected Position position;
 
-    protected Double mapY;
-
-    protected BasePlaceEntity(Long id, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
+    protected BasePlaceEntity(Long id, Long sequence, String name, String location, String imageUrl, Position position) {
         this.id = id;
         this.sequence = sequence;
         this.name = name;
         this.location = location;
         this.imageUrl = imageUrl;
-        this.mapX = mapX;
-        this.mapY = mapY;
+        this.position = position;
     }
 
 

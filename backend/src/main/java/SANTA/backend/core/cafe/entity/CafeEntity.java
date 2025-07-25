@@ -1,5 +1,6 @@
 package SANTA.backend.core.cafe.entity;
 
+import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.basePlace.entity.BasePlaceEntity;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.course.entity.CourseEntity;
@@ -15,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class CafeEntity extends BasePlaceEntity {
 
     @Builder
-    protected CafeEntity(Long id, Long sequence, String name, String location, String imageUrl, Double mapX, Double mapY) {
-        super(id, sequence, name, location, imageUrl, mapX, mapY);
+    protected CafeEntity(Long id, Long sequence, String name, String location, String imageUrl, Position position) {
+        super(id, sequence, name, location, imageUrl, position);
     }
 
     public static CafeEntity from(Cafe cafe) {
@@ -26,8 +27,7 @@ public class CafeEntity extends BasePlaceEntity {
                 .name(cafe.getName())
                 .location(cafe.getLocation())
                 .imageUrl(cafe.getImageUrl())
-                .mapX(cafe.getMapX())
-                .mapY(cafe.getMapY())
+                .position(cafe.getPosition())
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package SANTA.backend.global.utils.api;
 
 import SANTA.backend.core.basePlace.domain.BasePlace;
+import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
@@ -67,12 +68,13 @@ public class ApiRequesterImpl implements APIRequester {
                             String imageUrl = node.path("firstimage").asText();
                             Double mapX = node.path("mapX").asDouble();
                             Double mapY = node.path("mapY").asDouble();
+                            Position position = new Position(mapX,mapY);
 
                             switch (typeId) {
-                                case RESTAURANT -> list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
-                                case STAY -> list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
-                                case CULTURAL_FACILITY -> list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
-                                case TOUR_PLACE -> list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).mapX(mapX).mapY(mapY).build());
+                                case RESTAURANT -> list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case STAY -> list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case CULTURAL_FACILITY -> list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case TOUR_PLACE -> list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
                             }
                         }
                     }
