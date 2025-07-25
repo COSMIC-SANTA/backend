@@ -15,7 +15,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,8 +28,6 @@ import java.util.Map;
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;
-    private final UserService userService;
-    private final LikeService likeService;
 
     @GetMapping("/save")
     public String saveForm(){

@@ -4,7 +4,9 @@ import SANTA.backend.core.group.entity.GroupEntity;
 import SANTA.backend.core.user.domain.Interest;
 import SANTA.backend.core.user.domain.Level;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class Group {
 
     Long id;
@@ -29,7 +31,7 @@ public class Group {
         this.level = level;
     }
 
-    public Group fromEntity(GroupEntity groupEntity) {
+    public static Group fromEntity(GroupEntity groupEntity) {
         return Group.builder()
                 .id(groupEntity.getId())
                 .location(groupEntity.getLocation())

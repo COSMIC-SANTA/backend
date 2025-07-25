@@ -1,8 +1,12 @@
 package SANTA.backend.context;
 
+import SANTA.backend.core.chatting.application.ChattingService;
+import SANTA.backend.core.chatting.domain.ChattingRepository;
 import SANTA.backend.core.mountain.application.BannerService;
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.domain.MountainRepository;
+import SANTA.backend.core.user.application.UserService;
+import SANTA.backend.core.user.domain.UserRepository;
 import SANTA.backend.global.config.RabbitMQConfig;
 import SANTA.backend.global.utils.api.APIRequester;
 import SANTA.backend.global.utils.api.KoreanTourInfoServiceRequester;
@@ -38,4 +42,16 @@ public abstract class ServiceContext {
 
     @Autowired
     protected MountainInfoServiceRequester mountainInfoServiceRequester;
+
+    @Autowired
+    protected ChattingService chattingService;
+
+    @Autowired
+    protected ChattingRepository chattingRepository;
+
+    @Autowired
+    protected UserService userService;
+
+    @Autowired
+    protected UserRepository userRepository;
 }
