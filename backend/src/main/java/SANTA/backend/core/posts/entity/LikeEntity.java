@@ -15,7 +15,11 @@ public class LikeEntity {
 
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "post_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "post_id", nullable = true)
     private PostEntity post;
+
+    @ManyToOne(fetch = FetchType.LAZY,optional = true)
+    @JoinColumn(name = "comment_id", nullable = true)
+    private CommentEntity comment;
 }

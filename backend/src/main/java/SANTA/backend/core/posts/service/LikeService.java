@@ -1,7 +1,9 @@
 package SANTA.backend.core.posts.service;
 
+import SANTA.backend.core.posts.entity.CommentEntity;
 import SANTA.backend.core.posts.entity.LikeEntity;
 import SANTA.backend.core.posts.entity.PostEntity;
+import SANTA.backend.core.posts.repository.CommentRepository;
 import SANTA.backend.core.posts.repository.LikeRepository;
 import SANTA.backend.core.posts.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeService {
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public Long postLike(Long userId, Long postId){
@@ -31,6 +34,23 @@ public class LikeService {
         return likeRepository.countByPost_PostId(postId);
     }
 
+    @Transactional
+    public Long commentLike(Long userId, Long commmentId){
+        LikeEntity like = likeRepository.findByUserIdAndComment_CommentId(userId, commmentId).orElse(null);
+        if (like == null) {
+            CommentEntity comment = commentRepository.findById(commmentId)
+                    .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다"));
+            LikeEntity newLike = LikeEntity.builder()
+                    .userId(userId)
+                    .comment(comment)
+                    .build();
+            likeRepository.save(newLike);
+        } else {
+            likeRepository.delete(like);
+        }
+        return likeRepository.countByComment_CommentId(commmentId);
+    }
+
 
     public void addLike(Long postId, Long userId) {
         PostEntity post = postRepository.findById(postId)
@@ -47,5 +67,9 @@ public class LikeService {
 
     public long countLikes(Long postId) {
         return likeRepository.countByPost_PostId(postId);
+    }
+
+    public long countcommentLikes(Long commentId) {
+        return likeRepository.countByComment_CommentId(commentId);
     }
 }

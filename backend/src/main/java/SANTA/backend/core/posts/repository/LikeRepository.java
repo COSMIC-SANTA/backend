@@ -8,5 +8,8 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
     Optional<LikeEntity> findByUserIdAndPost_PostId(Long userId, Long postId);
     Long countByPost_PostId(Long postId);
+
+    Optional<LikeEntity> findByUserIdAndComment_CommentId(Long userId, Long commentId);
+    Long countByComment_CommentId(Long commentId);
 }
 

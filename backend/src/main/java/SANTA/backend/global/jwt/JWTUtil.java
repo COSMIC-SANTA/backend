@@ -35,7 +35,8 @@ public class JWTUtil {
 
     public Long getUserId(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", Long.class);
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", Long.class);
     }
 
     public Boolean isExpired(String token) {
@@ -70,7 +71,7 @@ public class JWTUtil {
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) //발행 시간
-                .expiration(new Date(System.currentTimeMillis() + expiredMs)) //소멸될 시간 설정
+                .expiration(new Date(System.currentTimeMillis() + 60*60*100)) //소멸될 시간 설정
                 .signWith(secretKey)
                 .compact();
     }
@@ -84,7 +85,7 @@ public class JWTUtil {
                 .claim("nickname",userDetails.getNickname())
                 .claim("interest",userDetails.getInterest())
                 .issuedAt(new Date(System.currentTimeMillis())) //발행 시간
-                .expiration(new Date(System.currentTimeMillis() + 60*60*10)) //소멸될 시간 설정
+                .expiration(new Date(System.currentTimeMillis() + 60*60*100)) //소멸될 시간 설정
                 .signWith(secretKey)
                 .compact();
     }

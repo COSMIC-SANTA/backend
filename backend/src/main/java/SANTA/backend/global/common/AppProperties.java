@@ -1,8 +1,10 @@
 package SANTA.backend.global.common;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "app")
+@Component
 public class AppProperties {
 
     private final KoreaTourOrganization koreaTourOrganization = new KoreaTourOrganization();

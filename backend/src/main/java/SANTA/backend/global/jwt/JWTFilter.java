@@ -35,8 +35,6 @@ public class JWTFilter extends OncePerRequestFilter {
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
-        //Bearer 부분 제거 후 순수 토큰만 획득.
-        //2번쨰 칸인 1번 인덱스를 받음(토큰 구조[string형]- Bearer asdfgqweaoiasdjfja;jtoje)
         String token = authorization.split(" ")[1];
 
         //토큰 소멸 시간 검증
@@ -44,7 +42,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-            //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 

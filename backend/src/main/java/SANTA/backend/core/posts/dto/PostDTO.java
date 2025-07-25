@@ -1,9 +1,13 @@
 package SANTA.backend.core.posts.dto;
 
 import SANTA.backend.core.posts.entity.PostEntity;
+import SANTA.backend.core.posts.entity.PostFileEntity;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,8 +22,15 @@ public class PostDTO {
     private String title;
     private String body;
     private int postHits; //조회수
+    private int likeCount; //좋아요 수
     private LocalDateTime postCreatedTime;
     private LocalDateTime postUpdatedTime;
+
+    //파일추가
+    private List<MultipartFile> postFile; //파일을 담는 용도
+    private List<String> originalFilename; //원본 파일 이름
+    private List<String> storedFilename; //서버 저장용 파일 이름
+    private int fileAttached; //파일 첨부 여부(첨부-1, 미첨부-0)
 
     public PostDTO(Long postId, String author, String title, int postHits, LocalDateTime postCreatedTime) {
         this.postId = postId;
@@ -39,7 +50,21 @@ public class PostDTO {
         postDTO.setPostHits(postEntity.getPostHits());
         postDTO.setPostCreatedTime(postEntity.getCreatedTime());
         postDTO.setPostUpdatedTime(postEntity.getUpdatedTime());
+        postDTO.setLikeCount(postEntity.getLikes().size());
+
+        if (postEntity.getPostFileEntityList() != null && !postEntity.getPostFileEntityList().isEmpty()) {
+            List<String> originalFileNameList = new ArrayList<>();
+            List<String> storedFileNameList = new ArrayList<>();
+            for (PostFileEntity fileEntity : postEntity.getPostFileEntityList()) {
+                originalFileNameList.add(fileEntity.getOriginalFileName());
+                storedFileNameList.add(fileEntity.getStoredFileName());
+            }
+            postDTO.setOriginalFilename(originalFileNameList);
+            postDTO.setStoredFilename(storedFileNameList);
+            postDTO.setFileAttached(1);
+        } else {
+            postDTO.setFileAttached(0);
+        }
         return postDTO;
     }
-
 }
