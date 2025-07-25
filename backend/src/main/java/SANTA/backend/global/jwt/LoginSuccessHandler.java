@@ -25,7 +25,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         cookie.setHttpOnly(true); // JS에서 접근 못하게
         cookie.setSecure(true);   // HTTPS 환경에서만 사용
         cookie.setPath("/");      // 모든 경로에 대해 쿠키 전송
-        cookie.setMaxAge(60*60*10); // 쿠키 유효시간 (초 단위)
+        cookie.setMaxAge(60*60*100);
 
         response.addCookie(cookie); // ✅ jakarta.servlet.http.Cookie 를 사용해야 오류 없음
 
