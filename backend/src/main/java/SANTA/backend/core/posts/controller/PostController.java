@@ -32,19 +32,20 @@ public class PostController {
     @GetMapping("/save")
     public String saveForm(){
 
-        return "save";
+        return "saveChattingRoom";
     }
 
     @PostMapping("/save")
     @ResponseBody
     public Map<String, List<Map<String, Object>>> save(@ModelAttribute PostDTO postDTO) throws IOException {
+
         // 현재 로그인 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
 
         // 게시글 저장
-        PostDTO savedPost = postService.save(postDTO, user);
+        PostDTO savedPost = postService.saveChattingRoom(postDTO, user);
 
         // JSON 응답 형태 구성
         Map<String, Object> postData = new HashMap<>();
@@ -83,21 +84,6 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
-
-
-    //게시글 수정
-    //상세화면에서 수정 버튼 클릭
-    //서버에서 해당 게시글의 정보를 가지고 수정 화면 출력
-    //제목, 내용 수정 입력 받아서 서버로 요청
-    //수정 처리
-
-    //이부분 수정 되는지 확인할 수 있도록 고치기 필요. 아직 안 고침
-//    @GetMapping("/update/{postId}")
-//    public String updateForm(@PathVariable Long postId,Model model){
-//        PostDTO postDTO=postService.findBypostId(postId);
-//        model.addAttribute("postUpdate",postDTO);
-//        return "update";
-//    }
 
     @PostMapping("/update")
     public PostDTO update(@ModelAttribute PostDTO postDTO) throws IOException {

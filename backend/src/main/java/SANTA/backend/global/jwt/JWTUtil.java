@@ -35,6 +35,7 @@ public class JWTUtil {
 
     public Long getUserId(String token) {
 
+
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", Long.class);
     }
 
