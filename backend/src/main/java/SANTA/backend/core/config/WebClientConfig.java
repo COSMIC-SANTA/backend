@@ -52,4 +52,23 @@ public class WebClientConfig {
                 ))
                 .build();
     }
+
+    @Bean("kakaoMapClient")
+    public WebClient kakaoMapClient(@Value("${kakao.url}") String kakaoApiUrl,
+                                    @Value("${kakao.key}") String kakaoApiKey) {
+        return WebClient.builder()
+                .baseUrl(kakaoApiUrl)
+                .defaultHeader(HttpHeaders.AUTHORIZATION, "KakaoAK " + kakaoApiKey)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .clientConnector(new ReactorClientHttpConnector(
+                        HttpClient.create()
+                                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+                                .responseTimeout(Duration.ofSeconds(10))
+                                .doOnConnected(conn ->
+                                        conn.addHandlerLast(new ReadTimeoutHandler(10))
+                                                .addHandlerLast(new WriteTimeoutHandler(10)))
+                ))
+                .build();
+    }
 }
