@@ -45,7 +45,7 @@ public class PostController {
         User user = userDetails.getUser();
 
         // 게시글 저장
-        PostDTO savedPost = postService.saveChattingRoom(postDTO, user);
+        PostDTO savedPost = postService.save(postDTO, user);
 
         // JSON 응답 형태 구성
         Map<String, Object> postData = new HashMap<>();
