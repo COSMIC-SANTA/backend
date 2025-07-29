@@ -51,20 +51,6 @@ public class LikeService {
         return likeRepository.countByComment_CommentId(commmentId);
     }
 
-
-    public void addLike(Long postId, Long userId) {
-        PostEntity post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
-
-        // 중복 좋아요 체크 등 필요하면 추가 가능
-        LikeEntity like = LikeEntity.builder()
-                .userId(userId)
-                .post(post)
-                .build();
-
-        likeRepository.save(like);
-    }
-
     public long countLikes(Long postId) {
         return likeRepository.countByPost_PostId(postId);
     }
