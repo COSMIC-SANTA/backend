@@ -52,7 +52,7 @@ public class SecurityConfig {
 
     public LoginFilter loginFilter(AuthenticationManager authenticationManager) {
         LoginFilter loginFilter = new LoginFilter();
-        loginFilter.setFilterProcessesUrl("/login");
+        loginFilter.setFilterProcessesUrl("/api/auth/login");
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
         loginFilter.setAuthenticationManager(authenticationManager);
         return loginFilter;
@@ -89,7 +89,7 @@ public class SecurityConfig {
                 .cors(c->c.configurationSource(corsConfiguration()))
                 .sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/api/auth/sign-up","/abc").permitAll()
+                        .requestMatchers("/", "/api/auth/login", "/api/auth/sign-up","/abc").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )

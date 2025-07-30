@@ -25,7 +25,7 @@ public class JoinController {
         return ResponseEntity.ok().body(joinUser);
     }
 
-    @PostMapping("/api/auth/sign-out")
+    @GetMapping("/api/auth/sign-out")
     public ResponseEntity<Void> logOut(@AuthenticationPrincipal CustomUserDetails customUserDetails, HttpServletRequest request){
         String token = extractAccessToken(request);
         joinService.logOut(customUserDetails.getUserId(),token);
