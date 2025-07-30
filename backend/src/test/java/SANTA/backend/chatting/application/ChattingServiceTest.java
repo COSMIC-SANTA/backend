@@ -20,7 +20,7 @@ public class ChattingServiceTest extends ServiceContext {
     @Nested @Transactional
     class 채팅방_조회_테스트{
 
-        @Test @Transactional
+        @Test
         void 모든_채팅방_리스트를_조회할_수_있다(){
             //given
             String title ="title1";
@@ -79,7 +79,7 @@ public class ChattingServiceTest extends ServiceContext {
 
     @Nested
     class 채팅방_참가_테스트{
-        @Test @Transactional
+        @Test
         void 채팅방에_참가할_수_있다(){
             //given
             String username = "user1";

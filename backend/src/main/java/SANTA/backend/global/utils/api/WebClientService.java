@@ -14,9 +14,11 @@ import java.util.List;
 public class WebClientService {
 
     private final WebClient webClient;
+    private final WebClient kakaoWebClient;
 
-    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient) {
+    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient, @Qualifier("kakaoRouteClient") WebClient kakaoWebClient) {
         this.webClient = webClient;
+        this.kakaoWebClient = kakaoWebClient;
     }
 
     public Mono<JsonNode> request(URI uri) {
@@ -34,6 +36,22 @@ public class WebClientService {
                 throw new RuntimeException("JSON 파싱 오류", e);
             }
         });
+    }
+
+    public Mono<JsonNode> requestKaKaoMap(URI uri){
+        Mono<JsonNode> stringMono = kakaoWebClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(JsonNode.class);
+
+        stringMono.map(json -> {
+            try {
+                return json.path("routes");
+            } catch (Exception e) {
+                throw new RuntimeException("JSON 파싱 오류", e);
+            }
+        });
+        return stringMono;
     }
 
 }

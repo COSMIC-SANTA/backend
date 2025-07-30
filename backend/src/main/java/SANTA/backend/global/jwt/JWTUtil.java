@@ -28,21 +28,22 @@ public class JWTUtil {
     }
 
     //token의 특정 요소들을 검증하는 부분
-    public String getUsername(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+    public String getUsername(Claims claims) {
+        return claims.get("username", String.class);
     }
 
-    public Long getUserId(String token) {
+    public Long getUserId(Claims claims ) {
+        return claims.get("id", Long.class);
+    }
 
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", Long.class);
+    public Boolean isExpired(Claims claims) {
+        return claims.getExpiration().before(new Date());
     }
 
     public Boolean isExpired(String token) {
-
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
+
     //Claims 파싱 및 유효성 검증 매서드 추가
     public Claims parseClaims(String token) {
         try {
@@ -88,5 +89,13 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + 60*60*100)) //소멸될 시간 설정
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public long getExpiration(String accessToken) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(accessToken).getPayload().getExpiration().getTime();
+    }
+
+    public long getExpiration(Claims claims) {
+        return claims.getExpiration().getTime();
     }
 }

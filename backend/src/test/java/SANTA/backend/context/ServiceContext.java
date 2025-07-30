@@ -9,6 +9,7 @@ import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.UserRepository;
 import SANTA.backend.global.config.RabbitMQConfig;
 import SANTA.backend.global.utils.api.APIRequester;
+import SANTA.backend.global.utils.api.KaKaoMapServiceRequester;
 import SANTA.backend.global.utils.api.KoreanTourInfoServiceRequester;
 import SANTA.backend.global.utils.api.MountainInfoServiceRequester;
 import jakarta.persistence.EntityManager;
@@ -54,4 +55,7 @@ public abstract class ServiceContext {
 
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    protected KaKaoMapServiceRequester kaKaoMapServiceRequester;
 }

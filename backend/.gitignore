@@ -1,4 +1,5 @@
 HELP.md
+.env
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -6,6 +7,8 @@ build/
 !**/src/test/**/build/
 **/application.yml
 **/application-local.yml
+Dockerfile
+compose-docker.yml
 
 ### STS ###
 .apt_generated
