@@ -31,7 +31,12 @@ public enum ErrorCode {
     FOREST_API_EXPIRED_KEY(401, "M_020", "기한만료된 서비스키입니다."),                  // 31
     FOREST_API_UNKNOWN_ERROR(500, "M_021", "산림청 API에서 알 수 없는 오류가 발생했습니다."), // 99
 
-    MOUNTAIN_NOT_FOUND(404, "M_022", "검색한 산 정보를 찾을 수 없습니다.");
+    MOUNTAIN_NOT_FOUND(404, "M_022", "검색한 산 정보를 찾을 수 없습니다."),
+    USER_NOT_FOUND(404,"M_023","해당하는 유저 정보를 찾을 수 없습니다."),
+    CHATTING_ROOM_NOT_FOUND(404,"M_024","해당하는 채팅방 정보를 찾을 수 없습니다."),
+    CHATTING_ROOM_USER_NOT_FOUND(404,"M_025","해당하는 채팅참여자 정보를 찾을 수 없습니다."),
+    CHATTING_ROOM_MESSAGE_NOT_FOUND(404,"M_026","채팅 목록을 찾을 수 없습니다."),
+    BANNER_NOT_AVAILABLE(400,"M_027","관심사에 해당하는 배너를 찾을 수 없습니다.");
 
 
     private final int state;

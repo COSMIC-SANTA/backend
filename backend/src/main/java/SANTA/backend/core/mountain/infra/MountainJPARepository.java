@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -49,9 +50,9 @@ public class MountainJPARepository implements MountainRepository {
     }
 
     @Override
-    public Mountain findById(Long mountainId) {
+    public Optional<Mountain> findById(Long mountainId) {
         MountainEntity mountainEntity = em.find(MountainEntity.class, mountainId);
-        return Mountain.fromEntity(mountainEntity);
+        return mountainEntity != null ? Optional.of(Mountain.fromEntity(mountainEntity)) : Optional.empty();
     }
 
     @Override

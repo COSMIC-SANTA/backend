@@ -41,17 +41,12 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
                 oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
         if (StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
-            log.info("@@@@@@@@@@@@@@@@@@@@@@username 정보 없음@@@@@@@@@@@@@@@@@@@@");
             throw new org.apache.tomcat.websocket.AuthenticationException("username 정보 없음;");
         }
 
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(oAuth2UserInfo.getUsername()));
+        Optional<User> userOptional = userRepository.findByUsername(oAuth2UserInfo.getUsername());
         User user;
-        if (userOptional.isPresent()) {
-            user = userOptional.get();
-        } else {
-            user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
-        }
+        user = userOptional.orElseGet(() -> registerNewUser(oAuth2UserRequest, oAuth2UserInfo));
 
         return CustomUserDetails.create(user, oAuth2User.getAttributes());
     }

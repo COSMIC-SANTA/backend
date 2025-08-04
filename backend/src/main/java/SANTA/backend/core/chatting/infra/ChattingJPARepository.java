@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -37,8 +38,8 @@ public class ChattingJPARepository implements ChattingRepository {
     }
 
     @Override
-    public ChattingRoomEntity findById(Long chattingRoomId) {
-        return em.find(ChattingRoomEntity.class, chattingRoomId);
+    public Optional<ChattingRoomEntity> findById(Long chattingRoomId) {
+        return Optional.ofNullable(em.find(ChattingRoomEntity.class, chattingRoomId));
     }
 
     @Override
@@ -48,17 +49,17 @@ public class ChattingJPARepository implements ChattingRepository {
     }
 
     @Override
-    public ChattingRoomUserEntity findChattingRoomUser(Long roomId, Long userId) {
-        return em.createQuery("""
+    public Optional<ChattingRoomUserEntity> findChattingRoomUser(Long roomId, Long userId) {
+        return Optional.ofNullable(em.createQuery("""
         select cru
         from ChattingRoomUserEntity cru
         join fetch cru.userEntity ue
         join fetch cru.chattingRoomEntity cr
         where ue.id = :userId and cr.id = :roomId
         """, ChattingRoomUserEntity.class)
-                        .setParameter("userId", userId)
-                        .setParameter("roomId", roomId)
-                        .getSingleResult();
+                .setParameter("userId", userId)
+                .setParameter("roomId", roomId)
+                .getSingleResult());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class ChattingJPARepository implements ChattingRepository {
         join fetch cru.chattingRoomEntity cre
         where cre.id = :roomId
         """, ChattingRoomMessageEntity.class)
-                        .setParameter("roomId", roomId)
-                        .getResultList();
+                .setParameter("roomId", roomId)
+                .getResultList();
     }
 }
