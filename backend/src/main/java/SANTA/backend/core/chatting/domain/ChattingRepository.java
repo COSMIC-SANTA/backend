@@ -5,6 +5,7 @@ import SANTA.backend.core.chatting.entity.ChattingRoomMessageEntity;
 import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChattingRepository {
     List<ChattingRoomEntity> findAllRooms();
@@ -13,11 +14,11 @@ public interface ChattingRepository {
 
     ChattingRoomEntity saveChattingRoom(ChattingRoomEntity chattingRoom);
 
-    ChattingRoomEntity findById(Long chattingRoomId);
+    Optional<ChattingRoomEntity> findById(Long chattingRoomId);
 
     ChattingRoomUserEntity saveChattingRoomUser(ChattingRoomUserEntity chattingRoomUser);
 
-    ChattingRoomUserEntity findChattingRoomUser(Long roomId, Long userId);
+    Optional<ChattingRoomUserEntity> findChattingRoomUser(Long roomId, Long userId);
 
     void saveChattingRoomMessage(ChattingRoomMessageEntity chattingRoomMessage);
 

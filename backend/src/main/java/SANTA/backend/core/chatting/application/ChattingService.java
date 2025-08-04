@@ -10,6 +10,8 @@ import SANTA.backend.core.chatting.entity.ChattingRoomUserEntity;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.user.entity.UserEntity;
+import SANTA.backend.global.exception.ErrorCode;
+import SANTA.backend.global.exception.type.CustomException;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,14 +52,16 @@ public class ChattingService {
     @Transactional
     public ChattingRoomUserEntity participateChattingRoom(Long chattingRoomId, Long myId){
         UserEntity user = userService.findEntityById(myId);
-        ChattingRoomEntity chattingRoom = chattingRepository.findById(chattingRoomId);
+        ChattingRoomEntity chattingRoom = chattingRepository.findById(chattingRoomId)
+                .orElseThrow(()-> new CustomException(ErrorCode.CHATTING_ROOM_NOT_FOUND));
         ChattingRoomUserEntity chattingRoomUser = ChattingRoomUserEntity.createChattingRoomUser(user,chattingRoom); //채팅방과 사용자를 이용해 채팅 참여자를 만들고 연관관계 매핑
         return chattingRepository.saveChattingRoomUser(chattingRoomUser);
     }
 
     @Transactional
     public void sendMessage(Long roomId, Long userId, String message){
-        ChattingRoomUserEntity chattingRoomUser = chattingRepository.findChattingRoomUser(roomId,userId);
+        ChattingRoomUserEntity chattingRoomUser = chattingRepository.findChattingRoomUser(roomId,userId)
+                .orElseThrow(()-> new CustomException(ErrorCode.CHATTING_ROOM_USER_NOT_FOUND));
         ChattingRoomMessageEntity chattingRoomMessage = ChattingRoomMessageEntity.createChattingRoomMessage(message,chattingRoomUser);
         ChattingRoomMessageDto chattingRoomMessageDto = ChattingRoomMessageDto.from(chattingRoomMessage);
         //Todo 채팅메시지를 Sender를 통해 subscriber들에게 publish

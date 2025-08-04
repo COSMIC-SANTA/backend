@@ -1,5 +1,7 @@
 package SANTA.backend.global.exception;
 
+import SANTA.backend.global.common.ResponseHandler;
+import SANTA.backend.global.exception.type.CustomException;
 import SANTA.backend.global.exception.type.DataNotFoundException;
 import SANTA.backend.global.exception.type.ExternalApiException;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,15 @@ public class GlobalExceptionHandler {
         log.info("ExternalApiExceptionHandler에 잡힌 예외 {} - {}", e.getErrorCode().getCode(), e.getMessage());
         ErrorResponse response = ErrorResponse.of(e.getErrorCode());
         return ResponseEntity.status(e.getErrorCode().getState()).body(response);
+    }
+
+    @ExceptionHandler(value = CustomException.class)
+    public ResponseEntity<?> handleCustomException(CustomException exception) {
+        log.warn("[CustomException에 잡힌 예외] : {} \n message: {}", exception.getErrorCode(),
+                exception.getMessage());
+
+        return ResponseEntity.status(exception.getErrorCode().getState())
+                .body(ResponseHandler.fail(exception.getMessage(), exception.getErrorCode().name()));
     }
 
     @ExceptionHandler(Exception.class)
