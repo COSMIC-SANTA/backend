@@ -3,6 +3,8 @@ package SANTA.backend.core.auth.service;
 import SANTA.backend.core.auth.dto.JoinResponseDTO;
 import SANTA.backend.core.user.domain.User;
 import SANTA.backend.core.user.domain.UserRepository;
+import SANTA.backend.global.exception.ErrorCode;
+import SANTA.backend.global.exception.type.CustomException;
 import SANTA.backend.global.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
@@ -28,11 +30,13 @@ public class JoinService {
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+                .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND, "해당 username의 유저가 존재하지 않습니다:" + username));
     }
 
     public User findByNickName(String nickname) {
-        return userRepository.findByUsername(nickname);
+        return userRepository.findByUsername(nickname)
+                .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND,"해당 nickname의 유저가 존재하지 않습니다:"+nickname));
     }
 
     public JoinResponseDTO join(String username, String password, String nickname, int age) throws IllegalAccessException {
