@@ -8,6 +8,7 @@ import SANTA.backend.core.posts.service.LikeService;
 import SANTA.backend.core.posts.service.PostService;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.User;
+import SANTA.backend.global.common.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class PostController {
 
     @PostMapping("/save")
     @ResponseBody
-    public Map<String, List<Map<String, Object>>> save(@ModelAttribute PostDTO postDTO) throws IOException {
+    public ResponseEntity<ResponseHandler<Map<String, List<Map<String, Object>>>>> save(@ModelAttribute PostDTO postDTO) throws IOException {
 
         // 현재 로그인 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -56,18 +57,18 @@ public class PostController {
 
         Map<String, List<Map<String, Object>>> response = new HashMap<>();
         response.put("post", List.of(postData));
-        return response;
+        return ResponseEntity.ok().body(ResponseHandler.success(response));
     }
 
     @GetMapping("/")
-    public List<PostDTO> findAll() {
-        return postService.findAll();
+    public ResponseEntity<ResponseHandler<List<PostDTO>>> findAll() {
+        return ResponseEntity.ok().body(ResponseHandler.success(postService.findAll()));
     }
 
     //게시글 조회
     @GetMapping("/{postId}")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getPostWithComments(@PathVariable Long postId) {
+    public ResponseEntity<ResponseHandler<Map<String, Object>>> getPostWithComments(@PathVariable Long postId) {
         // 1. 조회수 증가
         postService.updateHits(postId);
 
@@ -82,25 +83,25 @@ public class PostController {
         response.put("post", postDTO);
         response.put("comments", commentDTOList);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ResponseHandler.success(response));
     }
 
     @PostMapping("/update")
-    public PostDTO update(@ModelAttribute PostDTO postDTO) throws IOException {
-        return postService.update(postDTO);
+    public ResponseEntity<ResponseHandler<PostDTO>> update(@ModelAttribute PostDTO postDTO) throws IOException {
+        return ResponseEntity.ok().body(ResponseHandler.success(postService.update(postDTO)));
     }
 
     @DeleteMapping("/delete/{postId}")
-    public Map<String, String> delete(@PathVariable Long postId) {
+    public ResponseEntity<ResponseHandler<Map<String, String>>> delete(@PathVariable Long postId) {
         postService.delete(postId);
-        return Map.of("message", "삭제 성공");
+        return ResponseEntity.ok().body(ResponseHandler.success(Map.of("message", "삭제 성공")));
     }
 
     //페이징 처리 /post/paging?page=1이런 식으로 감
     //이거 postman에서 확인할 수 있도록 하기
     @GetMapping("/paging")
     @ResponseBody
-    public Map<String, Object> paging(@PageableDefault(page=1) Pageable pageable){
+    public ResponseEntity<ResponseHandler<Map<String, Object>>> paging(@PageableDefault(page=1) Pageable pageable){
         //pageable.getPageNumber();
         Page<PostDTO> postList = postService.paging(pageable);
 
@@ -115,13 +116,13 @@ public class PostController {
         response.put("startPage", startPage);
         response.put("endPage", endPage);
 
-        return response;
+        return ResponseEntity.ok().body(ResponseHandler.success(response));
     }
 
     @GetMapping("/bestposts")
-    public ResponseEntity<List<PostDTO>> getPopularPosts() {
+    public ResponseEntity<ResponseHandler<List<PostDTO>>> getPopularPosts() {
         List<PostDTO> posts = postService.findPopularPostsLast7Days();
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(ResponseHandler.success(posts));
     }
 
 }

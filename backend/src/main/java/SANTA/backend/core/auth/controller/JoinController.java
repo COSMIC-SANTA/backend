@@ -4,6 +4,7 @@ import SANTA.backend.core.auth.dto.JoinDTO;
 import SANTA.backend.core.auth.dto.JoinResponseDTO;
 import SANTA.backend.core.auth.service.CustomUserDetails;
 import SANTA.backend.core.auth.service.JoinService;
+import SANTA.backend.global.common.ResponseHandler;
 import SANTA.backend.global.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,9 @@ public class JoinController {
     private final JoinService joinService;
 
     @PostMapping("/api/auth/sign-up")
-    public ResponseEntity<JoinResponseDTO> joinProcess(@RequestBody JoinDTO joinDTO) throws IllegalAccessException{
+    public ResponseEntity<ResponseHandler<JoinResponseDTO>> joinProcess(@RequestBody JoinDTO joinDTO) throws IllegalAccessException{
         JoinResponseDTO joinUser = joinService.join(joinDTO.getUsername(),joinDTO.getPassword(),joinDTO.getNickname(),joinDTO.getAge());
-        return ResponseEntity.ok().body(joinUser);
+        return ResponseEntity.ok().body(ResponseHandler.success(joinUser));
     }
 
     @GetMapping("/api/auth/sign-out")
