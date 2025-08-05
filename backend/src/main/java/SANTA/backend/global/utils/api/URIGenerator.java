@@ -95,6 +95,18 @@ public abstract class URIGenerator {
         return builder.build(true).toUri();
     }
 
+    protected URI mountainINfoServiceURIGenerator(String url, String key, Long mountainCode) {
+        String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(url)
+                .queryParam("serviceKey", encodedKey)
+                .queryParam("_type", JSON)
+                .queryParam("searchWrd", mountainCode);
+
+        return builder.build(true).toUri();
+    }
+
     protected URI kakaoSearchRouteURIGenerator(String url, Position position, @Nullable List<Cafe> cafes, @Nullable List<Restaurant> restaurants, @Nullable List<Stay> stays, @Nullable List<Spot> spots,
                                                BasePlace destinationBasePlace){
         String origin = position.getMapX()+","+ position.getMapY();
