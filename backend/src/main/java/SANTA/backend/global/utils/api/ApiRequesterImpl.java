@@ -1,19 +1,24 @@
 package SANTA.backend.global.utils.api;
 
+import SANTA.backend.core.banner.dto.Banner;
 import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
-import SANTA.backend.core.mountain.domain.Mountain;
+import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
+import SANTA.backend.core.user.domain.Interest;
 import SANTA.backend.global.utils.api.domain.AreaCode;
 import SANTA.backend.global.utils.api.domain.Arrange;
 import SANTA.backend.global.utils.api.domain.ContentTypeId;
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -21,10 +26,11 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
-    private final MountainInfoServiceRequester mountainInfoServiceRequester;
+    private final BannerInfoServiceRequester bannerInfoServiceRequester;
     private static final Long numOfRows = 20L;
 
     @Override
@@ -45,15 +51,13 @@ public class ApiRequesterImpl implements APIRequester {
     }
 
     @Override
-    public List<Mountain> getMountains() {
-        Mono<JsonNode> mountains = mountainInfoServiceRequester.getMountains();
-        return extractMountains(mountains).block();
-    }
-
-    @Override
-    public List<Mountain> getMountains(String locationName) {
-        Mono<JsonNode> mountains = mountainInfoServiceRequester.getMountains(locationName);
-        return List.of();
+    public List<Banner> getBannersWithImages(@Nullable String locationName) {
+        Mono<List<Banner>> bannersWithImage = bannerInfoServiceRequester.getBanners(locationName)
+                .flatMap(this::extractBanners) // Step 1: JsonNode → List<Banner>
+                .flatMapMany(Flux::fromIterable)
+                .flatMap(this::enrichWithImageUrl) // Step 2: 각 Banner → 이미지 API 호출 → Banner에 imageUrl 추가
+                .collectList();
+        return bannersWithImage.block(); // block은 마지막에 한 번만
     }
 
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
@@ -68,13 +72,17 @@ public class ApiRequesterImpl implements APIRequester {
                             String imageUrl = node.path("firstimage").asText();
                             Double mapX = node.path("mapX").asDouble();
                             Double mapY = node.path("mapY").asDouble();
-                            Position position = new Position(mapX,mapY);
+                            Position position = new Position(mapX, mapY);
 
                             switch (typeId) {
-                                case RESTAURANT -> list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case STAY -> list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case CULTURAL_FACILITY -> list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case TOUR_PLACE -> list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case RESTAURANT ->
+                                        list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case STAY ->
+                                        list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case CULTURAL_FACILITY ->
+                                        list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case TOUR_PLACE ->
+                                        list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
                             }
                         }
                     }
@@ -97,18 +105,53 @@ public class ApiRequesterImpl implements APIRequester {
                 });
     }
 
-    private Mono<List<Mountain>> extractMountains(Mono<JsonNode> json){
-        return json.map(jsonNodes -> {
-            List<Mountain> mountains = new ArrayList<>();
-            if(jsonNodes.isArray()){
-                for (JsonNode jsonNode : jsonNodes) {
-                    String mountainName = jsonNode.path("mtnm").asText();
-                    String location = jsonNode.path("areanm").asText().split(",")[0].trim();
-                    mountains.add(Mountain.builder().name(mountainName).location(location).build());
-                }
+    private Mono<List<Banner>> extractBanners(JsonNode jsonNodes) {
+        List<Banner> banners = new ArrayList<>();
+        if (jsonNodes.isArray()) {
+            for (JsonNode jsonNode : jsonNodes) {
+                Long code = jsonNode.path("mntncd").asLong();
+                String mountainName = jsonNode.path("mntnm").asText();
+                String location = jsonNode.path("areanm").asText().split(",")[0].trim();
+                long height = jsonNode.path("mntheight").asLong();
+                Difficulty difficulty;
+                if (height < 500)
+                    difficulty = Difficulty.EASY;
+                else if (height < 1000)
+                    difficulty = Difficulty.MODERATE;
+                else if (height < 1500)
+                    difficulty = Difficulty.HARD;
+                else
+                    difficulty = Difficulty.EXTREME;
+
+                banners.add(
+                        Banner.builder()
+                                .code(code)
+                                .name(mountainName)
+                                .location(location)
+                                .interest(height > 1000L ? Interest.HIGH : Interest.LOW)
+                                .difficulty(difficulty)
+                                .build()
+                );
             }
-            return mountains;
-        });
+        }
+        return Mono.just(banners);
+    }
+
+
+    private Mono<Banner> enrichWithImageUrl(Banner banner) {
+        return bannerInfoServiceRequester.getBannerImage(banner.getCode())
+                .map(jsonNode -> {
+                    System.out.println(banner.getCode());
+                    String imageUrl = jsonNode.path("image").asText(null); // 없는 경우 null 반환
+                    System.out.println("이미지는"+ imageUrl);
+                    banner.setImageUrl(imageUrl);
+                    return banner;
+                })
+                .onErrorResume(e -> {
+                    System.out.println("이미지 API 호출 실패: " + banner.getCode() + " / " + e.getMessage());
+                    return Mono.just(banner); // 이미지 없이 그냥 반환
+                });
+
     }
 
 }

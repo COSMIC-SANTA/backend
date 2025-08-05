@@ -31,19 +31,6 @@ public class MountainJPARepository implements MountainRepository {
     }
 
     @Override
-    public void saveMountains(List<Mountain> mountains) {
-        int batchSize = 100;
-        List<MountainEntity> mountainEntities = mountains.stream().map(MountainEntity::from).toList();
-        for(int i=0; i<mountainEntities.size(); i++){
-            em.persist(mountainEntities.get(i));
-            if(i%batchSize==0){
-                em.flush();
-                em.clear();
-            }
-        }
-    }
-
-    @Override
     public Long findAllCount(){
         return em.createQuery("select count(m) from MountainEntity m", Long.class).getSingleResult();
     }

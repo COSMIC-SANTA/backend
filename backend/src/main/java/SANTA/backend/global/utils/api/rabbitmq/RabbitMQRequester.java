@@ -14,7 +14,7 @@ public class RabbitMQRequester {
     private final RabbitTemplate rabbitTemplate;
     private final AppProperties appProperties;
 
-    public void updateMountain(@Nullable String locationName) {
+    public void updateBanner(@Nullable String locationName) {
         String exchange = RabbitMQConfig.INFO_EXCHANGE;
         String routingKey = appProperties.getForest().getRoutingKey();
         String message = (locationName == null) ? "" : locationName;
