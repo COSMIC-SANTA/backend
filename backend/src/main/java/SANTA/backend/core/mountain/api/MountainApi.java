@@ -14,12 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class MountainApi {
 
     private final MountainService mountainService;
-    private final RabbitMQRequester rabbitMQRequester;
-
-    @PostMapping("getMountainsFromApi")
-    public void getMountains(){
-        rabbitMQRequester.updateMountain(null);
-    }
 
     @GetMapping("search/{mountainName}")
     public ResponseEntity<MountainListSearchResponse> searchMountain(@PathVariable("mountainName") String mountainName){
