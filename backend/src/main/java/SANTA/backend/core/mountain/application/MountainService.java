@@ -111,4 +111,10 @@ public class MountainService {
     public void saveMountains(List<Mountain> mountains) {
         mountainRepository.saveMountains(mountains);
     }
+
+    @Transactional
+    public OptimalRouteResponse searchOptimalRoute(OptimalRouteRequest request) {
+        Mono<OptimalRouteResponse> routeResponseMono = apiRequester.searchOptimalRoute(request);
+        return routeResponseMono.block();
+    }
 }
