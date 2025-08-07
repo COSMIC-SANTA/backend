@@ -5,8 +5,10 @@ import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.stay.entity.StayEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Stay extends BasePlace {
 
     @Builder
