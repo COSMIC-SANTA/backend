@@ -5,6 +5,8 @@ import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
+import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
@@ -25,6 +27,7 @@ public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
     private final MountainInfoServiceRequester mountainInfoServiceRequester;
+    private final KaKaoMapServiceRequester kaKaoMapServiceRequester;
     private static final Long numOfRows = 20L;
 
     @Override
@@ -54,6 +57,18 @@ public class ApiRequesterImpl implements APIRequester {
     public List<Mountain> getMountains(String locationName) {
         Mono<JsonNode> mountains = mountainInfoServiceRequester.getMountains(locationName);
         return List.of();
+    }
+
+    @Override
+    public Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request) {
+        return kaKaoMapServiceRequester.searchRoute(
+                request.origin(),
+                request.cafes(),
+                request.restaurants(),
+                request.stays(),
+                request.spots(),
+                request.destination()
+        ).map(this::extractRouteResponse);
     }
 
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
@@ -111,4 +126,61 @@ public class ApiRequesterImpl implements APIRequester {
         });
     }
 
+    private OptimalRouteResponse extractRouteResponse(JsonNode jsonNode) {
+        if (jsonNode.isArray() && !jsonNode.isEmpty()) {
+            JsonNode routeNode = jsonNode.get(0);
+            JsonNode summary = routeNode.path("summary");
+            JsonNode origin = summary.path("origin");
+            JsonNode destination = summary.path("destination");
+            JsonNode waypoints = summary.path("waypoints");
+            JsonNode fare = summary.path("fare");
+            JsonNode sections = summary.path("sections");
+
+            return new OptimalRouteResponse(
+                    new OptimalRouteResponse.OriginInfo(
+                            origin.path("name").asText(),
+                            origin.path("x").asDouble(),
+                            origin.path("y").asDouble()
+                    ),
+                    new OptimalRouteResponse.DestinationInfo(
+                            destination.path("name").asText(),
+                            destination.path("x").asDouble(),
+                            destination.path("y").asDouble()
+                    ),
+                    extractWaypoints(waypoints),
+                    summary.path("distance").asDouble(),
+                    summary.path("duration").asDouble(),
+                    fare.path("taxi").asDouble(),
+                    extractSections(sections)
+            );
+        }
+        throw new RuntimeException("경로를 찾을 수 없습니다.");
+    }
+
+    private List<OptimalRouteResponse.WaypointInfo> extractWaypoints(JsonNode waypoints) {
+        List<OptimalRouteResponse.WaypointInfo> waypointList = new ArrayList<>();
+        if (waypoints.isArray()) {
+            for (JsonNode waypoint : waypoints) {
+                waypointList.add(new OptimalRouteResponse.WaypointInfo(
+                        waypoint.path("name").asText(),
+                        waypoint.path("x").asDouble(),
+                        waypoint.path("y").asDouble()
+                ));
+            }
+        }
+        return waypointList;
+    }
+
+    private List<OptimalRouteResponse.SectionInfo> extractSections(JsonNode sections) {
+        List<OptimalRouteResponse.SectionInfo> sectionList = new ArrayList<>();
+        if (sections.isArray()) {
+            for (JsonNode section : sections) {
+                sectionList.add(new OptimalRouteResponse.SectionInfo(
+                        section.path("distance").asDouble(),
+                        section.path("duration").asDouble()
+                ));
+            }
+        }
+        return sectionList;
+    }
 }

@@ -2,6 +2,8 @@ package SANTA.backend.global.utils.api;
 
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
+import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -12,4 +14,6 @@ public interface APIRequester {
     List<Mountain> getMountains();
 
     List<Mountain> getMountains(String locationName);
+
+    Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request);
 }
