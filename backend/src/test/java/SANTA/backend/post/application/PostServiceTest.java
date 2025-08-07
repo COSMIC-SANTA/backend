@@ -1,6 +1,8 @@
 package SANTA.backend.post.application;
 
 import SANTA.backend.core.posts.dto.PostDTO;
+import SANTA.backend.core.posts.entity.LikeEntity;
+import SANTA.backend.core.posts.entity.PostEntity;
 import SANTA.backend.core.posts.repository.PostFileRepository;
 import SANTA.backend.core.posts.repository.PostRepository;
 import SANTA.backend.core.posts.service.PostService;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,12 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PostServiceTest {
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private PostFileRepository postFileRepository;
 
     private User testUser;
 
@@ -161,5 +159,76 @@ public class PostServiceTest {
 
         // then
         assertThat(deleted).isNull();
+    }
+
+    @Test
+    void 최근7일_인기게시글_조회_좋아요기준() throws Exception {
+        // given
+        List<PostEntity> posts = new ArrayList<>();
+
+        // 3개의 최근 게시글 생성 (좋아요 5, 10, 15개)
+        for (int i = 0; i < 3; i++) {
+            PostEntity post = PostEntity.builder()
+                    .title("최근 인기글 " + i)
+                    .body("내용 " + i)
+                    .author("nickname")
+                    .build();
+
+            for (int j = 0; j < (i + 1) * 5; j++) {
+                LikeEntity like = LikeEntity.builder()
+                        .userId((long) j)
+                        .post(post)
+                        .build();
+                post.getLikes().add(like);
+            }
+
+            em.persist(post);
+            posts.add(post);
+        }
+
+        // 오래된 게시글 생성 (좋아요 100개)
+        PostEntity oldPost = PostEntity.builder()
+                .title("오래된 게시글")
+                .body("오래된 내용")
+                .author("nickname")
+                .build();
+
+        for (int i = 0; i < 100; i++) {
+            LikeEntity like = LikeEntity.builder()
+                    .userId((long) i)
+                    .post(oldPost)
+                    .build();
+            oldPost.getLikes().add(like);
+        }
+
+        em.persist(oldPost);
+        em.flush();
+
+        // 오래된 게시글의 createdTime을 8일 전으로 수정하는 JPQL 쿼리 실행
+        em.createQuery("update PostEntity p set p.createdTime = :past where p.postId = :id")
+                .setParameter("past", LocalDateTime.now().minusDays(8))
+                .setParameter("id", oldPost.getPostId())
+                .executeUpdate();
+
+        em.clear();
+
+        // when
+        List<PostDTO> popularPosts = postService.findPopularPostsLast7Days();
+
+        // then
+        // 최근 게시글 3개만 조회되어야 함 (오래된 게시글 제외)
+        assertThat(popularPosts).hasSize(3);
+
+        // 좋아요 수 내림차순 정렬 확인
+        for (int i = 0; i < popularPosts.size() - 1; i++) {
+            int currentLikes = popularPosts.get(i).getLikeCount();
+            int nextLikes = popularPosts.get(i + 1).getLikeCount();
+            assertThat(currentLikes).isGreaterThanOrEqualTo(nextLikes);
+        }
+
+        // 오래된 게시글이 포함되지 않았는지 확인
+        boolean containsOldPost = popularPosts.stream()
+                .anyMatch(post -> post.getTitle().equals("오래된 게시글"));
+        assertThat(containsOldPost).isFalse();
     }
 }

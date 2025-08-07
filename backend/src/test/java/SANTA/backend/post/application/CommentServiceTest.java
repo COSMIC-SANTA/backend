@@ -44,7 +44,7 @@ public class CommentServiceTest {
         commentDTO.setPostId(post.getPostId());  // getPostId()로 PK 가져오기
         commentDTO.setCommentWriter("댓글작성자");
         commentDTO.setCommentBody("댓글 내용");
-        commentDTO.setCommentType(CommentType.COMMENT);
+        commentDTO.setCommentType(CommentType.COMMENT);//대댓글 테스트 - REPLY
 
         // when - 댓글 저장
         Long commentId = commentService.save(commentDTO);
