@@ -35,7 +35,7 @@ public class CommentEntity extends PostBaseEntity{
     @JoinColumn(name="parent_comment_id")
     private CommentEntity parent;
 
-    @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentEntity> children=new ArrayList<>();
 
     //좋아요

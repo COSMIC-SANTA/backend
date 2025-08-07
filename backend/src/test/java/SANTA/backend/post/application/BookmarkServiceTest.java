@@ -42,18 +42,14 @@ public class BookmarkServiceTest {
         // 1. 좋아요 삭제
         likeRepository.deleteAllInBatch();
 
-        // 2. 대댓글 → 부모 댓글 삭제 (명확히 정렬해서 순서 보장)
+        // 2. 댓글 (부모-자식 관계 해제 후 삭제)
         List<CommentEntity> allComments = commentRepository.findAll();
 
-        // 대댓글 먼저
-        allComments.stream()
-                .filter(c -> c.getParent() != null)
-                .forEach(commentRepository::delete);
-
-        // 부모 댓글
-        allComments.stream()
-                .filter(c -> c.getParent() == null)
-                .forEach(commentRepository::delete);
+        for (CommentEntity comment : allComments) {
+            comment.getChildren().clear();  // 자식 리스트 비워 orphanRemoval 유도
+        }
+        commentRepository.deleteAll();  // 연관관계가 정리된 후 삭제
+        // deleteAllInBatch() 사용하지 마! (cascade/orphanRemoval 무시함)
 
         // 3. 북마크 삭제
         bookmarkRepository.deleteAllInBatch();
@@ -62,7 +58,7 @@ public class BookmarkServiceTest {
         postFileRepository.deleteAllInBatch();
 
         // 5. 게시글 삭제
-        postRepository.deleteAllInBatch();
+        postRepository.deleteAll();
     }
     @Test
     void 북마크_토글_및_조회_테스트() {
