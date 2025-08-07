@@ -1,8 +1,7 @@
 package SANTA.backend.core.mountain.api;
 
 import SANTA.backend.core.mountain.application.MountainService;
-import SANTA.backend.core.mountain.dto.MountainListSearchResponse;
-import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.*;
 import SANTA.backend.global.utils.api.rabbitmq.RabbitMQRequester;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +30,11 @@ public class MountainApi {
     public ResponseEntity<MountainNearByResponse> mountainNearBy(@PathVariable("mountainId") Long mountainId, @PathVariable("pageNo") Long pageNo){
         MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountainId,pageNo);
         return ResponseEntity.ok().body(mountainNearByResponse);
+    }
+
+    @PostMapping("/optimalRoute")
+    public ResponseEntity<OptimalRouteResponse> searchOptimalRoute(@RequestBody OptimalRouteRequest request) {
+        OptimalRouteResponse optimalRouteResponse = mountainService.searchOptimalRoute(request);
+        return ResponseEntity.ok().body(optimalRouteResponse);
     }
 }
