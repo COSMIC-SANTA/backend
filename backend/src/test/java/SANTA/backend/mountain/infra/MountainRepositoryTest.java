@@ -3,7 +3,6 @@ package SANTA.backend.mountain.infra;
 import SANTA.backend.context.RepositoryContext;
 import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.mountain.domain.Mountain;
-import SANTA.backend.core.mountain.dto.BannerResponse;
 import SANTA.backend.core.user.domain.Interest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -59,7 +58,7 @@ public class MountainRepositoryTest extends RepositoryContext {
             mountainRepository.saveMountain(mountain3);
 
             //when
-            List<Mountain> interestingMountains = mountainRepository.findByInterest(interest);
+            List<Mountain> interestingMountains = mountainRepository.findByInterest(interest).get();
 
             //then
             assertThat(interestingMountains).extracting(Mountain::getInterest).containsExactlyInAnyOrder(interest);

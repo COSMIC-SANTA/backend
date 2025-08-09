@@ -5,6 +5,7 @@ import SANTA.backend.core.chatting.application.ChattingService;
 import SANTA.backend.core.chatting.dto.ChattingRoomMessageResponseDto;
 import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
 import SANTA.backend.core.chatting.dto.MessageDto;
+import SANTA.backend.global.common.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,15 @@ public class ChattingApi {
     private final ChattingService chattingService;
 
     @GetMapping
-    public ResponseEntity<List<ChattingRoomResponseDto>> chattingRoomList() {
+    public ResponseEntity<ResponseHandler<List<ChattingRoomResponseDto>>> chattingRoomList() {
         List<ChattingRoomResponseDto> chattingRoomLists = chattingService.getChattingRoomList();
-        return ResponseEntity.ok().body(chattingRoomLists);
+        return ResponseEntity.ok().body(ResponseHandler.success(chattingRoomLists));
     }
 
     @GetMapping("/{roomName}")
-    public ResponseEntity<List<ChattingRoomResponseDto>> searchChattingRoom(@PathVariable("roomName") String roomName) {
+    public ResponseEntity<ResponseHandler<List<ChattingRoomResponseDto>>> searchChattingRoom(@PathVariable("roomName") String roomName) {
         List<ChattingRoomResponseDto> chattingRooms = chattingService.getChattingRoomByName(roomName);
-        return ResponseEntity.ok().body(chattingRooms);
+        return ResponseEntity.ok().body(ResponseHandler.success(chattingRooms));
     }
 
     @MessageMapping("/chat")
@@ -44,8 +45,8 @@ public class ChattingApi {
     }
 
     @GetMapping("{roomId}")
-    public ResponseEntity<List<ChattingRoomMessageResponseDto>> getChattings(@PathVariable("roomId") Long roomId) {
+    public ResponseEntity<ResponseHandler<List<ChattingRoomMessageResponseDto>>> getChattings(@PathVariable("roomId") Long roomId) {
         List<ChattingRoomMessageResponseDto> chattingRoomMessageResponseDtos = chattingService.getChattingRoomMessageByRoomId(roomId);
-        return ResponseEntity.ok().body(chattingRoomMessageResponseDtos);
+        return ResponseEntity.ok().body(ResponseHandler.success(chattingRoomMessageResponseDtos));
     }
 }

@@ -1,25 +1,35 @@
 package SANTA.backend.global.common;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "app")
-@Component
 public class AppProperties {
 
     private final KoreaTourOrganization koreaTourOrganization = new KoreaTourOrganization();
     private final JWT jwt = new JWT();
     private final Forest forest = new Forest();
+    private final Kakao kakao = new Kakao();
+    private final BannerMountain bannerMountain = new BannerMountain();
 
     public KoreaTourOrganization getKoreaTourOrganization() {
         return this.koreaTourOrganization;
     }
 
-    public JWT getJwt(){
+    public JWT getJwt() {
         return this.jwt;
     }
 
-    public Forest getForest(){return this.forest;}
+    public Forest getForest() {
+        return this.forest;
+    }
+
+    public Kakao getKakao() {
+        return this.kakao;
+    }
+
+    public BannerMountain getBannerMountain() {
+        return this.bannerMountain;
+    }
 
     public static class KoreaTourOrganization {
         private String encodingKey;
@@ -43,55 +53,121 @@ public class AppProperties {
             this.decodingKey = decodingKey;
         }
 
-        public void setUrl(String url){
+        public void setUrl(String url) {
             this.url = url;
         }
 
-        public String getUrl(){
+        public String getUrl() {
             return url;
         }
 
-        public void setMobileAppName(String mobileAppName){
+        public void setMobileAppName(String mobileAppName) {
             this.mobileAppName = mobileAppName;
         }
 
-        public String getMobileAppName(){
+        public String getMobileAppName() {
             return mobileAppName;
         }
 
-        public String getRoutingKey(){return encodingKey;}
+        public String getRoutingKey() {
+            return encodingKey;
+        }
     }
 
-    public static class JWT{
+    public static class JWT {
         private String secret;
 
-        public String getSecret(){return secret;}
+        public String getSecret() {
+            return secret;
+        }
 
-        public void setSecret(String secret){this.secret = secret;}
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
     }
 
-    public static class Forest{
+    public static class Forest {
         private String url;
+        private String imageUrl;
         private String key;
 
-        public void setUrl(String url){
+        public void setUrl(String url) {
             this.url = url;
         }
 
-        public String getUrl(){
+        public String getUrl() {
             return this.url;
         }
 
-        public void setKey(String key){
+        public void setKey(String key) {
             this.key = key;
         }
 
-        public String getKey(){
+        public String getKey() {
             return this.key;
         }
 
-        public String getRoutingKey(){
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        public String getImageUrl() {
+            return this.imageUrl;
+        }
+
+        public String getRoutingKey() {
             return this.key;
+        }
+    }
+
+    public static class Kakao {
+        private String url;
+        private String key;
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getKey() {
+            return this.key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+    }
+
+    public static class BannerMountain {
+        private String url;
+        private String imageUrl;
+        private String key;
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public String getImageUrl() {
+            return this.imageUrl;
+        }
+
+        public String getKey() {
+            return this.key;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
         }
     }
 }
