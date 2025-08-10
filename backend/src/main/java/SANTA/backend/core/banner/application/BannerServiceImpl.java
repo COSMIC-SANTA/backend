@@ -26,6 +26,13 @@ public class BannerServiceImpl implements BannerService {
         return BannerResponse.from(interest, bannerMountains);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public BannerResponse getPopularMountains() {
+        List<BannerEntity> popularMountains = bannerRepository.findPopularMountains();
+        return BannerResponse.from(null, popularMountains);
+    }
+
     @Override @Transactional
     public void saveBanners(List<Banner> banners) {
         log.info("저장할 배너 개수: {}", banners.size()); // 🔍 로그 찍어보기
