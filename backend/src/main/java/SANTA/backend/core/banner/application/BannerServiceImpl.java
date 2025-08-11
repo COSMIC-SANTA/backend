@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class BannerServiceImpl implements BannerService {
     private final BannerRepository bannerRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BannerResponse getInterestingMountains(Interest interest) {
         List<BannerEntity> bannerMountains = bannerRepository.findByInterest(interest);
         return BannerResponse.from(interest, bannerMountains);
@@ -30,5 +31,10 @@ public class BannerServiceImpl implements BannerService {
     public void saveBanners(List<Banner> banners) {
         log.info("저장할 배너 개수: {}", banners.size()); // 🔍 로그 찍어보기
         bannerRepository.saveBanners(banners);
+    }
+
+    @Override @Transactional(readOnly = true)
+    public Optional<Banner> findById(Long bannerId) {
+        return bannerRepository.findById(bannerId);
     }
 }

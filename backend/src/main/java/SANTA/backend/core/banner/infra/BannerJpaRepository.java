@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -36,5 +37,10 @@ public class BannerJpaRepository implements BannerRepository {
             }
             log.info("배너 {} 저장됨",bannerEntities.get(i).getName());
         }
+    }
+
+    @Override
+    public Optional<Banner> findById(Long bannerId) {
+        return Optional.ofNullable(em.find(Banner.class, bannerId));
     }
 }

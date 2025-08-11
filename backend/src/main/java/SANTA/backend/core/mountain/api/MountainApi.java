@@ -20,8 +20,8 @@ public class MountainApi {
     }
 
     @GetMapping("/{mountainId}/details/{pageNo}")
-    public ResponseEntity<MountainNearByResponse> mountainNearBy(@PathVariable("mountainId") Long mountainId, @PathVariable("pageNo") Long pageNo){
-        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountainId,pageNo);
+    public ResponseEntity<MountainNearByResponse> mountainNearBy(@PathVariable("location") String location, @PathVariable("pageNo") Long pageNo){
+        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesByLocation(location,pageNo);
         return ResponseEntity.ok().body(mountainNearByResponse);
     }
 

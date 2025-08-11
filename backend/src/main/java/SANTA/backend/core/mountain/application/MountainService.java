@@ -1,5 +1,8 @@
 package SANTA.backend.core.mountain.application;
 
+import SANTA.backend.core.banner.application.BannerService;
+import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.infra.BannerRepository;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.cafe.domain.CafeRepository;
 import SANTA.backend.core.mountain.domain.Mountain;
@@ -47,20 +50,13 @@ public class MountainService {
     private String forestApiKey;
 
     private final MountainRepository mountainRepository;
-    private final RestaurantRepository restaurantRepository;
-    private final StayRepository stayRepository;
-    private final CafeRepository cafeRepository;
-    private final SpotRepository spotRepository;
+    private final BannerService bannerService;
     private final APIRequester apiRequester;
 
-    public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository, RestaurantRepository restaurantRepository,
-                           StayRepository stayRepository, CafeRepository cafeRepository, SpotRepository spotRepository, APIRequester apiRequester) {
+    public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository, APIRequester apiRequester, BannerService bannerService) {
         this.webClient = webClient;
         this.mountainRepository = mountainRepository;
-        this.restaurantRepository = restaurantRepository;
-        this.stayRepository = stayRepository;
-        this.cafeRepository = cafeRepository;
-        this.spotRepository = spotRepository;
+        this.bannerService = bannerService;
         this.apiRequester = apiRequester;
     }
 
@@ -99,17 +95,13 @@ public class MountainService {
         mountainRepository.saveMountain(mountain);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Mountain> findByName(String name){
         return mountainRepository.findByName(name);
     }
 
     @Transactional(readOnly = true)
-    public MountainNearByResponse searchNearByPlacesById(Long mountainId, Long pageNo) {
-        String location = mountainRepository.findById(mountainId)
-                .map(Mountain::getLocation)
-                .orElseThrow(() -> new CustomException(ErrorCode.MOUNTAIN_NOT_FOUND));
-
+    public MountainNearByResponse searchNearByPlacesByLocation(String location, Long pageNo) {
         return apiRequester.searchNearByPlacesByLocation(location, pageNo)
                 .block();
     }
