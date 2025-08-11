@@ -5,7 +5,10 @@ import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Difficulty;
+import SANTA.backend.core.mountain.dto.MountainDTO;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.MountainSearchRequest;
+import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
@@ -34,6 +37,7 @@ public class ApiRequesterImpl implements APIRequester {
     private final BannerInfoServiceRequester bannerInfoServiceRequester;
     private final WeatherServiceRequester weatherServiceRequester;
     private static final Long numOfRows = 20L;
+    private final KaKaoMountainServiceRequester kakaoMountainServiceRequester;
 
     @Override
     public Mono<MountainNearByResponse> searchNearByPlacesByLocation(String location, Long pageNo) {
@@ -65,6 +69,10 @@ public class ApiRequesterImpl implements APIRequester {
     @Override
     public WeatherResponseDto getWeather(Position position) {
         return weatherServiceRequester.getWeather(position).block();
+    }
+
+    public Mono<MountainSearchResponse> searchMountains(String mountainName) {
+        return kakaoMountainServiceRequester.searchMountainByKeyword(mountainName).map(this::extractMountainResponse);
     }
 
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
@@ -155,6 +163,21 @@ public class ApiRequesterImpl implements APIRequester {
                 .onErrorResume(e -> {
                     return Mono.just(banner); // 이미지 없이 그냥 반환
                 });
+    }
+
+    private MountainSearchResponse extractMountainResponse(JsonNode mountains) {
+        List<MountainDTO> mountainList = new ArrayList<>();
+        if (mountains.isArray()) {
+            for (JsonNode mountain : mountains) {
+                mountainList.add(new MountainDTO(
+                        mountain.path("place_name").asText(),
+                        mountain.path("address_name").asText(),
+                        mountain.path("x").asText(),
+                        mountain.path("y").asText()
+                ));
+            }
+        }
+        return new MountainSearchResponse(mountainList);
     }
 
 }
