@@ -7,7 +7,6 @@ import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.mountain.dto.MountainDTO;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
-import SANTA.backend.core.mountain.dto.MountainSearchRequest;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
