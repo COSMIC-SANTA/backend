@@ -58,7 +58,7 @@ public class MountainRepositoryTest extends RepositoryContext {
             mountainRepository.saveMountain(mountain3);
 
             //when
-            List<Mountain> interestingMountains = mountainRepository.findByInterest(interest).get();
+            List<Mountain> interestingMountains = mountainRepository.findByInterest(interest);
 
             //then
             assertThat(interestingMountains).extracting(Mountain::getInterest).containsExactlyInAnyOrder(interest);
