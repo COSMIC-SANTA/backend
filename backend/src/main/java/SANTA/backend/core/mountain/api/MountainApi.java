@@ -2,7 +2,6 @@ package SANTA.backend.core.mountain.api;
 
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.dto.*;
-import SANTA.backend.global.utils.api.rabbitmq.RabbitMQRequester;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

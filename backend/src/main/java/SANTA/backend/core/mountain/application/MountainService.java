@@ -6,6 +6,8 @@ import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.core.mountain.dto.MountainListSearchResponse;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
+import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
 import SANTA.backend.core.mountain.dto.external.ForestApiItem;
 import SANTA.backend.core.mountain.dto.external.ForestApiResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
