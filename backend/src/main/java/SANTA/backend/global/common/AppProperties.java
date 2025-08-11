@@ -10,6 +10,7 @@ public class AppProperties {
     private final Forest forest = new Forest();
     private final Kakao kakao = new Kakao();
     private final BannerMountain bannerMountain = new BannerMountain();
+    private final Weather weather = new Weather();
 
     public KoreaTourOrganization getKoreaTourOrganization() {
         return this.koreaTourOrganization;
@@ -29,6 +30,10 @@ public class AppProperties {
 
     public BannerMountain getBannerMountain() {
         return this.bannerMountain;
+    }
+
+    public Weather getWeather(){
+        return this.weather;
     }
 
     public static class KoreaTourOrganization {
@@ -167,6 +172,27 @@ public class AppProperties {
         }
 
         public void setKey(String key) {
+            this.key = key;
+        }
+    }
+
+    public static class Weather {
+        private String url;
+        private String key;
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public void setUrl(String url){
+            this.url = url;
+        }
+
+        public String getKey(){
+            return this.key;
+        }
+
+        public void setKey(String key){
             this.key = key;
         }
     }

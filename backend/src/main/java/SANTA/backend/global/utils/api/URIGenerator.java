@@ -6,6 +6,7 @@ import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
+import SANTA.backend.core.weather.dto.Grid;
 import SANTA.backend.global.utils.api.domain.AreaCode;
 import SANTA.backend.global.utils.api.domain.Arrange;
 import SANTA.backend.global.utils.api.domain.ContentTypeId;
@@ -15,6 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,9 +88,9 @@ public abstract class URIGenerator {
                 .fromHttpUrl(url)
                 .queryParam("serviceKey", encodedKey)
                 .queryParam("_type", JSON)
-                .queryParam("numOfRows",numOfRows);
+                .queryParam("numOfRows", numOfRows);
 
-        if (locationName != null){
+        if (locationName != null) {
             String encodedLocation = URLEncoder.encode(locationName, StandardCharsets.UTF_8);
             builder.queryParam("searchArNm", encodedLocation);
         }
@@ -108,20 +111,46 @@ public abstract class URIGenerator {
     }
 
     protected URI kakaoSearchRouteURIGenerator(String url, Position position, @Nullable List<Cafe> cafes, @Nullable List<Restaurant> restaurants, @Nullable List<Stay> stays, @Nullable List<Spot> spots,
-                                               BasePlace destinationBasePlace){
-        String origin = position.getMapX()+","+ position.getMapY();
-        String wayPoints = getWayPoints(stays,cafes, restaurants, spots);
-        String destination = destinationBasePlace.getPosition().getMapX()+","+destinationBasePlace.getPosition().getMapY()+",name="+destinationBasePlace.getName();
+                                               BasePlace destinationBasePlace) {
+        String origin = position.getMapX() + "," + position.getMapY();
+        String wayPoints = getWayPoints(stays, cafes, restaurants, spots);
+        String destination = destinationBasePlace.getPosition().getMapX() + "," + destinationBasePlace.getPosition().getMapY() + ",name=" + destinationBasePlace.getName();
 
-                UriComponentsBuilder componentsBuilder = UriComponentsBuilder
+        UriComponentsBuilder componentsBuilder = UriComponentsBuilder
                 .fromHttpUrl(url)
-                .queryParam("origin",origin)
-                .queryParam("destination",destination)
-                .queryParam("waypoints",wayPoints)
-                .queryParam("priority","RECOMMEND")
-                .queryParam("alternatives","true")
-                .queryParam("road_details","true")
-                .queryParam("summary","true");
+                .queryParam("origin", origin)
+                .queryParam("destination", destination)
+                .queryParam("waypoints", wayPoints)
+                .queryParam("priority", "RECOMMEND")
+                .queryParam("alternatives", "true")
+                .queryParam("road_details", "true")
+                .queryParam("summary", "true");
+
+        return componentsBuilder.build().toUri();
+    }
+
+    protected URI weatherURIGenerator(String url, String key, Grid grid) {
+        int nx = grid.nx();
+        int ny = grid.ny();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime base = (now.getMinute() < 40)
+                ? now.minusHours(1).withMinute(0).withSecond(0).withNano(0)
+                : now.withMinute(0).withSecond(0).withNano(0);
+
+        String baseDate = base.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String baseTime = base.format(DateTimeFormatter.ofPattern("HHmm"));
+
+
+        UriComponentsBuilder componentsBuilder = UriComponentsBuilder
+                .fromHttpUrl(url)
+                .queryParam("serviceKey", key)
+                .queryParam("dataType", "JSON")
+                .queryParam("numOfRows", 10)
+                .queryParam("pageNo", 1)
+                .queryParam("base_date", baseDate)
+                .queryParam("base_time", baseTime)
+                .queryParam("nx", nx)
+                .queryParam("ny", ny);
 
         return componentsBuilder.build().toUri();
     }

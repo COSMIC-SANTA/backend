@@ -10,6 +10,7 @@ import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
 import SANTA.backend.core.user.domain.Interest;
+import SANTA.backend.core.weather.dto.WeatherResponseDto;
 import SANTA.backend.global.utils.api.domain.AreaCode;
 import SANTA.backend.global.utils.api.domain.Arrange;
 import SANTA.backend.global.utils.api.domain.ContentTypeId;
@@ -31,6 +32,7 @@ public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
     private final BannerInfoServiceRequester bannerInfoServiceRequester;
+    private final WeatherServiceRequester weatherServiceRequester;
     private static final Long numOfRows = 20L;
 
     @Override
@@ -58,6 +60,11 @@ public class ApiRequesterImpl implements APIRequester {
                 .flatMap(this::enrichWithImageUrl) // Step 2: 각 Banner → 이미지 API 호출 → Banner에 imageUrl 추가
                 .collectList();
         return bannersWithImage.block(); // block은 마지막에 한 번만
+    }
+
+    @Override
+    public WeatherResponseDto getWeather(Position position) {
+        return weatherServiceRequester.getWeather(position).block();
     }
 
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
@@ -141,17 +148,13 @@ public class ApiRequesterImpl implements APIRequester {
     private Mono<Banner> enrichWithImageUrl(Banner banner) {
         return bannerInfoServiceRequester.getBannerImage(banner.getCode())
                 .map(jsonNode -> {
-                    System.out.println(banner.getCode());
                     String imageUrl = jsonNode.path("image").asText(null); // 없는 경우 null 반환
-                    System.out.println("이미지는"+ imageUrl);
                     banner.setImageUrl(imageUrl);
                     return banner;
                 })
                 .onErrorResume(e -> {
-                    System.out.println("이미지 API 호출 실패: " + banner.getCode() + " / " + e.getMessage());
                     return Mono.just(banner); // 이미지 없이 그냥 반환
                 });
-
     }
 
 }
