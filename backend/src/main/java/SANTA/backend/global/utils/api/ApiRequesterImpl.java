@@ -5,9 +5,11 @@ import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Difficulty;
+import SANTA.backend.core.mountain.dto.MountainDTO;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
 import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
+import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
@@ -29,6 +31,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
@@ -36,6 +39,7 @@ public class ApiRequesterImpl implements APIRequester {
     private final BannerInfoServiceRequester bannerInfoServiceRequester;
     private final WeatherServiceRequester weatherServiceRequester;
     private static final Long numOfRows = 20L;
+    private final KaKaoMountainServiceRequester kakaoMountainServiceRequester;
 
     @Override
     public Mono<MountainNearByResponse> searchNearByPlacesByLocation(String location, Long pageNo) {
@@ -69,6 +73,10 @@ public class ApiRequesterImpl implements APIRequester {
         return weatherServiceRequester.getWeather(position).block();
     }
 
+    public Mono<MountainSearchResponse> searchMountains(String mountainName) {
+        return kakaoMountainServiceRequester.searchMountainByKeyword(mountainName).map(this::extractMountainResponse);
+    }
+
     @Override
     public Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request) {
         return kaKaoMapServiceRequester.searchRoute(
@@ -96,10 +104,14 @@ public class ApiRequesterImpl implements APIRequester {
                             Position position = new Position(mapX, mapY);
 
                             switch (typeId) {
-                                case RESTAURANT -> list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case STAY -> list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case CULTURAL_FACILITY -> list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case TOUR_PLACE -> list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case RESTAURANT ->
+                                        list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case STAY ->
+                                        list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case CULTURAL_FACILITY ->
+                                        list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case TOUR_PLACE ->
+                                        list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
                             }
                         }
                     }
@@ -165,6 +177,21 @@ public class ApiRequesterImpl implements APIRequester {
                 .onErrorResume(e -> {
                     return Mono.just(banner); // 이미지 없이 그냥 반환
                 });
+    }
+
+    private MountainSearchResponse extractMountainResponse(JsonNode mountains) {
+        List<MountainDTO> mountainList = new ArrayList<>();
+        if (mountains.isArray()) {
+            for (JsonNode mountain : mountains) {
+                mountainList.add(new MountainDTO(
+                        mountain.path("place_name").asText(),
+                        mountain.path("address_name").asText(),
+                        mountain.path("x").asText(),
+                        mountain.path("y").asText()
+                ));
+            }
+        }
+        return new MountainSearchResponse(mountainList);
     }
 
     private OptimalRouteResponse extractRouteResponse(JsonNode jsonNode) {

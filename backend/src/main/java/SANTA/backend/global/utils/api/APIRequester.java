@@ -3,6 +3,7 @@ package SANTA.backend.global.utils.api;
 import SANTA.backend.core.banner.dto.Banner;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.weather.dto.WeatherResponseDto;
 import io.micrometer.common.lang.Nullable;
 import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
@@ -17,6 +18,8 @@ public interface APIRequester {
     public List<Banner> getBannersWithImages(@Nullable String mountainName);
 
     public WeatherResponseDto getWeather(Position position);
+
+    Mono<MountainSearchResponse> searchMountains(String mountainName);
 
     Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request);
 }

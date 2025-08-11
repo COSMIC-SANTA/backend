@@ -1,6 +1,8 @@
 package SANTA.backend.core.mountain.api;
 
 import SANTA.backend.core.mountain.application.MountainService;
+import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.mountain.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +15,10 @@ public class MountainApi {
 
     private final MountainService mountainService;
 
-    @GetMapping("search/{mountainName}")
-    public ResponseEntity<MountainListSearchResponse> searchMountain(@PathVariable("mountainName") String mountainName){
-        MountainListSearchResponse response = mountainService.searchMountains(mountainName.trim());
-        return ResponseEntity.ok(response);
+    @GetMapping("search")
+    public ResponseEntity<MountainSearchResponse> searchMountain(@RequestParam("mountainName") String mountainName){
+        MountainSearchResponse mountainSearchResponse = mountainService.searchMountains(mountainName.trim());
+        return ResponseEntity.ok(mountainSearchResponse);
     }
 
     @GetMapping("/{mountainId}/details/{pageNo}")
