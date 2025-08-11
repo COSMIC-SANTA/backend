@@ -7,10 +7,7 @@ import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.UserRepository;
-import SANTA.backend.global.utils.api.APIRequester;
-import SANTA.backend.global.utils.api.KaKaoMapServiceRequester;
-import SANTA.backend.global.utils.api.KoreanTourInfoServiceRequester;
-import SANTA.backend.global.utils.api.BannerInfoServiceRequester;
+import SANTA.backend.global.utils.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -53,4 +50,7 @@ public abstract class ServiceContext {
 
     @Autowired
     protected KaKaoMapServiceRequester kaKaoMapServiceRequester;
+
+    @Autowired
+    protected KakaoFacilityServiceRequester kakaoFacilityServiceRequester;
 }
