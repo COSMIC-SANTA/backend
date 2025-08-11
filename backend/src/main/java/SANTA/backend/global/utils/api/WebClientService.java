@@ -15,10 +15,12 @@ public class WebClientService {
 
     private final WebClient webClient;
     private final WebClient kakaoWebClient;
+    private final WebClient kakaoSearchByKeywordClient;
 
-    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient, @Qualifier("kakaoRouteClient") WebClient kakaoWebClient) {
+    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient, @Qualifier("kakaoRouteClient") WebClient kakaoWebClient, @Qualifier("kakaoSearchByKeywordClient") WebClient kakaoSearchByKeywordClient) {
         this.webClient = webClient;
         this.kakaoWebClient = kakaoWebClient;
+        this.kakaoSearchByKeywordClient = kakaoSearchByKeywordClient;
     }
 
     public Mono<JsonNode> request(URI uri) {
@@ -52,6 +54,21 @@ public class WebClientService {
             }
         });
         return stringMono;
+    }
+
+    public Mono<JsonNode> requestSearchByKeyword(URI uri){
+        Mono<JsonNode> stringMono = kakaoSearchByKeywordClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(JsonNode.class);
+
+        return stringMono.map(json -> {
+            try {
+                return json.path("documents");
+            } catch (Exception e) {
+                throw new RuntimeException("JSON 파싱 오류", e);
+            }
+        });
     }
 
 }

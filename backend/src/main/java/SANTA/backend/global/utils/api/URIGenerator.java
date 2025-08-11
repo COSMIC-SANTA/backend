@@ -155,6 +155,14 @@ public abstract class URIGenerator {
         return componentsBuilder.build().toUri();
     }
 
+    protected URI kakaoSearchMountainURIGenerator(String url, String mountainName) {
+        UriComponentsBuilder componentsBuilder = UriComponentsBuilder
+                .fromHttpUrl(url)
+                .queryParam("query", mountainName);
+
+        return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
+    }
+
     private static String getWayPoints(List<Stay> stays, List<Cafe> cafes, List<Restaurant> restaurants, List<Spot> spots) {
 
         List<String> waypoints = new ArrayList<>();
