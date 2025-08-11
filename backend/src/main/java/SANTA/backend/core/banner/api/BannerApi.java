@@ -24,15 +24,12 @@ public class BannerApi {
     }
 
     @GetMapping("/banner")
-    public ResponseEntity<ResponseHandler<BannerResponse>> getBanner(@RequestParam(required = false) String interest, @RequestParam(defaultValue = "best") String type){
+    public ResponseEntity<ResponseHandler<BannerResponse>> getBanner(@RequestParam String interest){
 
         BannerResponse response;
-        if ("interest".equals(type)){
-            Interest userInterest = Interest.valueOf(interest);
-            response = bannerService.getInterestingMountains(userInterest);
-        } else {
-            response = bannerService.getPopularMountains();
-        }
+        Interest userInterest = Interest.valueOf(interest);
+        response = bannerService.getInterestingMountains(userInterest);
+
         return ResponseEntity.ok().body(ResponseHandler.success(response));
     }
 }

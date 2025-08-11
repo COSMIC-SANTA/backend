@@ -22,6 +22,10 @@ public class BannerServiceImpl implements BannerService {
     @Override
     @Transactional
     public BannerResponse getInterestingMountains(Interest interest) {
+        if (interest == Interest.POPULAR) {
+            return getPopularMountains();
+        }
+
         List<BannerEntity> bannerMountains = bannerRepository.findByInterest(interest);
         return BannerResponse.from(interest, bannerMountains);
     }
@@ -30,7 +34,7 @@ public class BannerServiceImpl implements BannerService {
     @Transactional(readOnly = true)
     public BannerResponse getPopularMountains() {
         List<BannerEntity> popularMountains = bannerRepository.findPopularMountains();
-        return BannerResponse.from(null, popularMountains);
+        return BannerResponse.from(Interest.POPULAR, popularMountains);
     }
 
     @Override @Transactional
