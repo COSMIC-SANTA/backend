@@ -68,7 +68,7 @@ public class MountainService {
                 .uri(uriBuilder -> uriBuilder
                         .path("")
                         .queryParam("searchWrd", keyword)
-                        .queryParam("ServiceKey", forestApiKey)
+                        .queryParam("serviceKey", forestApiKey)
                         .queryParam("_type", "json")
                         .build())
                 .retrieve()
@@ -110,10 +110,5 @@ public class MountainService {
 
         return apiRequester.searchNearByPlacesByLocation(location, pageNo)
                 .block();
-    }
-
-    @Transactional
-    public void saveMountains(List<Mountain> mountains) {
-        mountainRepository.saveMountains(mountains);
     }
 }
