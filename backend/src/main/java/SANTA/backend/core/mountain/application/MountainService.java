@@ -15,6 +15,7 @@ import SANTA.backend.core.spot.domain.SpotRepository;
 import SANTA.backend.core.stay.domain.Stay;
 import SANTA.backend.core.stay.domain.StayRepository;
 import SANTA.backend.global.exception.ErrorCode;
+import SANTA.backend.global.exception.type.CustomException;
 import SANTA.backend.global.exception.type.ExternalApiException;
 import SANTA.backend.global.exception.type.DataNotFoundException;
 
@@ -32,6 +33,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -66,7 +68,7 @@ public class MountainService {
                 .uri(uriBuilder -> uriBuilder
                         .path("")
                         .queryParam("searchWrd", keyword)
-                        .queryParam("ServiceKey", forestApiKey)
+                        .queryParam("serviceKey", forestApiKey)
                         .queryParam("_type", "json")
                         .build())
                 .retrieve()
@@ -102,13 +104,11 @@ public class MountainService {
 
     @Transactional(readOnly = true)
     public MountainNearByResponse searchNearByPlacesById(Long mountainId, Long pageNo) {
-        String location = mountainRepository.findById(mountainId).getLocation();
-        Mono<MountainNearByResponse> mountainNearByResponseMono = apiRequester.searchNearByPlacesByLocation(location,pageNo);
-        return mountainNearByResponseMono.block();
-    }
+        String location = mountainRepository.findById(mountainId)
+                .map(Mountain::getLocation)
+                .orElseThrow(() -> new CustomException(ErrorCode.MOUNTAIN_NOT_FOUND));
 
-    @Transactional
-    public void saveMountains(List<Mountain> mountains) {
-        mountainRepository.saveMountains(mountains);
+        return apiRequester.searchNearByPlacesByLocation(location, pageNo)
+                .block();
     }
 }

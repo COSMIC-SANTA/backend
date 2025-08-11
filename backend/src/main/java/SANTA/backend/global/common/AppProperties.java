@@ -9,6 +9,8 @@ public class AppProperties {
     private final JWT jwt = new JWT();
     private final Forest forest = new Forest();
     private final Kakao kakao = new Kakao();
+    private final BannerMountain bannerMountain = new BannerMountain();
+    private final Weather weather = new Weather();
 
     public KoreaTourOrganization getKoreaTourOrganization() {
         return this.koreaTourOrganization;
@@ -24,6 +26,14 @@ public class AppProperties {
 
     public Kakao getKakao() {
         return this.kakao;
+    }
+
+    public BannerMountain getBannerMountain() {
+        return this.bannerMountain;
+    }
+
+    public Weather getWeather(){
+        return this.weather;
     }
 
     public static class KoreaTourOrganization {
@@ -64,25 +74,20 @@ public class AppProperties {
             return mobileAppName;
         }
 
-        public String getRoutingKey() {
-            return encodingKey;
-        }
+        public String getRoutingKey(){return encodingKey;}
     }
 
     public static class JWT {
         private String secret;
 
-        public String getSecret() {
-            return secret;
-        }
+        public String getSecret(){return secret;}
 
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
+        public void setSecret(String secret){this.secret = secret;}
     }
 
     public static class Forest {
         private String url;
+        private String imageUrl;
         private String key;
 
         public void setUrl(String url) {
@@ -99,6 +104,14 @@ public class AppProperties {
 
         public String getKey() {
             return this.key;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        public String getImageUrl() {
+            return this.imageUrl;
         }
 
         public String getRoutingKey() {
@@ -123,6 +136,57 @@ public class AppProperties {
         }
 
         public void setKey(String key) {
+            this.key = key;
+        }
+    }
+
+    public static class BannerMountain {
+        private String url;
+        private String imageUrl;
+        private String key;
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public String getImageUrl() {
+            return this.imageUrl;
+        }
+
+        public String getKey() {
+            return this.key;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+    }
+
+    public static class Weather {
+        private String url;
+        private String key;
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public void setUrl(String url){
+            this.url = url;
+        }
+
+        public String getKey(){
+            return this.key;
+        }
+
+        public void setKey(String key){
             this.key = key;
         }
     }

@@ -1,8 +1,8 @@
 package SANTA.backend.mountain.api;
 
 import SANTA.backend.context.ControllerTest;
-import SANTA.backend.core.mountain.dto.BannerMountainResponse;
-import SANTA.backend.core.mountain.dto.BannerResponse;
+import SANTA.backend.core.banner.dto.BannerMountainResponse;
+import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.user.domain.Interest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -31,27 +32,14 @@ public class MountainJPARepository implements MountainRepository {
     }
 
     @Override
-    public void saveMountains(List<Mountain> mountains) {
-        int batchSize = 100;
-        List<MountainEntity> mountainEntities = mountains.stream().map(MountainEntity::from).toList();
-        for(int i=0; i<mountainEntities.size(); i++){
-            em.persist(mountainEntities.get(i));
-            if(i%batchSize==0){
-                em.flush();
-                em.clear();
-            }
-        }
-    }
-
-    @Override
     public Long findAllCount(){
         return em.createQuery("select count(m) from MountainEntity m", Long.class).getSingleResult();
     }
 
     @Override
-    public Mountain findById(Long mountainId) {
+    public Optional<Mountain> findById(Long mountainId) {
         MountainEntity mountainEntity = em.find(MountainEntity.class, mountainId);
-        return Mountain.fromEntity(mountainEntity);
+        return mountainEntity != null ? Optional.of(Mountain.fromEntity(mountainEntity)) : Optional.empty();
     }
 
     @Override
