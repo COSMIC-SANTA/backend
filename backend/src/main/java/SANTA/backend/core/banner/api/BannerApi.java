@@ -9,10 +9,7 @@ import SANTA.backend.global.utils.api.rabbitmq.RabbitMQRequester;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,9 +26,19 @@ public class BannerApi {
     }
 
     @GetMapping("/banner")
-    public ResponseEntity<ResponseHandler<BannerResponse>> getBanner(@AuthenticationPrincipal CustomUserDetails customUserDetails){
-        Interest interest = customUserDetails.getInterest();
-        return ResponseEntity.ok().body(ResponseHandler.success(bannerService.getInterestingMountains(interest)));
+    public ResponseEntity<ResponseHandler<BannerResponse>> getBanner(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                     @RequestParam(defaultValue = "best") String type){
+
+        BannerResponse response;
+
+        if ("interest".equals(type)){
+            Interest interest = customUserDetails.getInterest();
+            response = bannerService.getInterestingMountains(interest);
+        } else {
+            response = bannerService.getPopularMountains();
+        }
+
+        return ResponseEntity.ok().body(ResponseHandler.success(response));
     }
 
 }

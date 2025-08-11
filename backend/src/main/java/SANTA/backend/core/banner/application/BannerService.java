@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface BannerService {
     BannerResponse getInterestingMountains(Interest interest);
 
+    BannerResponse getPopularMountains();
+
     void saveBanners(List<Banner> banners);
 
     Optional<Banner> findById(Long bannerId);

@@ -5,6 +5,7 @@ import SANTA.backend.core.mountain.api.MountainApi;
 import SANTA.backend.core.banner.application.BannerService;
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.user.application.UserService;
+import SANTA.backend.global.jwt.JWTFilter;
 import SANTA.backend.global.jwt.JWTUtil;
 import SANTA.backend.global.utils.api.rabbitmq.RabbitMQRequester;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,7 @@ public abstract class ControllerTest {
     @MockitoBean
     protected RedisTemplate<String, String> redisTemplate;
 
+    @MockitoBean
+    protected JWTFilter jwtFilter;
 
 }

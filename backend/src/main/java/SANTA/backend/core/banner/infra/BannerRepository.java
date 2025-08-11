@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface BannerRepository {
     List<BannerEntity> findByInterest(Interest interest);
 
+    List<BannerEntity> findPopularMountains();
+
     void saveBanners(List<Banner> banners);
 
     Optional<Banner> findById(Long bannerId);
