@@ -9,5 +9,7 @@ import java.util.List;
 public interface BannerRepository {
     List<BannerEntity> findByInterest(Interest interest);
 
+    List<BannerEntity> findPopularMountains();
+
     void saveBanners(List<Banner> banners);
 }

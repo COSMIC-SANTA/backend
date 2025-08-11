@@ -14,15 +14,17 @@ public class Banner {
     private Interest interest;
     private String imageUrl;
     private Difficulty difficulty;
+    private Long visitCount;
 
     @Builder
-    public Banner(Long code, String name, String location, Interest interest, String imageUrl, Difficulty difficulty){
+    public Banner(Long code, String name, String location, Interest interest, String imageUrl, Difficulty difficulty, Long  visitCount) {
         this.code = code;
         this.name= name;
         this.location = location;
         this.interest = interest;
         this.imageUrl = imageUrl;
         this.difficulty = difficulty;
+        this.visitCount = visitCount;
     }
 
     public void setImageUrl(String imageUrl) {

@@ -9,5 +9,7 @@ import java.util.List;
 public interface BannerService {
     BannerResponse getInterestingMountains(Interest interest);
 
+    BannerResponse getPopularMountains();
+
     void saveBanners(List<Banner> banners);
 }

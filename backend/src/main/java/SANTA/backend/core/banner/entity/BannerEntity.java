@@ -29,13 +29,16 @@ public class BannerEntity {
     @Enumerated(EnumType.STRING)
     private Interest interest;
 
+    private Long visitCount;
+
     @Builder
-    private BannerEntity(String name, Difficulty difficulty, String location, String imageUrl, Interest interest){
+    private BannerEntity(String name, Difficulty difficulty, String location, String imageUrl, Interest interest, Long visitCount) {
         this.name = name;
         this.difficulty = difficulty;
         this.location = location;
         this.imageUrl = imageUrl;
         this.interest = interest;
+        this.visitCount = visitCount;
     }
 
     public static BannerEntity from(Banner banner){
@@ -44,6 +47,7 @@ public class BannerEntity {
                 .location(banner.getLocation())
                 .interest(banner.getInterest())
                 .difficulty(banner.getDifficulty())
+                .visitCount(banner.getVisitCount())
                 .build();
     }
 }
