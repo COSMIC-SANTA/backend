@@ -6,6 +6,8 @@ import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
+import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
@@ -27,10 +29,10 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
+    private final KaKaoMapServiceRequester kaKaoMapServiceRequester;
     private final BannerInfoServiceRequester bannerInfoServiceRequester;
     private final WeatherServiceRequester weatherServiceRequester;
     private static final Long numOfRows = 20L;
@@ -67,6 +69,18 @@ public class ApiRequesterImpl implements APIRequester {
         return weatherServiceRequester.getWeather(position).block();
     }
 
+    @Override
+    public Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request) {
+        return kaKaoMapServiceRequester.searchRoute(
+                request.origin(),
+                request.cafes(),
+                request.restaurants(),
+                request.stays(),
+                request.spots(),
+                request.destination()
+        ).map(this::extractRouteResponse);
+    }
+
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
         return koreanTourInfoServiceRequester
                 .getContentByAreaBasedList2(numOfRows, pageNo, areaCode, sigunguCode, Arrange.A, typeId)
@@ -82,14 +96,10 @@ public class ApiRequesterImpl implements APIRequester {
                             Position position = new Position(mapX, mapY);
 
                             switch (typeId) {
-                                case RESTAURANT ->
-                                        list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case STAY ->
-                                        list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case CULTURAL_FACILITY ->
-                                        list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
-                                case TOUR_PLACE ->
-                                        list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case RESTAURANT -> list.add((T) Restaurant.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case STAY -> list.add((T) Stay.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case CULTURAL_FACILITY -> list.add((T) Cafe.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
+                                case TOUR_PLACE -> list.add((T) Spot.builder().name(name).location(location).imageUrl(imageUrl).position(position).build());
                             }
                         }
                     }
@@ -157,4 +167,61 @@ public class ApiRequesterImpl implements APIRequester {
                 });
     }
 
+    private OptimalRouteResponse extractRouteResponse(JsonNode jsonNode) {
+        if (jsonNode.isArray() && !jsonNode.isEmpty()) {
+            JsonNode routeNode = jsonNode.get(0);
+            JsonNode summary = routeNode.path("summary");
+            JsonNode origin = summary.path("origin");
+            JsonNode destination = summary.path("destination");
+            JsonNode waypoints = summary.path("waypoints");
+            JsonNode fare = summary.path("fare");
+            JsonNode sections = summary.path("sections");
+
+            return new OptimalRouteResponse(
+                    new OptimalRouteResponse.OriginInfo(
+                            origin.path("name").asText(),
+                            origin.path("x").asDouble(),
+                            origin.path("y").asDouble()
+                    ),
+                    new OptimalRouteResponse.DestinationInfo(
+                            destination.path("name").asText(),
+                            destination.path("x").asDouble(),
+                            destination.path("y").asDouble()
+                    ),
+                    extractWaypoints(waypoints),
+                    summary.path("distance").asDouble(),
+                    summary.path("duration").asDouble(),
+                    fare.path("taxi").asDouble(),
+                    extractSections(sections)
+            );
+        }
+        throw new RuntimeException("경로를 찾을 수 없습니다.");
+    }
+
+    private List<OptimalRouteResponse.WaypointInfo> extractWaypoints(JsonNode waypoints) {
+        List<OptimalRouteResponse.WaypointInfo> waypointList = new ArrayList<>();
+        if (waypoints.isArray()) {
+            for (JsonNode waypoint : waypoints) {
+                waypointList.add(new OptimalRouteResponse.WaypointInfo(
+                        waypoint.path("name").asText(),
+                        waypoint.path("x").asDouble(),
+                        waypoint.path("y").asDouble()
+                ));
+            }
+        }
+        return waypointList;
+    }
+
+    private List<OptimalRouteResponse.SectionInfo> extractSections(JsonNode sections) {
+        List<OptimalRouteResponse.SectionInfo> sectionList = new ArrayList<>();
+        if (sections.isArray()) {
+            for (JsonNode section : sections) {
+                sectionList.add(new OptimalRouteResponse.SectionInfo(
+                        section.path("distance").asDouble(),
+                        section.path("duration").asDouble()
+                ));
+            }
+        }
+        return sectionList;
+    }
 }

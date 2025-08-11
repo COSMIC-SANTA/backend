@@ -111,4 +111,10 @@ public class MountainService {
         return apiRequester.searchNearByPlacesByLocation(location, pageNo)
                 .block();
     }
+
+    @Transactional
+    public OptimalRouteResponse searchOptimalRoute(OptimalRouteRequest request) {
+        Mono<OptimalRouteResponse> routeResponseMono = apiRequester.searchOptimalRoute(request);
+        return routeResponseMono.block();
+    }
 }

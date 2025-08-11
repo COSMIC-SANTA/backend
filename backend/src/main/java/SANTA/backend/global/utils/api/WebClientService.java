@@ -44,14 +44,13 @@ public class WebClientService {
                 .retrieve()
                 .bodyToMono(JsonNode.class);
 
-        stringMono.map(json -> {
+        return stringMono.map(json -> {
             try {
                 return json.path("routes");
             } catch (Exception e) {
                 throw new RuntimeException("JSON 파싱 오류", e);
             }
         });
-        return stringMono;
     }
 
 }

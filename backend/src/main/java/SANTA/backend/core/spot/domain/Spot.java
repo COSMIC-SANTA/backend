@@ -5,8 +5,10 @@ import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.spot.entity.SpotEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Spot extends BasePlace {
 
     @Builder
