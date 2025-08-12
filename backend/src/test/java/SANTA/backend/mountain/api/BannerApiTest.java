@@ -3,14 +3,20 @@ package SANTA.backend.mountain.api;
 import SANTA.backend.context.ControllerTest;
 import SANTA.backend.core.banner.dto.BannerMountainResponse;
 import SANTA.backend.core.banner.dto.BannerResponse;
+import SANTA.backend.core.mountain.dto.MountainDTO;
+import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.user.domain.Interest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
@@ -19,6 +25,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,6 +96,33 @@ public class BannerApiTest extends ControllerTest {
                     Arguments.of(Interest.ACTIVITY),
                     Arguments.of(Interest.HIGH)
             );
+        }
+    }
+
+    @Nested
+    class 배너_클릭 {
+        @Test
+        @WithMockUser(username = "testuser", roles = {"USER"})
+        void 배너_클릭_성공() throws Exception {
+            // given
+            String mountainName = "부모산";
+            MountainDTO mountainDTO = new MountainDTO("부모산", "충북 청주시 흥덕구 비하동 산 10-3", "127.41026890180636", "36.63420831918445");
+            List<MountainDTO> mountainResponseList = new ArrayList<>();
+            mountainResponseList.add(mountainDTO);
+            MountainSearchResponse searchResponse = new MountainSearchResponse(mountainResponseList);
+
+            given(mountainService.searchMountains(anyString())).willReturn(searchResponse);
+
+            // when & then
+            mockMvc.perform(post("/api/main/banner/click")
+                            .param("mountainName", mountainName)
+                            .contentType(String.valueOf(MediaType.APPLICATION_JSON)))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("success"));
+
+            verify(bannerService).incrementViewCount(mountainName);
+            verify(mountainService).searchMountains(mountainName);
         }
     }
 }
