@@ -128,4 +128,32 @@ public class BannerServiceTest extends ServiceContext {
             );
         }
     }
+
+    @Nested
+    class 배너_클릭_테스트 {
+
+        @Test
+        @Transactional
+        void 배너_클릭_시_조회수가_올라간다() {
+            // given
+            Banner banner = Banner.builder()
+                    .code(1L)
+                    .name("한라산")
+                    .location("제주도")
+                    .interest(Interest.HIGH)
+                    .imageUrl("http://image")
+                    .difficulty(Difficulty.HARD)
+                    .viewCount(200L)
+                    .build();
+
+            bannerService.saveBanners(List.of(banner));
+
+            // when
+            bannerService.incrementViewCount("한라산");
+
+            // then
+            Banner updatedBanner = bannerService.findByName("한라산");
+            assertThat(updatedBanner.getViewCount()).isEqualTo(201L);
+        }
+    }
 }
