@@ -32,7 +32,7 @@ public class BannerEntity {
     private Long viewCount;
 
     @Builder
-    private BannerEntity(String name, Difficulty difficulty, String location, String imageUrl, Interest interest, Long visitCount) {
+    private BannerEntity(String name, Difficulty difficulty, String location, String imageUrl, Interest interest, Long viewCount) {
         this.name = name;
         this.difficulty = difficulty;
         this.location = location;
@@ -49,5 +49,9 @@ public class BannerEntity {
                 .difficulty(banner.getDifficulty())
                 .viewCount(banner.getViewCount())
                 .build();
+    }
+
+    public void incrementViewCount() {
+        this.viewCount += 1;
     }
 }
