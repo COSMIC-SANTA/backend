@@ -110,7 +110,7 @@ public class BannerServiceTest extends ServiceContext {
             BannerResponse popularMountains = bannerService.getPopularMountains();
 
             // then
-            assertThat(popularMountains.interest()).isNull();
+            assertThat(popularMountains.interest()).isEqualTo(Interest.POPULAR);
             assertThat(popularMountains.mountains()).hasSize(3);
             assertThat(popularMountains.mountains().get(0).name()).isEqualTo("부모산");
             assertThat(popularMountains.mountains().get(0).viewCount()).isEqualTo(300L);
