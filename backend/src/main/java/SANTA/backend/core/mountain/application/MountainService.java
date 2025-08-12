@@ -1,16 +1,15 @@
 package SANTA.backend.core.mountain.application;
 
 import SANTA.backend.core.banner.application.BannerService;
-import SANTA.backend.core.cafe.domain.CafeRepository;
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
 import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
-import SANTA.backend.core.restaurant.domain.RestaurantRepository;
-import SANTA.backend.core.spot.domain.SpotRepository;
-import SANTA.backend.core.stay.domain.StayRepository;
+import SANTA.backend.core.mountain.entity.MountainEntity;
+import SANTA.backend.global.exception.ErrorCode;
+import SANTA.backend.global.exception.type.CustomException;
 import SANTA.backend.global.utils.api.APIRequester;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +20,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -55,7 +55,7 @@ public class MountainService {
 
     @Transactional(readOnly = true)
     public List<Mountain> findByName(String name) {
-        return mountainRepository.findByName(name);
+        return mountainRepository.findByName(name).stream().map(Mountain::fromEntity).toList();
     }
 
     @Transactional(readOnly = true)
@@ -69,4 +69,5 @@ public class MountainService {
         Mono<OptimalRouteResponse> routeResponseMono = apiRequester.searchOptimalRoute(request);
         return routeResponseMono.block();
     }
+
 }

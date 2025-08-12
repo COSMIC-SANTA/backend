@@ -11,41 +11,37 @@ import SANTA.backend.core.auth.service.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.*;
 
-import java.util.Collections;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    //JWTUtil
     private final SuccessHandler successHandler;
-
     private final FailureHandler failureHandler;
-
     private final JWTFilter jwtFilter;
-
     private final JWTUtil jwtUtil;
-
     private final HttpCookieOAuth2Auth2AuthorizationRequestRepository httpCookieOAuth2Auth2AuthorizationRequestRepository;
-
     private final CustomOauth2UserService customOauth2UserService;
-
     private final LoginSuccessHandler loginSuccessHandler;
 
-
-    @Bean //
+    @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -58,63 +54,73 @@ public class SecurityConfig {
         return loginFilter;
     }
 
+    /** ✅ 전역 CORS 설정 (패턴 + OPTIONS 포함) */
     @Bean
-    public CorsConfigurationSource corsConfiguration() {
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration cfg = new CorsConfiguration();
 
-        CorsConfiguration configuration = new CorsConfiguration();
+        // 개발 단계: 정확한 오리진(8081) 허용. 필요하면 패턴/여러 항목 추가
+        cfg.setAllowedOriginPatterns(List.of(
+                "http://localhost:8081",
+                "http://127.0.0.1:8081",
+                "http://[::1]:8081"
+        ));
+        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
+        cfg.setAllowedHeaders(List.of("*"));
+        cfg.setExposedHeaders(List.of("*"));
 
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-        configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setMaxAge(3600L);
+        // withCredentials(쿠키/세션) 안 쓰면 false 권장. 쓰면 true + 정확한 Origin만 허용해야 함.
+        cfg.setAllowCredentials(false);
 
-        UrlBasedCorsConfigurationSource corsConfigurationSource=new UrlBasedCorsConfigurationSource();
-        corsConfigurationSource.registerCorsConfiguration("/**",configuration);
-
-        return corsConfigurationSource;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cfg);
+        return source;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception{
-        //csrf disable : csrf 공격 방어
-        //Form 로그인 방식 disable
-        //http basic 인증방식 disable
-        //경로별 인가 작업, OAuth2
-        //세션 설정-stateless 상태로 설정하는 것이 중요
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+
         http
-                .csrf((auth)->auth.disable())
-                .formLogin((auth)->auth.disable())
-                .httpBasic((auth)->auth.disable())
-                .cors(c->c.configurationSource(corsConfiguration()))
-                .sessionManagement((session)->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable())
+                .formLogin(f -> f.disable())
+                .httpBasic(b -> b.disable())
+
+                /** ✅ CorsFilter를 시큐리티 체인에 활성화 */
+                .cors(Customizer.withDefaults())
+
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/api/auth/login", "/api/auth/sign-up","/abc").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        /** ✅ 프리플라이트는 전부 허용 (중요) */
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        /** 공개 엔드포인트 */
+                        .requestMatchers("/", "/api/auth/login", "/api/auth/sign-up", "/abc").permitAll()
+
+                        /** 필요 시 개발 단계에서 임시 오픈
+                         * .requestMatchers("/api/**").permitAll()
+                         */
+
                         .anyRequest().permitAll()
                 )
-                .oauth2Login(oauth->oauth
+
+                .oauth2Login(oauth -> oauth
                         .successHandler(successHandler)
                         .failureHandler(failureHandler)
                         .authorizationEndpoint(aep -> aep
                                 .baseUri("/api/oauth2/authorize")
                                 .authorizationRequestRepository(httpCookieOAuth2Auth2AuthorizationRequestRepository)
                         )
-                        .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
-                                .baseUri("/api/oauth2/callback/*")
-                        )
-                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOauth2UserService))
+                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/oauth2/callback/*"))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
                 );
 
-        //JWT필터 등록
-        http
-                .addFilterBefore(jwtFilter,LoginFilter.class);
-        //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-        http
-                .addFilterAt(loginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+        /** ✅ 필터 순서 정정: CORS 처리 후에 JWT 검사 */
+        http.addFilterAfter(jwtFilter, CorsFilter.class);
 
+        /** 로그인 필터 등록 */
+        http.addFilterAt(loginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
 
-        return  http.build();
+        return http.build();
     }
 }
