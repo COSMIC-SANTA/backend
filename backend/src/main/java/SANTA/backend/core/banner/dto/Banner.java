@@ -14,7 +14,7 @@ public class Banner {
     private Interest interest;
     private String imageUrl;
     private Difficulty difficulty;
-    private Long visitCount;
+    private Long viewCount;
 
     @Builder
     public Banner(Long code, String name, String location, Interest interest, String imageUrl, Difficulty difficulty, Long  visitCount) {
@@ -24,11 +24,11 @@ public class Banner {
         this.interest = interest;
         this.imageUrl = imageUrl;
         this.difficulty = difficulty;
-        this.visitCount = visitCount;
+        this.viewCount = viewCount;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    public void setVisitCount(Long visitCount) {this.visitCount = visitCount;}
+    public void setVisitCount(Long viewCount) {this.viewCount = viewCount;}
 }

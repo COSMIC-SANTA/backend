@@ -26,7 +26,7 @@ public class BannerJpaRepository implements BannerRepository {
 
     @Override
     public List<BannerEntity> findPopularMountains() {
-        return em.createQuery("select b from BannerEntity b order by b.visitCount desc",
+        return em.createQuery("select b from BannerEntity b order by b.viewCount desc",
                 BannerEntity.class)
                 .setMaxResults(10)
                 .getResultList();

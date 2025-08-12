@@ -7,9 +7,9 @@ public record BannerMountainResponse(
         Long id,
         String name,
         String image_url,
-        Long visitCount
+        Long viewCount
 ) {
     public static BannerMountainResponse from(BannerEntity banner){
-        return new BannerMountainResponse(banner.getId(), banner.getName(), banner.getImageUrl(), banner.getVisitCount());
+        return new BannerMountainResponse(banner.getId(), banner.getName(), banner.getImageUrl(), banner.getViewCount());
     }
 }

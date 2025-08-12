@@ -34,7 +34,7 @@ public class BannerServiceTest extends ServiceContext {
                     .interest(Interest.ACTIVITY)
                     .imageUrl("http://image")
                     .difficulty(Difficulty.EASY)
-                    .visitCount(10L)
+                    .viewCount(10L)
                     .build();
 
             Banner banner2 = Banner.builder()
@@ -44,7 +44,7 @@ public class BannerServiceTest extends ServiceContext {
                     .interest(Interest.HIGH)
                     .imageUrl("http://image")
                     .difficulty(Difficulty.HARD)
-                    .visitCount(10L)
+                    .viewCount(10L)
                     .build();
 
             Banner banner3 = Banner.builder()
@@ -54,7 +54,7 @@ public class BannerServiceTest extends ServiceContext {
                     .interest(Interest.LOW)
                     .imageUrl("http://image")
                     .difficulty(Difficulty.MODERATE)
-                    .visitCount(11L)
+                    .viewCount(11L)
                     .build();
 
             List<Banner> banners = List.of(banner1, banner2, banner3);
@@ -80,7 +80,7 @@ public class BannerServiceTest extends ServiceContext {
                     .interest(Interest.HIGH)
                     .imageUrl("http://image")
                     .difficulty(Difficulty.HARD)
-                    .visitCount(200L)
+                    .viewCount(200L)
                     .build();
 
             Banner banner2 = Banner.builder()
@@ -90,7 +90,7 @@ public class BannerServiceTest extends ServiceContext {
                     .interest(Interest.ACTIVITY)
                     .imageUrl("http://image")
                     .difficulty(Difficulty.HARD)
-                    .visitCount(150L)
+                    .viewCount(150L)
                     .build();
 
             Banner banner3 = Banner.builder()
@@ -100,7 +100,7 @@ public class BannerServiceTest extends ServiceContext {
                     .interest(Interest.LOW)
                     .imageUrl("http://image")
                     .difficulty(Difficulty.MODERATE)
-                    .visitCount(300L)
+                    .viewCount(300L)
                     .build();
 
             List<Banner> banners = List.of(banner1, banner2, banner3);
@@ -113,11 +113,11 @@ public class BannerServiceTest extends ServiceContext {
             assertThat(popularMountains.interest()).isNull();
             assertThat(popularMountains.mountains()).hasSize(3);
             assertThat(popularMountains.mountains().get(0).name()).isEqualTo("부모산");
-            assertThat(popularMountains.mountains().get(0).visitCount()).isEqualTo(300L);
+            assertThat(popularMountains.mountains().get(0).viewCount()).isEqualTo(300L);
             assertThat(popularMountains.mountains().get(1).name()).isEqualTo("한라산");
-            assertThat(popularMountains.mountains().get(1).visitCount()).isEqualTo(200L);
+            assertThat(popularMountains.mountains().get(1).viewCount()).isEqualTo(200L);
             assertThat(popularMountains.mountains().get(2).name()).isEqualTo("지리산");
-            assertThat(popularMountains.mountains().get(2).visitCount()).isEqualTo(150L);
+            assertThat(popularMountains.mountains().get(2).viewCount()).isEqualTo(150L);
         }
 
         public static Stream<Arguments> provideInterests() {
