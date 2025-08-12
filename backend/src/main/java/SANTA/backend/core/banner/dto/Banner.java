@@ -1,5 +1,6 @@
 package SANTA.backend.core.banner.dto;
 
+import SANTA.backend.core.banner.entity.BannerEntity;
 import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.user.domain.Interest;
 import lombok.Builder;
@@ -17,7 +18,7 @@ public class Banner {
     private Long viewCount;
 
     @Builder
-    public Banner(Long code, String name, String location, Interest interest, String imageUrl, Difficulty difficulty, Long  visitCount) {
+    public Banner(Long code, String name, String location, Interest interest, String imageUrl, Difficulty difficulty, Long  viewCount) {
         this.code = code;
         this.name= name;
         this.location = location;
@@ -25,6 +26,17 @@ public class Banner {
         this.imageUrl = imageUrl;
         this.difficulty = difficulty;
         this.viewCount = viewCount;
+    }
+
+    public static Banner fromEntity(BannerEntity bannerEntity) {
+        return Banner.builder()
+                .name(bannerEntity.getName())
+                .location(bannerEntity.getLocation())
+                .interest(bannerEntity.getInterest())
+                .imageUrl(bannerEntity.getImageUrl())
+                .difficulty(bannerEntity.getDifficulty())
+                .viewCount(bannerEntity.getViewCount())
+                .build();
     }
 
     public void setImageUrl(String imageUrl) {
