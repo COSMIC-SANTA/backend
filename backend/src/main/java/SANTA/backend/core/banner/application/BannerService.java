@@ -11,5 +11,7 @@ public interface BannerService {
 
     BannerResponse getPopularMountains();
 
+    Banner findByName(String name);
+
     void saveBanners(List<Banner> banners);
 }
