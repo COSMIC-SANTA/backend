@@ -29,7 +29,7 @@ public class BannerApiTest extends ControllerTest {
 
         @ParameterizedTest
         @WithMockUser(username = "testuser", roles = {"USER"})
-        @MethodSource({"provideInterest"})
+        @MethodSource("provideInterest")
         void 배너_리스트_조회_요청(Interest interest) throws Exception {
             //given
             List<BannerMountainResponse> mountainResponseList = new ArrayList<>();
@@ -37,14 +37,18 @@ public class BannerApiTest extends ControllerTest {
             mountainResponseList.add(bannerMountainResponse);
             BannerResponse bannerResponse = new BannerResponse(interest, mountainResponseList);
 
-
             given(bannerService.getInterestingMountains(interest)).willReturn(bannerResponse);
-            //when & then
+
+            // when & then
             mockMvc.perform(get("/api/main/banner")
-                    .contentType("application/json"))
+                            .param("interest", interest.name())
+                            .contentType("application/json"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name").value("새로운 산"))
-                    .andExpect(jsonPath("$.image_url").value("image_url"));
+                    .andExpect(jsonPath("$.data.interest").value(interest.name()))
+                    .andExpect(jsonPath("$.data.mountains[0].name").value("새로운 산"))
+                    .andExpect(jsonPath("$.data.mountains[0].image_url").value("image_url"));
+
+            verify(bannerService).getInterestingMountains(interest);
         }
 
         @Test
@@ -58,21 +62,24 @@ public class BannerApiTest extends ControllerTest {
             mountainResponseList.add(bannerMountainResponse1);
             mountainResponseList.add(bannerMountainResponse2);
             mountainResponseList.add(bannerMountainResponse3);
-            BannerResponse bannerResponse = new BannerResponse(null, mountainResponseList);
+            BannerResponse bannerResponse = new BannerResponse(Interest.POPULAR, mountainResponseList);
 
-            given(bannerService.getPopularMountains()).willReturn(bannerResponse);
+            given(bannerService.getInterestingMountains(any(Interest.class))).willReturn(bannerResponse);
 
             // when & then
             mockMvc.perform(get("/api/main/banner")
-                            .param("type", "best")
+                            .param("interest", "POPULAR")
                             .contentType("application/json"))
                     .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.interest").value("POPULAR"))
                     .andExpect(jsonPath("$.data.mountains[0].name").value("부모산"))
-                    .andExpect(jsonPath("$.data.mountains[0].visitCount").value(300L))
+                    .andExpect(jsonPath("$.data.mountains[0].viewCount").value(300L))
                     .andExpect(jsonPath("$.data.mountains[1].name").value("한라산"))
-                    .andExpect(jsonPath("$.data.mountains[1].visitCount").value(200L))
+                    .andExpect(jsonPath("$.data.mountains[1].viewCount").value(200L))
                     .andExpect(jsonPath("$.data.mountains[2].name").value("지리산"))
-                    .andExpect(jsonPath("$.data.mountains[2].visitCount").value(150L));
+                    .andExpect(jsonPath("$.data.mountains[2].viewCount").value(150L));
+
+            verify(bannerService).getInterestingMountains(Interest.POPULAR);
         }
 
 
@@ -83,7 +90,5 @@ public class BannerApiTest extends ControllerTest {
                     Arguments.of(Interest.HIGH)
             );
         }
-
-
     }
 }
