@@ -49,4 +49,11 @@ public class BannerServiceImpl implements BannerService {
         log.info("저장할 배너 개수: {}", banners.size()); // 🔍 로그 찍어보기
         bannerRepository.saveBanners(banners);
     }
+
+    @Override @Transactional
+    public void incrementViewCount(String mountainName) {
+        BannerEntity banner = bannerRepository.findByName(mountainName);
+        banner.incrementViewCount();
+        log.info("배너 '{}' 조회수 1 증가", mountainName);
+    }
 }

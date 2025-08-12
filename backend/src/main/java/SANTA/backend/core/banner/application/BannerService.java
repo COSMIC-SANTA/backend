@@ -14,4 +14,6 @@ public interface BannerService {
     Banner findByName(String name);
 
     void saveBanners(List<Banner> banners);
+
+    void incrementViewCount(String mountainName);
 }
