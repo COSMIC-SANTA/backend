@@ -45,4 +45,12 @@ public class BannerJpaRepository implements BannerRepository {
             log.info("배너 {} 저장됨",bannerEntities.get(i).getName());
         }
     }
+
+    @Override
+    public BannerEntity findByName(String name) {
+        return em.createQuery("select b from BannerEntity b where b.name = :name", BannerEntity.class)
+                .setParameter("name", name)
+                .getResultStream().findFirst()
+                .orElse(null);
+    }
 }

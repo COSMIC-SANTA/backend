@@ -12,4 +12,6 @@ public interface BannerRepository {
     List<BannerEntity> findPopularMountains();
 
     void saveBanners(List<Banner> banners);
+
+    BannerEntity findByName(String name);
 }
