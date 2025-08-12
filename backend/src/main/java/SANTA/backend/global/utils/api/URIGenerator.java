@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public abstract class URIGenerator {
 
     private static final String JSON = "json";
+    private static final String SEARCH_RADIUS = "20000";
 
     protected URI KoreanTourInfoServiceURIGenerator(String url, String operation, String key, String mobileOs, String mobileApp, @Nullable Long numOfRows, @Nullable Long pageNo,
                                                     @Nullable Arrange arrange, @Nullable ContentTypeId contentTypeId, @Nullable AreaCode areaCode, @Nullable Long sigunguCode,
@@ -159,6 +160,17 @@ public abstract class URIGenerator {
         UriComponentsBuilder componentsBuilder = UriComponentsBuilder
                 .fromHttpUrl(url)
                 .queryParam("query", mountainName);
+
+        return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
+    }
+
+    protected URI kakaoSearchFacilityURIGenerator(String url, String mapX, String mapY, String keyword) {
+        UriComponentsBuilder componentsBuilder = UriComponentsBuilder
+                .fromHttpUrl(url)
+                .queryParam("query", keyword)
+                .queryParam("x", mapX)
+                .queryParam("y", mapY)
+                .queryParam("radius", SEARCH_RADIUS);
 
         return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
     }

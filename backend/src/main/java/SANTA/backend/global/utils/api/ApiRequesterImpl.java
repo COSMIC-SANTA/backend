@@ -5,10 +5,7 @@ import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Difficulty;
-import SANTA.backend.core.mountain.dto.MountainDTO;
-import SANTA.backend.core.mountain.dto.MountainNearByResponse;
-import SANTA.backend.core.mountain.dto.MountainSearchRequest;
-import SANTA.backend.core.mountain.dto.MountainSearchResponse;
+import SANTA.backend.core.mountain.dto.*;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
@@ -26,6 +23,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -38,6 +36,7 @@ public class ApiRequesterImpl implements APIRequester {
     private final WeatherServiceRequester weatherServiceRequester;
     private static final Long numOfRows = 20L;
     private final KaKaoMountainServiceRequester kakaoMountainServiceRequester;
+    private final KakaoFacilityServiceRequester kakaoFacilityServiceRequester;
 
     @Override
     public Mono<MountainNearByResponse> searchNearByPlacesByLocation(String location, Long pageNo) {
@@ -73,6 +72,14 @@ public class ApiRequesterImpl implements APIRequester {
 
     public Mono<MountainSearchResponse> searchMountains(String mountainName) {
         return kakaoMountainServiceRequester.searchMountainByKeyword(mountainName).map(this::extractMountainResponse);
+    }
+
+    @Override
+    public Mono<MountainFacilityResponse> searchFacility(MountainFacilityRequest request) {
+        return kakaoFacilityServiceRequester.searchFacilities(
+                request.mapX(),
+                request.mapY()
+        ).map(this::extractFacilityResponse);
     }
 
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
@@ -180,4 +187,47 @@ public class ApiRequesterImpl implements APIRequester {
         return new MountainSearchResponse(mountainList);
     }
 
+    private MountainFacilityResponse extractFacilityResponse(JsonNode jsonNode) {
+        JsonNode hospitalsNode = jsonNode.path("hospitals");
+        JsonNode pharmaciesNode = jsonNode.path("pharmacies");
+        JsonNode toiletsNode = jsonNode.path("toilets");
+        JsonNode waterNode = jsonNode.path("water");
+
+        List<FacilityDTO> hospitals = parseFacilities(hospitalsNode);
+        List<FacilityDTO> pharmacies = parseFacilities(pharmaciesNode);
+        List<FacilityDTO> toilets = parseFacilities(toiletsNode);
+        List<FacilityDTO> water = parseFacilities(waterNode);
+
+        return new MountainFacilityResponse(
+                sortByDistance(toilets), // toilet
+                sortByDistance(water), // water
+                sortByDistance(hospitals), // hospital
+                sortByDistance(pharmacies) // pharmacy
+        );
+    }
+
+    private List<FacilityDTO> parseFacilities(JsonNode jsonNode) {
+        List<FacilityDTO> facilities = new ArrayList<>();
+
+        if(jsonNode.isArray()) {
+            for (JsonNode document : jsonNode) {
+                String placeName = document.path("place_name").asText();
+                String addressName = document.path("road_address_name").asText();
+                String mapX = document.path("x").asText();
+                String mapY = document.path("y").asText();
+                String distance = document.path("distance").asText();
+
+                facilities.add(new FacilityDTO(placeName, addressName, mapX, mapY, distance));
+            }
+        }
+
+        return facilities;
+    }
+
+    private List<FacilityDTO> sortByDistance(List<FacilityDTO> facilities) {
+        return facilities.stream()
+                .sorted(Comparator.comparingInt(facility ->
+                        facility.distance().isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(facility.distance())))
+                .toList();
+    }
 }

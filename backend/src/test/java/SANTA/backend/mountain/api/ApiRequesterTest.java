@@ -166,4 +166,33 @@ public class ApiRequesterTest extends ServiceContext {
             }
         }
     }
+
+    @Nested
+    class 카카오_편의시설_API_호출_테스트 {
+
+        @Test
+        void 현재_좌표로_주변_병원을_조회할_수_있다() {
+            //given
+            String mapX = "127.73062186929766";
+            String mapY = "35.33691118099147";
+
+            //when
+            JsonNode hospitalResult = kakaoFacilityServiceRequester.searchHospitals(mapX, mapY).block();
+            System.out.println("병원 검색 API 호출 결과:");
+            System.out.println(hospitalResult);
+
+            //then
+            assertThat(hospitalResult).isNotNull();
+            if (hospitalResult.isArray() && hospitalResult.size() > 0) {
+                JsonNode firstHospital = hospitalResult.get(0);
+                assertThat(firstHospital.has("place_name")).isTrue();
+                assertThat(firstHospital.has("x")).isTrue();
+                assertThat(firstHospital.has("y")).isTrue();
+                assertThat(firstHospital.has("distance")).isTrue();
+
+                System.out.println("첫 번째 병원 이름: " + firstHospital.path("place_name").asText());
+                System.out.println("거리: " + firstHospital.path("distance").asText() + "m");
+            }
+        }
+    }
 }
