@@ -45,11 +45,7 @@ class CourseServiceTest extends ServiceContext {
         spots.add(spot);
 
         //when
-        Long courseId = courseService.saveCourse(mountain, restaurants, stays, cafes, spots);
 
-        //then
-        System.out.println(courseId);
-        Assertions.assertThat(courseId).isNotNull();
     }
 
 

@@ -1,6 +1,6 @@
 package SANTA.backend.core.mountain.dto;
 
-public record CompleteMountainRequest(
+public record CompletePlanRequest(
         Long planId,
         Long distance
 ) {
