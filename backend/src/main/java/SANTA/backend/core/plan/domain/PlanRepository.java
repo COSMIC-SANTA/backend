@@ -10,5 +10,6 @@ public interface PlanRepository {
 
     Long savePlan(PlanEntity courseEntity);
 
-    List<PlanEntity> findCompletedPlans(Long userId);
+    List<PlanEntity> findPlans(Long userId, PlanState planState);
+
 }

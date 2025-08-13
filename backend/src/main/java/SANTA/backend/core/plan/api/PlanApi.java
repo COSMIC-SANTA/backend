@@ -27,6 +27,12 @@ public class PlanApi {
         return ResponseEntity.ok().body(ResponseHandler.success(planId));
     }
 
+    @GetMapping
+    public ResponseEntity<ResponseHandler<List<PlanDto>>> notCompletedPlans(@AuthenticationPrincipal CustomUserDetails userDetails){
+        List<PlanDto> notCompletedPlans = planService.getNotCompletedPlans(userDetails.getUserId());
+        return ResponseEntity.ok(ResponseHandler.success(notCompletedPlans));
+    }
+
     @PostMapping("/complete")
     public ResponseEntity<ResponseHandler<Long>> completePlan(@RequestBody CompletePlanRequest completePlanRequest){
         Long updatedPlanId = planService.completePlan(completePlanRequest.planId(), completePlanRequest.distance());
