@@ -42,6 +42,7 @@ public class KaKaoMapTest extends ServiceContext {
             //when
             JsonNode block = kaKaoMapServiceRequester.searchRoute(origin, cafes, null, null, null, destination).block();
             System.out.println(block);
+
             //then
             assertThat(block).isNotNull();
         }

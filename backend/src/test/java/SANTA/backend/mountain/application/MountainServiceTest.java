@@ -24,17 +24,9 @@ public class MountainServiceTest extends ServiceContext {
         String name = "산인데용";
         String location = "충청북도 청주";
 
-        Mountain mountain = Mountain.builder()
-                .name(name)
-                .location(location)
-                .difficulty(Difficulty.EXTREME)
-                .build();
-
-        mountainService.saveMountain(mountain);
-        List<Mountain> mountains = mountainService.findByName(name);
 
         //when
-        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountains.get(0).getId(),1L);
+        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesByLocation(location,1L);
         System.out.println(mountainNearByResponse);
 
         //then

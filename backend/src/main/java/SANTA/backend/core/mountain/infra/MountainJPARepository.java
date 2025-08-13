@@ -18,11 +18,10 @@ public class MountainJPARepository implements MountainRepository {
     private final EntityManager em;
 
     @Override
-    public List<Mountain> findByInterest(Interest interest){
-        List<MountainEntity> mountains = em.createQuery("select m from MountainEntity m where m.interest =: interest", MountainEntity.class)
+    public List<MountainEntity> findByInterest(Interest interest){
+        return em.createQuery("select m from MountainEntity m where m.interest =: interest", MountainEntity.class)
                 .setParameter("interest", interest)
                 .getResultList();
-        return mountains.stream().map(Mountain::fromEntity).toList();
     }
 
     @Override
@@ -37,17 +36,16 @@ public class MountainJPARepository implements MountainRepository {
     }
 
     @Override
-    public Optional<Mountain> findById(Long mountainId) {
+    public Optional<MountainEntity> findById(Long mountainId) {
         MountainEntity mountainEntity = em.find(MountainEntity.class, mountainId);
-        return mountainEntity != null ? Optional.of(Mountain.fromEntity(mountainEntity)) : Optional.empty();
+        return Optional.of(mountainEntity);
     }
 
     @Override
-    public List<Mountain> findByName(String name) {
-        List<MountainEntity> mountainEntities = em.createQuery("select m from MountainEntity m where m.name =: name", MountainEntity.class)
+    public List<MountainEntity> findByName(String name) {
+        return em.createQuery("select m from MountainEntity m where m.name =: name", MountainEntity.class)
                 .setParameter("name", name)
                 .getResultList();
-        return mountainEntities.stream().map(Mountain::fromEntity).toList();
     }
 
 }

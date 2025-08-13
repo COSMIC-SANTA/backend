@@ -8,6 +8,8 @@ import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.weather.dto.WeatherResponseDto;
 import io.micrometer.common.lang.Nullable;
+import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
+import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -22,4 +24,6 @@ public interface APIRequester {
     Mono<MountainSearchResponse> searchMountains(String mountainName);
 
     Mono<MountainFacilityResponse> searchFacility(MountainFacilityRequest request);
+
+    Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request);
 }

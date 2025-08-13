@@ -25,7 +25,6 @@ public class Course {
     public static Course fromEntity(CourseEntity courseEntity) {
         return Course.builder()
                 .id(courseEntity.getId())
-                .trafficId(courseEntity.getTrafficEntity().getId())
                 .mountainId(courseEntity.getMountainEntity().getId())
                 .distance(courseEntity.getDistance())
                 .build();

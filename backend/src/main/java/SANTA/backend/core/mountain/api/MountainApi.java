@@ -5,6 +5,8 @@ import SANTA.backend.core.mountain.dto.MountainFacilityRequest;
 import SANTA.backend.core.mountain.dto.MountainFacilityResponse;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
+import SANTA.backend.core.mountain.dto.*;
+import SANTA.backend.global.common.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class MountainApi {
     }
 
     @GetMapping("/{mountainId}/details/{pageNo}")
-    public ResponseEntity<MountainNearByResponse> mountainNearBy(@PathVariable("mountainId") Long mountainId, @PathVariable("pageNo") Long pageNo){
-        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesById(mountainId,pageNo);
+    public ResponseEntity<MountainNearByResponse> mountainNearBy(@RequestParam("location") String location, @PathVariable("pageNo") Long pageNo){
+        MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesByLocation(location,pageNo);
         return ResponseEntity.ok().body(mountainNearByResponse);
     }
 
@@ -33,4 +35,11 @@ public class MountainApi {
         MountainFacilityResponse mountainFacilityResponse = mountainService.searchFacilities(mountainFacilityRequest);
         return ResponseEntity.ok().body(mountainFacilityResponse);
     }
+
+    @PostMapping("/optimalRoute")
+    public ResponseEntity<OptimalRouteResponse> searchOptimalRoute(@RequestBody OptimalRouteRequest request) {
+        OptimalRouteResponse optimalRouteResponse = mountainService.searchOptimalRoute(request);
+        return ResponseEntity.ok().body(optimalRouteResponse);
+    }
+
 }

@@ -1,15 +1,15 @@
 package SANTA.backend.core.mountain.application;
 
-import SANTA.backend.core.cafe.domain.CafeRepository;
+import SANTA.backend.core.banner.application.BannerService;
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.core.mountain.dto.MountainFacilityRequest;
 import SANTA.backend.core.mountain.dto.MountainFacilityResponse;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
-import SANTA.backend.core.restaurant.domain.RestaurantRepository;
-import SANTA.backend.core.spot.domain.SpotRepository;
-import SANTA.backend.core.stay.domain.StayRepository;
+import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
+import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
+import SANTA.backend.core.mountain.entity.MountainEntity;
 import SANTA.backend.global.exception.ErrorCode;
 import SANTA.backend.global.exception.type.CustomException;
 import SANTA.backend.global.utils.api.APIRequester;
@@ -22,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -33,20 +34,13 @@ public class MountainService {
     private String forestApiKey;
 
     private final MountainRepository mountainRepository;
-    private final RestaurantRepository restaurantRepository;
-    private final StayRepository stayRepository;
-    private final CafeRepository cafeRepository;
-    private final SpotRepository spotRepository;
+    private final BannerService bannerService;
     private final APIRequester apiRequester;
 
-    public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository, RestaurantRepository restaurantRepository,
-                           StayRepository stayRepository, CafeRepository cafeRepository, SpotRepository spotRepository, APIRequester apiRequester) {
+    public MountainService(@Qualifier("forestApiClient") WebClient webClient, MountainRepository mountainRepository, APIRequester apiRequester, BannerService bannerService) {
         this.webClient = webClient;
         this.mountainRepository = mountainRepository;
-        this.restaurantRepository = restaurantRepository;
-        this.stayRepository = stayRepository;
-        this.cafeRepository = cafeRepository;
-        this.spotRepository = spotRepository;
+        this.bannerService = bannerService;
         this.apiRequester = apiRequester;
     }
 
@@ -61,17 +55,13 @@ public class MountainService {
         mountainRepository.saveMountain(mountain);
     }
 
-    @Transactional
-    public List<Mountain> findByName(String name){
-        return mountainRepository.findByName(name);
+    @Transactional(readOnly = true)
+    public List<Mountain> findByName(String name) {
+        return mountainRepository.findByName(name).stream().map(Mountain::fromEntity).toList();
     }
 
     @Transactional(readOnly = true)
-    public MountainNearByResponse searchNearByPlacesById(Long mountainId, Long pageNo) {
-        String location = mountainRepository.findById(mountainId)
-                .map(Mountain::getLocation)
-                .orElseThrow(() -> new CustomException(ErrorCode.MOUNTAIN_NOT_FOUND));
-
+    public MountainNearByResponse searchNearByPlacesByLocation(String location, Long pageNo) {
         return apiRequester.searchNearByPlacesByLocation(location, pageNo)
                 .block();
     }
@@ -81,4 +71,11 @@ public class MountainService {
         Mono<MountainFacilityResponse> FacilityResponseMono = apiRequester.searchFacility(request);
         return FacilityResponseMono.block();
     }
+
+    @Transactional
+    public OptimalRouteResponse searchOptimalRoute(OptimalRouteRequest request) {
+        Mono<OptimalRouteResponse> routeResponseMono = apiRequester.searchOptimalRoute(request);
+        return routeResponseMono.block();
+    }
+
 }

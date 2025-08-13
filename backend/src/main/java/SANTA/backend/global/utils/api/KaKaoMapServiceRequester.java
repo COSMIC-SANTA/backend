@@ -21,9 +21,9 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class KaKaoMapServiceRequester extends URIGenerator{
 
-    private static final Logger log = LoggerFactory.getLogger(KaKaoMapServiceRequester.class);
     private final AppProperties appProperties;
     private final WebClientService webClientService;
 
