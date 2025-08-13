@@ -1,6 +1,7 @@
 package SANTA.backend.core.plan.api;
 
 import SANTA.backend.core.auth.service.CustomUserDetails;
+import SANTA.backend.core.plan.dto.PlanDto;
 import SANTA.backend.core.plan.dto.PlanRequest;
 import SANTA.backend.core.mountain.dto.CompletePlanRequest;
 import SANTA.backend.core.plan.application.PlanService;
@@ -8,10 +9,9 @@ import SANTA.backend.global.common.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,5 +31,11 @@ public class PlanApi {
     public ResponseEntity<ResponseHandler<Long>> completePlan(@RequestBody CompletePlanRequest completePlanRequest){
         Long updatedPlanId = planService.completePlan(completePlanRequest.planId(), completePlanRequest.distance());
         return ResponseEntity.ok(ResponseHandler.success(updatedPlanId));
+    }
+
+    @GetMapping("/complete")
+    public ResponseEntity<ResponseHandler<List<PlanDto>>> completedPlans(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<PlanDto> completedPlans = planService.getCompletedPlans(userDetails.getUserId());
+        return ResponseEntity.ok(ResponseHandler.success(completedPlans));
     }
 }

@@ -9,6 +9,7 @@ import SANTA.backend.core.mountain.dto.*;
 import SANTA.backend.core.mountain.entity.MountainEntity;
 import SANTA.backend.core.plan.domain.PlanRepository;
 import SANTA.backend.core.plan.domain.PlanState;
+import SANTA.backend.core.plan.dto.PlanDto;
 import SANTA.backend.core.plan.entity.PlanEntity;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.restaurant.entity.RestaurantEntity;
@@ -51,10 +52,16 @@ public class PlanService {
         PlanEntity plan = PlanEntity.builder()
                 .course(course)
                 .targetDate(targetDate)
-                .state(PlanState.PLANNED)
+                .state(PlanState.IN_PROGRESS)
                 .user(user)
                 .build();
         return planRepository.savePlan(plan);
+    }
+
+    @Transactional
+    public List<PlanDto> getCompletedPlans(Long userId){
+        List<PlanEntity> completedPlans = planRepository.findCompletedPlans(userId);
+        return completedPlans.stream().map(PlanDto::fromEntity).toList();
     }
 
     private static CourseEntity makeCourse(MountainDTO mountainDTO, List<RestaurantDTO> restaurantDtos, List<StayDTO> stayDTOS, List<CafeDTO> cafeDtos, List<TouristSpotDTO> spotDTOS) {
