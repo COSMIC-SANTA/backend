@@ -26,7 +26,7 @@ public class BannerJpaRepository implements BannerRepository {
 
     @Override
     public List<BannerEntity> findPopularMountains() {
-        return em.createQuery("select b from BannerEntity b order by b.visitCount desc",
+        return em.createQuery("select b from BannerEntity b order by b.viewCount desc",
                 BannerEntity.class)
                 .setMaxResults(10)
                 .getResultList();
@@ -44,5 +44,13 @@ public class BannerJpaRepository implements BannerRepository {
             }
             log.info("배너 {} 저장됨",bannerEntities.get(i).getName());
         }
+    }
+
+    @Override
+    public BannerEntity findByName(String name) {
+        return em.createQuery("select b from BannerEntity b where b.name = :name", BannerEntity.class)
+                .setParameter("name", name)
+                .getResultStream().findFirst()
+                .orElse(null);
     }
 }

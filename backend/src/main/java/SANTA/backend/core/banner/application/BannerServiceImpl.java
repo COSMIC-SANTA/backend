@@ -37,9 +37,23 @@ public class BannerServiceImpl implements BannerService {
         return BannerResponse.from(Interest.POPULAR, popularMountains);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Banner findByName(String name) {
+        BannerEntity bannerEntity = bannerRepository.findByName(name);
+        return Banner.fromEntity(bannerEntity);
+    }
+
     @Override @Transactional
     public void saveBanners(List<Banner> banners) {
         log.info("저장할 배너 개수: {}", banners.size()); // 🔍 로그 찍어보기
         bannerRepository.saveBanners(banners);
+    }
+
+    @Override @Transactional
+    public void incrementViewCount(String mountainName) {
+        BannerEntity banner = bannerRepository.findByName(mountainName);
+        banner.incrementViewCount();
+        log.info("배너 '{}' 조회수 1 증가", mountainName);
     }
 }

@@ -2,6 +2,8 @@ package SANTA.backend.core.banner.api;
 
 import SANTA.backend.core.banner.application.BannerService;
 import SANTA.backend.core.banner.dto.BannerResponse;
+import SANTA.backend.core.mountain.application.MountainService;
+import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.user.domain.Interest;
 import SANTA.backend.global.common.ResponseHandler;
 import SANTA.backend.global.utils.api.rabbitmq.RabbitMQRequester;
@@ -17,6 +19,7 @@ public class BannerApi {
     private final BannerService bannerService;
 
     private final RabbitMQRequester rabbitMQRequester;
+    private final MountainService mountainService;
 
     @PostMapping("saveMountainsFromApi")
     public void saveBannerMountains(){
@@ -29,6 +32,16 @@ public class BannerApi {
         BannerResponse response;
         Interest userInterest = Interest.valueOf(interest);
         response = bannerService.getInterestingMountains(userInterest);
+
+        return ResponseEntity.ok().body(ResponseHandler.success(response));
+    }
+
+    @PostMapping("/banner/click")
+    public ResponseEntity<ResponseHandler<MountainSearchResponse>> getBannerClick(@RequestParam String mountainName){
+
+        bannerService.incrementViewCount(mountainName);
+
+        MountainSearchResponse response = mountainService.searchMountains(mountainName);
 
         return ResponseEntity.ok().body(ResponseHandler.success(response));
     }
