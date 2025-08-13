@@ -92,6 +92,7 @@ public class ApiRequesterImpl implements APIRequester {
     public Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request) {
         return kaKaoMapServiceRequester.searchRoute(
                 request.origin(),
+                request.mountain(),
                 request.cafes(),
                 request.restaurants(),
                 request.stays(),

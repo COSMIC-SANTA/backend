@@ -55,6 +55,7 @@ public class OptimalRouteApiTest extends ControllerTest {
             OptimalRouteRequest request = new OptimalRouteRequest(
                     origin,
                     destination,
+                    null,
                     cafes,
                     null,
                     null,
