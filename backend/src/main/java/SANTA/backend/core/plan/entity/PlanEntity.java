@@ -24,7 +24,7 @@ public class PlanEntity {
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "COURSE_ID")
     private CourseEntity course;
 

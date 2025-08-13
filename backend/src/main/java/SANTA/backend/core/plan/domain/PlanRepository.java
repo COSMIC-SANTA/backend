@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface PlanRepository {
     Optional<PlanEntity> findById(Long planId);
+
+    Long savePlan(PlanEntity courseEntity);
 }

@@ -21,4 +21,11 @@ public class PlanJpaRepository implements PlanRepository {
                 .getSingleResult();
         return Optional.of(plan);
     }
+
+    @Override
+    public Long savePlan(PlanEntity planEntity) {
+        em.persist(planEntity);
+        return planEntity.getId();
+    }
+
 }

@@ -58,8 +58,8 @@ public class CourseEntity {
                 .build();
     }
 
-    public void makeCourse(MountainEntity mountain, Collection<CafeEntity> cafes, Collection<RestaurantEntity> restaurants, Collection<SpotEntity> spots,
-                           Collection<StayEntity> stays){
+    public void setLocations(MountainEntity mountain, Collection<CafeEntity> cafes, Collection<RestaurantEntity> restaurants, Collection<SpotEntity> spots,
+                             Collection<StayEntity> stays){
         this.mountainEntity = mountain;
         this.addAllCafes(cafes);
         this.addAllRestaurants(restaurants);
