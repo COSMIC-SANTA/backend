@@ -57,15 +57,74 @@ public class PlanService {
         return planRepository.savePlan(plan);
     }
 
-    private static CourseEntity makeCourse(MountainDTO mountain, List<RestaurantDTO> restaurants, List<StayDTO> stays, List<CafeDTO> cafes, List<TouristSpotDTO> spots) {
+    private static CourseEntity makeCourse(MountainDTO mountainDTO, List<RestaurantDTO> restaurantDtos, List<StayDTO> stayDTOS, List<CafeDTO> cafeDtos, List<TouristSpotDTO> spotDTOS) {
         CourseEntity course = CourseEntity.builder().build();
-//        cafes.stream().map(cafeDTO -> Cafe.builder().name(cafeDTO.name()).location(cafeDTO.location()).imageUrl(cafeDTO.imageUrl()).position(new Position(cafeDTO.mapX(), cafeDTO.mapY())));
-//        List<CafeEntity> cafeEntities = cafes.stream().map(CafeEntity::from).toList();
-//        List<RestaurantEntity> restaurantEntities = restaurants.stream().map(RestaurantEntity::from).toList();
-//        List<SpotEntity> spotEntities = spots.stream().map(SpotEntity::from).toList();
-//        List<StayEntity> stayEntities = stays.stream().map(StayEntity::from).toList();
-//        MountainEntity mountainEntity = MountainEntity.from(mountain);
-//        course.setLocations(mountainEntity, cafeEntities, restaurantEntities, spotEntities, stayEntities);
+        List<Cafe> cafes = parseCafeDto(cafeDtos);
+        List<CafeEntity> cafeEntities = cafes.stream().map(CafeEntity::from).toList();
+
+        List<Restaurant> restaurants = parseRestaurantDto(restaurantDtos);
+        List<RestaurantEntity> restaurantEntities = restaurants.stream().map(RestaurantEntity::from).toList();
+
+        List<Spot> spots = parseSpotDto(spotDTOS);
+        List<SpotEntity> spotEntities = spots.stream().map(SpotEntity::from).toList();
+
+        List<Stay> stays = parseStayDto(stayDTOS);
+        List<StayEntity> stayEntities = stays.stream().map(StayEntity::from).toList();
+
+        Mountain mountain = parseMountainDto(mountainDTO);
+        MountainEntity mountainEntity = MountainEntity.from(mountain);
+
+        course.setLocations(mountainEntity, cafeEntities, restaurantEntities, spotEntities, stayEntities);
         return course;
+    }
+
+    private static Mountain parseMountainDto(MountainDTO mountainDTO) {
+        Mountain mountain = Mountain.builder()
+                .name(mountainDTO.mountainName())
+                .location(mountainDTO.mountainAddress())
+                .imageUrl(mountainDTO.imageUrl())
+                .position(new Position(mountainDTO.mapX(), mountainDTO.mapY()))
+                .build();
+        return mountain;
+    }
+
+    private static List<Stay> parseStayDto(List<StayDTO> stayDTOS) {
+        List<Stay> stays = stayDTOS.stream().map(stayDTO -> Stay.builder()
+                .name(stayDTO.name())
+                .location(stayDTO.location())
+                .imageUrl(stayDTO.imageUrl())
+                .position(new Position(stayDTO.mapX(), stayDTO.mapY()))
+                .build()).toList();
+        return stays;
+    }
+
+    private static List<Spot> parseSpotDto(List<TouristSpotDTO> spotDTOS) {
+        List<Spot> spots = spotDTOS.stream().map(spotDTO -> Spot.builder()
+                .name(spotDTO.name())
+                .location(spotDTO.location())
+                .imageUrl(spotDTO.imageUrl())
+                .position(new Position(spotDTO.mapX(), spotDTO.mapY()))
+                .build()).toList();
+        return spots;
+    }
+
+    private static List<Restaurant> parseRestaurantDto(List<RestaurantDTO> restaurantDtos) {
+        List<Restaurant> restaurants = restaurantDtos.stream().map(restaurantDTO -> Restaurant.builder()
+                .name(restaurantDTO.name())
+                .location(restaurantDTO.location())
+                .imageUrl(restaurantDTO.imageUrl())
+                .position(new Position(restaurantDTO.mapX(), restaurantDTO.mapY()))
+                .build()).toList();
+        return restaurants;
+    }
+
+    private static List<Cafe> parseCafeDto(List<CafeDTO> cafeDtos) {
+        List<Cafe> cafes = cafeDtos.stream().map(cafeDTO -> Cafe.builder()
+                .name(cafeDTO.name())
+                .location(cafeDTO.location())
+                .imageUrl(cafeDTO.imageUrl())
+                .position(new Position(cafeDTO.mapX(), cafeDTO.mapY()))
+                .build()).toList();
+        return cafes;
     }
 }
