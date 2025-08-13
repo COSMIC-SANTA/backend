@@ -67,6 +67,11 @@ public class CourseEntity {
         this.addAllStays(stays);
     }
 
+    public void updateDistance(Long distance) {
+        this.distance = distance;
+    }
+
+
     // ===== 연관관계 편의 메서드 =====
     private void addCafe(CafeEntity cafe) {
         cafes.add(cafe);

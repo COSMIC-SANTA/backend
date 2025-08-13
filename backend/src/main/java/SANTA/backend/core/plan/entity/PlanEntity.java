@@ -52,4 +52,8 @@ public class PlanEntity {
                 .targetDate(plan.getTargetDate())
                 .build();
     }
+
+    public void completePlan() {
+        this.state = PlanState.COMPLETED;
+    }
 }

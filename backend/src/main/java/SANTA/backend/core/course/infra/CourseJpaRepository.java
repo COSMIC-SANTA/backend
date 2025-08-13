@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class CourseJpaRepository implements CourseRepository {
@@ -16,5 +18,10 @@ public class CourseJpaRepository implements CourseRepository {
     public Long saveCourse(CourseEntity courseEntity) {
         em.persist(courseEntity);
         return courseEntity.getId();
+    }
+
+    @Override
+    public Optional<CourseEntity> findById(Long courseId) {
+        return Optional.ofNullable(em.find(CourseEntity.class,courseId));
     }
 }
