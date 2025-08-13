@@ -3,6 +3,7 @@ package SANTA.backend.context;
 import SANTA.backend.core.chatting.application.ChattingService;
 import SANTA.backend.core.chatting.domain.ChattingRepository;
 import SANTA.backend.core.banner.application.BannerService;
+import SANTA.backend.core.course.domain.CourseRepository;
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import SANTA.backend.core.user.application.UserService;
@@ -53,4 +54,5 @@ public abstract class ServiceContext {
 
     @Autowired
     protected KakaoFacilityServiceRequester kakaoFacilityServiceRequester;
+
 }

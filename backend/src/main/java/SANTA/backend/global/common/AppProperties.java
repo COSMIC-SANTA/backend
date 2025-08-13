@@ -77,21 +77,15 @@ public class AppProperties {
             return mobileAppName;
         }
 
-        public String getRoutingKey() {
-            return encodingKey;
-        }
+        public String getRoutingKey(){return encodingKey;}
     }
 
     public static class JWT {
         private String secret;
 
-        public String getSecret() {
-            return secret;
-        }
+        public String getSecret(){return secret;}
 
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
+        public void setSecret(String secret){this.secret = secret;}
     }
 
     public static class Forest {

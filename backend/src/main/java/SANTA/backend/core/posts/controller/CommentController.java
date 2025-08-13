@@ -22,7 +22,7 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
 
-    // 댓글 저장 (POST /api/community/comment/save)
+    // 댓글 저장 (POST /PlanApi/community/comment/save)
     //테스트용
     @PostMapping("/save")
     public ResponseEntity<ResponseHandler<?>> save(@RequestBody CommentDTO commentDTO) {
@@ -44,7 +44,7 @@ public class CommentController {
         }
     }
 
-    // 특정 게시글 댓글 조회 (GET /api/community/comment/{postId})
+    // 특정 게시글 댓글 조회 (GET /PlanApi/community/comment/{postId})
     @GetMapping("/{postId}")
     public ResponseEntity<ResponseHandler<?>> findAll(@PathVariable Long postId) {
         try {

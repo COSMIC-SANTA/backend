@@ -1,5 +1,6 @@
 package SANTA.backend.core.mountain.domain;
 
+import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.mountain.entity.MountainEntity;
 import SANTA.backend.core.user.domain.Interest;
 import lombok.Builder;
@@ -24,12 +25,10 @@ public class Mountain {
 
     private Interest interest;
 
-    private Double mapX;
-
-    private Double mapY;
+    private Position position;
 
     @Builder
-    protected Mountain(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl, Interest interest) {
+    protected Mountain(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl, Interest interest, Position position) {
         this.id = id;
         this.visitCount = visitCount;
         this.sequence = sequence;
@@ -38,6 +37,7 @@ public class Mountain {
         this.location = location;
         this.imageUrl = imageUrl;
         this.interest = interest;
+        this.position = position;
     }
 
     public static Mountain fromEntity(MountainEntity mountainEntity) {

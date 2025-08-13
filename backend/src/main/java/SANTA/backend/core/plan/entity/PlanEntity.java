@@ -24,7 +24,7 @@ public class PlanEntity {
     @JoinColumn(name = "USER_ID")
     private UserEntity user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "COURSE_ID")
     private CourseEntity course;
 
@@ -51,5 +51,9 @@ public class PlanEntity {
                 .state(plan.getState())
                 .targetDate(plan.getTargetDate())
                 .build();
+    }
+
+    public void completePlan() {
+        this.state = PlanState.COMPLETED;
     }
 }

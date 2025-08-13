@@ -1,5 +1,7 @@
 package SANTA.backend.core.mountain.entity;
 
+import SANTA.backend.core.basePlace.domain.Position;
+import SANTA.backend.core.course.entity.CourseEntity;
 import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.user.domain.Interest;
@@ -34,6 +36,11 @@ public class MountainEntity {
     @Enumerated(EnumType.STRING)
     private Interest interest;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    private CourseEntity courseEntity;
+
+    private Position position;
+
     @Builder
     protected MountainEntity(Long id, Long visitCount, Long sequence, String name, Difficulty difficulty, String location, String imageUrl, Interest interest) {
         this.id = id;
@@ -58,4 +65,6 @@ public class MountainEntity {
                 .interest(mountain.getInterest())
                 .build();
     }
+
+
 }

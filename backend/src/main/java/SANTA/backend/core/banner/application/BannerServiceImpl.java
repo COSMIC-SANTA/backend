@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class BannerServiceImpl implements BannerService {
     private final BannerRepository bannerRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BannerResponse getInterestingMountains(Interest interest) {
         if (interest == Interest.POPULAR) {
             return getPopularMountains();
@@ -55,5 +56,10 @@ public class BannerServiceImpl implements BannerService {
         BannerEntity banner = bannerRepository.findByName(mountainName);
         banner.incrementViewCount();
         log.info("배너 '{}' 조회수 1 증가", mountainName);
+    }
+
+    @Override @Transactional(readOnly = true)
+    public Optional<Banner> findById(Long bannerId) {
+        return bannerRepository.findById(bannerId);
     }
 }
