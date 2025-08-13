@@ -182,7 +182,7 @@ public abstract class URIGenerator {
 
         if(mountain != null) {
             waypoints.add(
-                    mountain.getMapX() + "," + mountain.getMapY() + ",name=" + mountain.getName()
+                    mountain.getPosition().getMapX() + "," + mountain.getPosition().getMapY() + ",name=" + mountain.getName()
             );
         }
 

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record PlanRequest(
-        MountainDTO mountain,
+        MountainRequestDTO mountain,
         LocalDateTime targetDate,
         List<TouristSpotDTO> touristSpotDTO,
         List<RestaurantDTO> restaurantDTO,

@@ -47,7 +47,7 @@ public class PlanService {
     }
 
     @Transactional
-    public Long savePlan(Long userId, LocalDateTime targetDate, MountainDTO mountain, List<RestaurantDTO> restaurants, List<StayDTO> stays, List<CafeDTO> cafes, List<TouristSpotDTO> spots) {
+    public Long savePlan(Long userId, LocalDateTime targetDate, MountainRequestDTO mountain, List<RestaurantDTO> restaurants, List<StayDTO> stays, List<CafeDTO> cafes, List<TouristSpotDTO> spots) {
         UserEntity user = userRepository.findEntityById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "해당되는 유저를 찾지 못했습니다."));
         CourseEntity course = makeCourse(mountain, restaurants, stays, cafes, spots);
         PlanEntity plan = PlanEntity.builder()
@@ -73,7 +73,7 @@ public class PlanService {
         return notCompletedPlans.stream().map(PlanDto::fromEntity).toList();
     }
 
-    private static CourseEntity makeCourse(MountainDTO mountainDTO, List<RestaurantDTO> restaurantDtos, List<StayDTO> stayDTOS, List<CafeDTO> cafeDtos, List<TouristSpotDTO> spotDTOS) {
+    private static CourseEntity makeCourse(MountainRequestDTO mountainDTO, List<RestaurantDTO> restaurantDtos, List<StayDTO> stayDTOS, List<CafeDTO> cafeDtos, List<TouristSpotDTO> spotDTOS) {
         CourseEntity course = CourseEntity.builder().build();
         List<Cafe> cafes = parseCafeDto(cafeDtos);
         List<CafeEntity> cafeEntities = cafes.stream().map(CafeEntity::from).toList();
@@ -94,7 +94,7 @@ public class PlanService {
         return course;
     }
 
-    private static Mountain parseMountainDto(MountainDTO mountainDTO) {
+    private static Mountain parseMountainDto(MountainRequestDTO mountainDTO) {
         Mountain mountain = Mountain.builder()
                 .name(mountainDTO.mountainName())
                 .location(mountainDTO.mountainAddress())

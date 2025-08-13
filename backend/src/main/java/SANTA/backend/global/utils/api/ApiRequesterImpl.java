@@ -198,9 +198,8 @@ public class ApiRequesterImpl implements APIRequester {
                 mountainList.add(new MountainDTO(
                         mountain.path("place_name").asText(),
                         mountain.path("address_name").asText(),
-                        null,
-                        mountain.path("x").asDouble(),
-                        mountain.path("y").asDouble()
+                        mountain.path("x").asText(),
+                        mountain.path("y").asText()
                 ));
             }
         }
