@@ -3,6 +3,7 @@ package SANTA.backend.global.utils.api;
 import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
+import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
@@ -28,10 +29,9 @@ public class KaKaoMapServiceRequester extends URIGenerator{
     private final WebClientService webClientService;
 
 
-    public Mono<JsonNode> searchRoute(Position position, @Nullable List<Cafe> cafes, @Nullable List<Restaurant> restaurants, @Nullable List<Stay> stays, @Nullable List<Spot> spots, BasePlace destination){
+    public Mono<JsonNode> searchRoute(Position position, Mountain mountain, @Nullable List<Cafe> cafes, @Nullable List<Restaurant> restaurants, @Nullable List<Stay> stays, @Nullable List<Spot> spots, BasePlace destination){
         String url = appProperties.getKakao().getUrl();
-        String key = appProperties.getKakao().getKey();
-        URI uri = kakaoSearchRouteURIGenerator(url, position, cafes, restaurants, stays, spots, destination);
+        URI uri = kakaoSearchRouteURIGenerator(url, position, mountain, cafes, restaurants, stays, spots, destination);
         log.info("uri={}",uri);
         Mono<JsonNode> jsonNodeMono = webClientService.requestKaKaoMap(uri);
         log.info("카카오 맵 결과 ={}",jsonNodeMono.block().asText());

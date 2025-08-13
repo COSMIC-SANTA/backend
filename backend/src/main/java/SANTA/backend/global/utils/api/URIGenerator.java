@@ -3,6 +3,7 @@ package SANTA.backend.global.utils.api;
 import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
+import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public abstract class URIGenerator {
 
     private static final String JSON = "json";
+    private static final String SEARCH_RADIUS = "20000";
 
     protected URI KoreanTourInfoServiceURIGenerator(String url, String operation, String key, String mobileOs, String mobileApp, @Nullable Long numOfRows, @Nullable Long pageNo,
                                                     @Nullable Arrange arrange, @Nullable ContentTypeId contentTypeId, @Nullable AreaCode areaCode, @Nullable Long sigunguCode,
@@ -110,10 +112,10 @@ public abstract class URIGenerator {
         return builder.build(true).toUri();
     }
 
-    protected URI kakaoSearchRouteURIGenerator(String url, Position position, @Nullable List<Cafe> cafes, @Nullable List<Restaurant> restaurants, @Nullable List<Stay> stays, @Nullable List<Spot> spots,
+    protected URI kakaoSearchRouteURIGenerator(String url, Position position, @Nullable Mountain mountain, @Nullable List<Cafe> cafes, @Nullable List<Restaurant> restaurants, @Nullable List<Stay> stays, @Nullable List<Spot> spots,
                                                BasePlace destinationBasePlace) {
         String origin = position.getMapX() + "," + position.getMapY();
-        String wayPoints = getWayPoints(stays, cafes, restaurants, spots);
+        String wayPoints = getWayPoints(mountain, stays, cafes, restaurants, spots);
         String destination = destinationBasePlace.getPosition().getMapX() + "," + destinationBasePlace.getPosition().getMapY() + ",name=" + destinationBasePlace.getName();
 
         UriComponentsBuilder componentsBuilder = UriComponentsBuilder
@@ -163,9 +165,26 @@ public abstract class URIGenerator {
         return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
     }
 
-    private static String getWayPoints(List<Stay> stays, List<Cafe> cafes, List<Restaurant> restaurants, List<Spot> spots) {
+    protected URI kakaoSearchFacilityURIGenerator(String url, String mapX, String mapY, String keyword) {
+        UriComponentsBuilder componentsBuilder = UriComponentsBuilder
+                .fromHttpUrl(url)
+                .queryParam("query", keyword)
+                .queryParam("x", mapX)
+                .queryParam("y", mapY)
+                .queryParam("radius", SEARCH_RADIUS);
+
+        return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
+    }
+
+    private static String getWayPoints(Mountain mountain, List<Stay> stays, List<Cafe> cafes, List<Restaurant> restaurants, List<Spot> spots) {
 
         List<String> waypoints = new ArrayList<>();
+
+        if(mountain != null) {
+            waypoints.add(
+                    mountain.getMapX() + "," + mountain.getMapY() + ",name=" + mountain.getName()
+            );
+        }
 
         if (cafes != null && !cafes.isEmpty()) {
             waypoints.addAll(

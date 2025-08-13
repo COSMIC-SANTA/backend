@@ -2,6 +2,8 @@ package SANTA.backend.core.mountain.api;
 
 import SANTA.backend.core.auth.service.CustomUserDetails;
 import SANTA.backend.core.mountain.application.MountainService;
+import SANTA.backend.core.mountain.dto.MountainFacilityRequest;
+import SANTA.backend.core.mountain.dto.MountainFacilityResponse;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
@@ -29,6 +31,12 @@ public class MountainApi {
     public ResponseEntity<MountainNearByResponse> mountainNearBy(@PathVariable("location") String location, @PathVariable("pageNo") Long pageNo) {
         MountainNearByResponse mountainNearByResponse = mountainService.searchNearByPlacesByLocation(location, pageNo);
         return ResponseEntity.ok().body(mountainNearByResponse);
+    }
+
+    @PostMapping("/facilities")
+    public ResponseEntity<MountainFacilityResponse> searchFacilities(@RequestBody MountainFacilityRequest mountainFacilityRequest){
+        MountainFacilityResponse mountainFacilityResponse = mountainService.searchFacilities(mountainFacilityRequest);
+        return ResponseEntity.ok().body(mountainFacilityResponse);
     }
 
     @PostMapping("/optimalRoute")

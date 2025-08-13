@@ -30,7 +30,7 @@ public class BannerRepositoryTest extends RepositoryContext {
                         .interest(Interest.ACTIVITY)
                         .imageUrl("http://image" + i)
                         .difficulty(Difficulty.MODERATE)
-                        .visitCount((long) i * 100)
+                        .viewCount((long) i * 100)
                         .build();
                 bannerRepository.saveBanners(List.of(banner));
             }
@@ -41,12 +41,12 @@ public class BannerRepositoryTest extends RepositoryContext {
             //then
             assertThat(result).hasSize(10);
             assertThat(result.get(0).getName()).isEqualTo("산15");
-            assertThat(result.get(0).getVisitCount()).isEqualTo(1500L);
+            assertThat(result.get(0).getViewCount()).isEqualTo(1500L);
             assertThat(result.get(9).getName()).isEqualTo("산6");
-            assertThat(result.get(9).getVisitCount()).isEqualTo(600L);
+            assertThat(result.get(9).getViewCount()).isEqualTo(600L);
 
             for (int i = 0; i < result.size() - 1; i++) {
-                assertThat(result.get(i).getVisitCount()).isGreaterThanOrEqualTo(result.get(i + 1).getVisitCount());
+                assertThat(result.get(i).getViewCount()).isGreaterThanOrEqualTo(result.get(i + 1).getViewCount());
             }
         }
     }

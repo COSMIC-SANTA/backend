@@ -3,6 +3,8 @@ package SANTA.backend.core.mountain.application;
 import SANTA.backend.core.banner.application.BannerService;
 import SANTA.backend.core.mountain.domain.Mountain;
 import SANTA.backend.core.mountain.domain.MountainRepository;
+import SANTA.backend.core.mountain.dto.MountainFacilityRequest;
+import SANTA.backend.core.mountain.dto.MountainFacilityResponse;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
@@ -62,6 +64,12 @@ public class MountainService {
     public MountainNearByResponse searchNearByPlacesByLocation(String location, Long pageNo) {
         return apiRequester.searchNearByPlacesByLocation(location, pageNo)
                 .block();
+    }
+
+    @Transactional(readOnly = true)
+    public MountainFacilityResponse searchFacilities(MountainFacilityRequest request) {
+        Mono<MountainFacilityResponse> FacilityResponseMono = apiRequester.searchFacility(request);
+        return FacilityResponseMono.block();
     }
 
     @Transactional

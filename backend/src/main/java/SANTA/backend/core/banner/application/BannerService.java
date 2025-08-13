@@ -12,7 +12,12 @@ public interface BannerService {
 
     BannerResponse getPopularMountains();
 
+    Banner findByName(String name);
+
     void saveBanners(List<Banner> banners);
 
     Optional<Banner> findById(Long bannerId);
+
+    void incrementViewCount(String mountainName);
 }
+

@@ -14,5 +14,7 @@ public interface BannerRepository {
 
     void saveBanners(List<Banner> banners);
 
+    BannerEntity findByName(String name);
+
     Optional<Banner> findById(Long bannerId);
 }
