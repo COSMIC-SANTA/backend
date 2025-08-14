@@ -1,6 +1,7 @@
 package SANTA.backend.global.utils.api;
 
 import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
@@ -43,6 +44,7 @@ public class ApiRequesterImpl implements APIRequester {
     private static final Long numOfRows = 20L;
     private final KaKaoMountainServiceRequester kakaoMountainServiceRequester;
     private final KakaoFacilityServiceRequester kakaoFacilityServiceRequester;
+    private final BannerDescriptionServiceRequester bannerDescriptionServiceRequester;
 
     @Override
     public Mono<MountainNearByResponse> searchNearByPlacesByLocation(String location, Long pageNo) {
@@ -99,6 +101,11 @@ public class ApiRequesterImpl implements APIRequester {
                 request.spots(),
                 request.destination()
         ).map(this::extractRouteResponse);
+    }
+
+    @Override
+    public Mono<BannerDescriptionDTO> getBannerDescription(String mountainName) {
+        return bannerDescriptionServiceRequester.getBannerDescription(mountainName).map(this::extractBannerDescription);
     }
 
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
@@ -305,5 +312,14 @@ public class ApiRequesterImpl implements APIRequester {
             }
         }
         return sectionList;
+    }
+
+    private BannerDescriptionDTO extractBannerDescription(JsonNode jsonNode) {
+        return new BannerDescriptionDTO(
+                jsonNode.path("mntiname").asText(),
+                jsonNode.path("mntihigh").asText(),
+                jsonNode.path("mntidetails").asText(),
+                jsonNode.path("mntitop").asText()
+        );
     }
 }
