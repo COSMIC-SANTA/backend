@@ -8,6 +8,8 @@ import SANTA.backend.core.mountain.dto.MountainNearByResponse;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
 import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
+import SANTA.backend.global.exception.ErrorCode;
+import SANTA.backend.global.exception.type.CustomException;
 import SANTA.backend.global.utils.api.APIRequester;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,20 +48,35 @@ public class MountainService {
 
     @Transactional(readOnly = true)
     public MountainNearByResponse searchNearByPlacesByLocation(String location, Long pageNo) {
-        return apiRequester.searchNearByPlacesByLocation(location, pageNo)
-                .block();
+        try{
+            return apiRequester.searchNearByPlacesByLocation(location, pageNo)
+                    .block();
+        } catch (Exception e){
+            log.info("관광 API 오류: {}",e.getMessage());
+            throw new CustomException(ErrorCode.TOUR_API_INVALID,"관광 API 이용이 불안정합니다.");
+        }
     }
 
     @Transactional(readOnly = true)
     public MountainFacilityResponse searchFacilities(MountainFacilityRequest request) {
-        Mono<MountainFacilityResponse> FacilityResponseMono = apiRequester.searchFacility(request);
-        return FacilityResponseMono.block();
+        try {
+            Mono<MountainFacilityResponse> FacilityResponseMono = apiRequester.searchFacility(request);
+            return FacilityResponseMono.block();
+        }catch (Exception e){
+            log.info("kakao 편의시설 API 오류: {}",e.getMessage());
+            throw new CustomException(ErrorCode.KAKAO_API_INVALID,"카카오 API 이용이 불안정합니다.");
+        }
     }
 
     @Transactional
     public OptimalRouteResponse searchOptimalRoute(OptimalRouteRequest request) {
-        Mono<OptimalRouteResponse> routeResponseMono = apiRequester.searchOptimalRoute(request);
-        return routeResponseMono.block();
+        try {
+            Mono<OptimalRouteResponse> routeResponseMono = apiRequester.searchOptimalRoute(request);
+            return routeResponseMono.block();
+        } catch (Exception e){
+            log.info(e.getMessage());
+            throw new CustomException(ErrorCode.KAKAO_API_INVALID,"카카오 API 이용이 불안정합니다.");
+        }
     }
 
 }
