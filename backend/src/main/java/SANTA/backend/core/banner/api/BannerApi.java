@@ -1,6 +1,7 @@
 package SANTA.backend.core.banner.api;
 
 import SANTA.backend.core.banner.application.BannerService;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.dto.MountainSearchResponse;
@@ -37,11 +38,11 @@ public class BannerApi {
     }
 
     @PostMapping("/banner/click")
-    public ResponseEntity<ResponseHandler<MountainSearchResponse>> getBannerClick(@RequestParam String mountainName){
+    public ResponseEntity<ResponseHandler<BannerDescriptionDTO>> getBannerClick(@RequestParam String mountainName){
 
         bannerService.incrementViewCount(mountainName);
 
-        MountainSearchResponse response = mountainService.searchMountains(mountainName);
+        BannerDescriptionDTO response = bannerService.getBannerDescription(mountainName);
 
         return ResponseEntity.ok().body(ResponseHandler.success(response));
     }

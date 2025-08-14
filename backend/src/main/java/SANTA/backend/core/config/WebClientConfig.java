@@ -24,9 +24,8 @@ public class WebClientConfig {
     private final AppProperties appProperties;
 
     @Bean("forestApiClient")
-    public WebClient webClient(@Value("${forest.api.url}") String baseUrl) {
+    public WebClient bannerDescriptionClient() {
         return WebClient.builder()
-                .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .clientConnector(new ReactorClientHttpConnector(

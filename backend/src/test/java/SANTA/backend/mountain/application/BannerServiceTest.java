@@ -2,6 +2,7 @@ package SANTA.backend.mountain.application;
 
 import SANTA.backend.context.ServiceContext;
 import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.user.domain.Interest;
@@ -154,6 +155,33 @@ public class BannerServiceTest extends ServiceContext {
             // then
             Banner updatedBanner = bannerService.findByName("한라산");
             assertThat(updatedBanner.getViewCount()).isEqualTo(201L);
+        }
+
+        @Test
+        @Transactional
+        void 해당_산의_상세설명을_조회할_수_있다() {
+            // given
+            Banner banner = Banner.builder()
+                    .code(1L)
+                    .name("한라산")
+                    .location("제주도")
+                    .interest(Interest.HIGH)
+                    .imageUrl("http://image")
+                    .difficulty(Difficulty.HARD)
+                    .viewCount(200L)
+                    .build();
+
+            bannerService.saveBanners(List.of(banner));
+
+            // when
+            BannerDescriptionDTO description = bannerService.getBannerDescription("한라산");
+            System.out.println(description);
+
+            // then
+            assertThat(description.mountainName()).isNotNull();
+            assertThat(description.high()).isNotNull();
+            assertThat(description.mntidetails()).isNotNull();
+            assertThat(description.mntitop()).isNotNull();
         }
     }
 }

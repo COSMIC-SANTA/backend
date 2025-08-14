@@ -1,6 +1,8 @@
 package SANTA.backend.mountain.api;
 
 import SANTA.backend.context.ControllerTest;
+import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.banner.dto.BannerMountainResponse;
 import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.mountain.dto.MountainDTO;
@@ -105,24 +107,20 @@ public class BannerApiTest extends ControllerTest {
         @WithMockUser(username = "testuser", roles = {"USER"})
         void 배너_클릭_성공() throws Exception {
             // given
-            String mountainName = "부모산";
-            MountainDTO mountainDTO = new MountainDTO("부모산", "충북 청주시 흥덕구 비하동 산 10-3", "127.41026890180636", "36.63420831918445");
-            List<MountainDTO> mountainResponseList = new ArrayList<>();
-            mountainResponseList.add(mountainDTO);
-            MountainSearchResponse searchResponse = new MountainSearchResponse(mountainResponseList);
+            BannerDescriptionDTO description = new BannerDescriptionDTO("지리산", "1947.3", "상세설명", "개관");
 
-            given(mountainService.searchMountains(anyString())).willReturn(searchResponse);
+            given(bannerService.getBannerDescription(description.mountainName())).willReturn(description);
 
             // when & then
             mockMvc.perform(post("/api/main/banner/click")
-                            .param("mountainName", mountainName)
+                            .param("mountainName", description.mountainName())
                             .contentType(String.valueOf(MediaType.APPLICATION_JSON)))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("success"));
 
-            verify(bannerService).incrementViewCount(mountainName);
-            verify(mountainService).searchMountains(mountainName);
+            verify(bannerService).incrementViewCount(description.mountainName());
+            verify(bannerService).getBannerDescription(description.mountainName());
         }
     }
 }

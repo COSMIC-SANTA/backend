@@ -1,6 +1,7 @@
 package SANTA.backend.global.utils.api;
 
 import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.mountain.dto.MountainFacilityRequest;
 import SANTA.backend.core.mountain.dto.MountainFacilityResponse;
@@ -26,4 +27,6 @@ public interface APIRequester {
     Mono<MountainFacilityResponse> searchFacility(MountainFacilityRequest request);
 
     Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request);
+
+    Mono<BannerDescriptionDTO> getBannerDescription(String mountainName);
 }
