@@ -95,7 +95,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         /** 공개 엔드포인트 */
-                        .requestMatchers("/", "/api/auth/login", "/api/auth/sign-up", "/abc").permitAll()
+                        .requestMatchers("/", "/api/auth/login", "/api/auth/sign-up").permitAll()
 
                         /** 필요 시 개발 단계에서 임시 오픈
                          * .requestMatchers("/PlanApi/**").permitAll()
@@ -108,10 +108,10 @@ public class SecurityConfig {
                         .successHandler(successHandler)
                         .failureHandler(failureHandler)
                         .authorizationEndpoint(aep -> aep
-                                .baseUri("/PlanApi/oauth2/authorize")
+                                .baseUri("/api/oauth2/authorize")
                                 .authorizationRequestRepository(httpCookieOAuth2Auth2AuthorizationRequestRepository)
                         )
-                        .redirectionEndpoint(redirection -> redirection.baseUri("/PlanApi/oauth2/callback/*"))
+                        .redirectionEndpoint(redirection -> redirection.baseUri("/api/oauth2/callback/*"))
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
                 );
 
