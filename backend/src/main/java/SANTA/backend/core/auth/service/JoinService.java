@@ -42,16 +42,18 @@ public class JoinService {
     }
 
     @Transactional
-    public JoinResponseDTO join(String username, String password, String nickname, int age) throws IllegalAccessException {
-        if (findByUsername(username) != null)
-            throw new IllegalAccessException("이미 사용중인 아이디입니다.");
+    public JoinResponseDTO join(String username, String password, String nickname, int age) {
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new CustomException(ErrorCode.TEMPORARY_ERROR, "이미 존재하는 username입니다: " + username);
+        }
 
         String encoded = bCryptPasswordEncoder.encode(password);
         User user = User.registerUser(username, encoded, nickname, age);
-
         User joinUser = userRepository.join(user);
-        return new JoinResponseDTO(joinUser);//repository에서 db로의 데이터 저장??
+
+        return new JoinResponseDTO(joinUser);
     }
+
 
     @CacheEvict(cacheNames = "users", key = "'userId:'+#userId",cacheManager = "cacheManager")
     public void logOut(Long userId, String accessToken) {
