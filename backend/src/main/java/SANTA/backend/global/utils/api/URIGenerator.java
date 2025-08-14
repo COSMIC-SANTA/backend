@@ -176,6 +176,18 @@ public abstract class URIGenerator {
         return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
     }
 
+    protected URI bannerDescriptionURIGenerator(String url, String key, String mountainName) {
+        UriComponentsBuilder componentsBuilder = UriComponentsBuilder
+                .fromHttpUrl(url)
+                .queryParam("searchWrd", mountainName)
+                .queryParam("pageNo", 1)
+                .queryParam("numOfRows", 1)
+                .queryParam("ServiceKey", key)
+                .queryParam("_type", JSON);
+
+        return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
+    }
+
     private static String getWayPoints(Mountain mountain, List<Stay> stays, List<Cafe> cafes, List<Restaurant> restaurants, List<Spot> spots) {
 
         List<String> waypoints = new ArrayList<>();
