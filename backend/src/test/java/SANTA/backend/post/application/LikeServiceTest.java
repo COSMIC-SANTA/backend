@@ -25,9 +25,6 @@ public class LikeServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @Autowired
-    private LikeRepository likeRepository;
-
     @Test
     void 게시글에_좋아요_추가_및_취소_테스트() {
         // given - 게시글 저장
