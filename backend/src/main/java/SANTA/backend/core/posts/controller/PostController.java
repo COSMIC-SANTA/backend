@@ -1,0 +1,128 @@
+package SANTA.backend.core.posts.controller;
+
+import SANTA.backend.core.auth.service.CustomUserDetails;
+import SANTA.backend.core.posts.dto.CommentDTO;
+import SANTA.backend.core.posts.dto.PostDTO;
+import SANTA.backend.core.posts.service.CommentService;
+import SANTA.backend.core.posts.service.LikeService;
+import SANTA.backend.core.posts.service.PostService;
+import SANTA.backend.core.user.application.UserService;
+import SANTA.backend.core.user.domain.User;
+import SANTA.backend.global.common.ResponseHandler;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/community/board")
+public class PostController {
+    private final PostService postService;
+    private final CommentService commentService;
+
+    @GetMapping("/save")
+    public String saveForm(){
+
+        return "saveChattingRoom";
+    }
+
+    @PostMapping("/save")
+    @ResponseBody
+    public ResponseEntity<ResponseHandler<Map<String, List<Map<String, Object>>>>> save(@ModelAttribute PostDTO postDTO) throws IOException {
+
+        // 현재 로그인 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
+
+        // 게시글 저장
+        PostDTO savedPost = postService.save(postDTO, user);
+
+        // JSON 응답 형태 구성
+        Map<String, Object> postData = new HashMap<>();
+        postData.put("post_id", savedPost.getPostId());
+        postData.put("post_title", savedPost.getTitle());
+        postData.put("post_body", savedPost.getBody());
+        postData.put("post_author", savedPost.getAuthor());
+
+        Map<String, List<Map<String, Object>>> response = new HashMap<>();
+        response.put("post", List.of(postData));
+        return ResponseEntity.ok().body(ResponseHandler.success(response));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ResponseHandler<List<PostDTO>>> findAll() {
+        return ResponseEntity.ok().body(ResponseHandler.success(postService.findAll()));
+    }
+
+    //게시글 조회
+    @GetMapping("/{postId}")
+    @ResponseBody
+    public ResponseEntity<ResponseHandler<Map<String, Object>>> getPostWithComments(@PathVariable Long postId) {
+        // 1. 조회수 증가
+        postService.updateHits(postId);
+
+        // 2. 게시글 데이터 조회
+        PostDTO postDTO = postService.findBypostId(postId);
+
+        // 3. 댓글 목록 조회
+        List<CommentDTO> commentDTOList = commentService.findAll(postId);
+
+        // 4. JSON 응답 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("post", postDTO);
+        response.put("comments", commentDTOList);
+
+        return ResponseEntity.ok(ResponseHandler.success(response));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<ResponseHandler<PostDTO>> update(@ModelAttribute PostDTO postDTO) throws IOException {
+        return ResponseEntity.ok().body(ResponseHandler.success(postService.update(postDTO)));
+    }
+
+    @DeleteMapping("/delete/{postId}")
+    public ResponseEntity<ResponseHandler<Map<String, String>>> delete(@PathVariable Long postId) {
+        postService.delete(postId);
+        return ResponseEntity.ok().body(ResponseHandler.success(Map.of("message", "삭제 성공")));
+    }
+
+    //페이징 처리 /post/paging?page=1이런 식으로 감
+    //이거 postman에서 확인할 수 있도록 하기
+    @GetMapping("/paging")
+    @ResponseBody
+    public ResponseEntity<ResponseHandler<Map<String, Object>>> paging(@PageableDefault(page=1) Pageable pageable){
+        //pageable.getPageNumber();
+        Page<PostDTO> postList = postService.paging(pageable);
+
+        int blockLimit = 10;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = ((startPage + blockLimit - 1) < postList.getTotalPages()) ? startPage + blockLimit - 1 : postList.getTotalPages();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("postList", postList.getContent()); // 실제 게시글 리스트
+        response.put("currentPage", postList.getNumber() + 1); // 0부터 시작하므로 +1
+        response.put("totalPages", postList.getTotalPages());
+        response.put("startPage", startPage);
+        response.put("endPage", endPage);
+
+        return ResponseEntity.ok().body(ResponseHandler.success(response));
+    }
+
+    @GetMapping("/bestposts")
+    public ResponseEntity<ResponseHandler<List<PostDTO>>> getPopularPosts() {
+        List<PostDTO> posts = postService.findPopularPostsLast7Days();
+        return ResponseEntity.ok(ResponseHandler.success(posts));
+    }
+
+}

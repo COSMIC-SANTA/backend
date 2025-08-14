@@ -1,9 +1,14 @@
 HELP.md
+.env
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+**/application.yml
+**/application-local.yml
+Dockerfile
+compose-docker.yml
 
 ### STS ###
 .apt_generated
@@ -18,7 +23,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
