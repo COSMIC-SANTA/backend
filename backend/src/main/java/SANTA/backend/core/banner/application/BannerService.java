@@ -1,6 +1,7 @@
 package SANTA.backend.core.banner.application;
 
 import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.user.domain.Interest;
 
@@ -19,5 +20,7 @@ public interface BannerService {
     Optional<Banner> findById(Long bannerId);
 
     void incrementViewCount(String mountainName);
+
+    BannerDescriptionDTO getBannerDescription(String mountainName);
 }
 

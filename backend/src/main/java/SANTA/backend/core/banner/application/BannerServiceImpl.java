@@ -1,10 +1,12 @@
 package SANTA.backend.core.banner.application;
 
 import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.banner.entity.BannerEntity;
 import SANTA.backend.core.banner.infra.BannerRepository;
 import SANTA.backend.core.user.domain.Interest;
+import SANTA.backend.global.utils.api.APIRequester;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class BannerServiceImpl implements BannerService {
 
     private final BannerRepository bannerRepository;
+    private final APIRequester apiRequester;
 
     @Override
     @Transactional(readOnly = true)
@@ -56,6 +59,11 @@ public class BannerServiceImpl implements BannerService {
         BannerEntity banner = bannerRepository.findByName(mountainName);
         banner.incrementViewCount();
         log.info("배너 '{}' 조회수 1 증가", mountainName);
+    }
+
+    @Override @Transactional(readOnly = true)
+    public BannerDescriptionDTO getBannerDescription(String mountainName) {
+        return apiRequester.getBannerDescription(mountainName).block();
     }
 
     @Override @Transactional(readOnly = true)
