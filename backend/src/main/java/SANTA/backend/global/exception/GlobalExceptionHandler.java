@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.info("ExceptionHandler에 잡힌 예외 {}", e.getMessage());
+        log.info("ExceptionHandler에 잡힌 예외 {}", e.getStackTrace().toString());
         ErrorResponse response = ErrorResponse.of(ErrorCode.TEMPORARY_ERROR);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

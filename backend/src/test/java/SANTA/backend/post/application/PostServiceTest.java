@@ -3,8 +3,6 @@ package SANTA.backend.post.application;
 import SANTA.backend.core.posts.dto.PostDTO;
 import SANTA.backend.core.posts.entity.LikeEntity;
 import SANTA.backend.core.posts.entity.PostEntity;
-import SANTA.backend.core.posts.repository.PostFileRepository;
-import SANTA.backend.core.posts.repository.PostRepository;
 import SANTA.backend.core.posts.service.PostService;
 import SANTA.backend.core.user.domain.User;
 import jakarta.persistence.EntityManager;

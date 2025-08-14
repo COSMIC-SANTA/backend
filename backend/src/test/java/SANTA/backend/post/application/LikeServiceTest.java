@@ -3,7 +3,6 @@ package SANTA.backend.post.application;
 import SANTA.backend.core.posts.entity.CommentEntity;
 import SANTA.backend.core.posts.entity.PostEntity;
 import SANTA.backend.core.posts.repository.CommentRepository;
-import SANTA.backend.core.posts.repository.LikeRepository;
 import SANTA.backend.core.posts.repository.PostRepository;
 import SANTA.backend.core.posts.service.LikeService;
 import org.junit.jupiter.api.Test;
