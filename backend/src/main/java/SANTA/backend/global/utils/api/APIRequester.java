@@ -19,7 +19,7 @@ public interface APIRequester {
 
     public List<Banner> getBannersWithImages(@Nullable String mountainName);
 
-    public WeatherResponseDto getWeather(Position position);
+    public List<WeatherResponseDto> getWeather(Position position);
 
     Mono<MountainSearchResponse> searchMountains(String mountainName);
 

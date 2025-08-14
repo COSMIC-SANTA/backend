@@ -175,6 +175,7 @@ public class AppProperties {
 
     public static class Weather {
         private String url;
+        private String forecastUrl;
         private String key;
 
         public String getUrl() {
@@ -183,6 +184,12 @@ public class AppProperties {
 
         public void setUrl(String url){
             this.url = url;
+        }
+
+        public String getForecastUrl(){return this.forecastUrl;}
+
+        public void setForecastUrl(String forecastUrl){
+            this.forecastUrl = forecastUrl;
         }
 
         public String getKey(){

@@ -72,7 +72,7 @@ public class ApiRequesterImpl implements APIRequester {
     }
 
     @Override
-    public WeatherResponseDto getWeather(Position position) {
+    public List<WeatherResponseDto> getWeather(Position position) {
         return weatherServiceRequester.getWeather(position).block();
     }
 

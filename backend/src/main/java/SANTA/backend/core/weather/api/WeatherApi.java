@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/main/weather")
@@ -16,8 +18,8 @@ public class WeatherApi {
     private final APIRequester apiRequester;
 
     @PostMapping
-    public ResponseEntity<ResponseHandler<WeatherResponseDto>> getWeather(@RequestBody Position position) {
-        WeatherResponseDto weather = apiRequester.getWeather(position);
+    public ResponseEntity<ResponseHandler<List<WeatherResponseDto>>> getWeather(@RequestBody Position position) {
+        List<WeatherResponseDto> weather = apiRequester.getWeather(position);
         return ResponseEntity.ok().body(ResponseHandler.success(weather));
     }
 }
