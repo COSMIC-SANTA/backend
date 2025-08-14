@@ -6,9 +6,10 @@ import SANTA.backend.core.mountain.domain.Mountain;
 public record BannerMountainResponse(
         Long id,
         String name,
-        String image_url
+        String image_url,
+        Long viewCount
 ) {
     public static BannerMountainResponse from(BannerEntity banner){
-        return new BannerMountainResponse(banner.getId(), banner.getName(), banner.getImageUrl());
+        return new BannerMountainResponse(banner.getId(), banner.getName(), banner.getImageUrl(), banner.getViewCount());
     }
 }

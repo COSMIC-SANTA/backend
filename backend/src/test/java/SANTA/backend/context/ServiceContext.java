@@ -3,14 +3,15 @@ package SANTA.backend.context;
 import SANTA.backend.core.chatting.application.ChattingService;
 import SANTA.backend.core.chatting.domain.ChattingRepository;
 import SANTA.backend.core.banner.application.BannerService;
+import SANTA.backend.core.course.domain.CourseRepository;
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.domain.MountainRepository;
+import SANTA.backend.core.plan.application.PlanService;
+import SANTA.backend.core.plan.domain.PlanRepository;
+import SANTA.backend.core.plan.dto.PlanRequest;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.UserRepository;
-import SANTA.backend.global.utils.api.APIRequester;
-import SANTA.backend.global.utils.api.KaKaoMapServiceRequester;
-import SANTA.backend.global.utils.api.KoreanTourInfoServiceRequester;
-import SANTA.backend.global.utils.api.BannerInfoServiceRequester;
+import SANTA.backend.global.utils.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -53,4 +54,14 @@ public abstract class ServiceContext {
 
     @Autowired
     protected KaKaoMapServiceRequester kaKaoMapServiceRequester;
+
+    @Autowired
+    protected KakaoFacilityServiceRequester kakaoFacilityServiceRequester;
+
+    @Autowired
+    protected PlanService planService;
+
+    @Autowired
+    protected PlanRepository planRepository;
+
 }

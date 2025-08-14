@@ -1,5 +1,6 @@
 package SANTA.backend.context;
 
+import SANTA.backend.core.banner.infra.BannerRepository;
 import SANTA.backend.core.chatting.domain.ChattingRepository;
 import SANTA.backend.core.mountain.domain.MountainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,4 +14,7 @@ public class RepositoryContext {
 
     @Autowired
     protected ChattingRepository chattingRepository;
+
+    @Autowired
+    protected BannerRepository bannerRepository;
 }

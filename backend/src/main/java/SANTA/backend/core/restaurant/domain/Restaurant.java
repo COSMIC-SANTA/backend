@@ -5,8 +5,10 @@ import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.restaurant.entity.RestaurantEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Restaurant extends BasePlace {
 
     @Builder

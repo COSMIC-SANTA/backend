@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -25,6 +26,14 @@ public class BannerJpaRepository implements BannerRepository {
     }
 
     @Override
+    public List<BannerEntity> findPopularMountains() {
+        return em.createQuery("select b from BannerEntity b order by b.viewCount desc",
+                BannerEntity.class)
+                .setMaxResults(10)
+                .getResultList();
+    }
+
+    @Override
     public void saveBanners(List<Banner> banners) {
         int batchSize = 100;
         List<BannerEntity> bannerEntities = banners.stream().map(BannerEntity::from).toList();
@@ -36,5 +45,18 @@ public class BannerJpaRepository implements BannerRepository {
             }
             log.info("배너 {} 저장됨",bannerEntities.get(i).getName());
         }
+    }
+
+    @Override
+    public BannerEntity findByName(String name) {
+        return em.createQuery("select b from BannerEntity b where b.name = :name", BannerEntity.class)
+                .setParameter("name", name)
+                .getResultStream().findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public Optional<Banner> findById(Long bannerId) {
+        return Optional.ofNullable(em.find(Banner.class, bannerId));
     }
 }

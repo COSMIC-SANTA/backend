@@ -1,15 +1,22 @@
 package SANTA.backend.global.utils.api;
 
 import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.basePlace.domain.BasePlace;
 import SANTA.backend.core.basePlace.domain.Position;
 import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.mountain.domain.Difficulty;
+import SANTA.backend.core.mountain.dto.*;
+import SANTA.backend.core.mountain.dto.MountainDTO;
 import SANTA.backend.core.mountain.dto.MountainNearByResponse;
+import SANTA.backend.core.mountain.dto.OptimalRouteRequest;
+import SANTA.backend.core.mountain.dto.OptimalRouteResponse;
+import SANTA.backend.core.mountain.dto.MountainSearchResponse;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
 import SANTA.backend.core.user.domain.Interest;
+import SANTA.backend.core.weather.dto.WeatherResponseDto;
 import SANTA.backend.global.utils.api.domain.AreaCode;
 import SANTA.backend.global.utils.api.domain.Arrange;
 import SANTA.backend.global.utils.api.domain.ContentTypeId;
@@ -22,6 +29,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -30,8 +38,13 @@ import java.util.List;
 public class ApiRequesterImpl implements APIRequester {
 
     private final KoreanTourInfoServiceRequester koreanTourInfoServiceRequester;
+    private final KaKaoMapServiceRequester kaKaoMapServiceRequester;
     private final BannerInfoServiceRequester bannerInfoServiceRequester;
+    private final WeatherServiceRequester weatherServiceRequester;
     private static final Long numOfRows = 20L;
+    private final KaKaoMountainServiceRequester kakaoMountainServiceRequester;
+    private final KakaoFacilityServiceRequester kakaoFacilityServiceRequester;
+    private final BannerDescriptionServiceRequester bannerDescriptionServiceRequester;
 
     @Override
     public Mono<MountainNearByResponse> searchNearByPlacesByLocation(String location, Long pageNo) {
@@ -60,6 +73,41 @@ public class ApiRequesterImpl implements APIRequester {
         return bannersWithImage.block(); // block은 마지막에 한 번만
     }
 
+    @Override
+    public List<WeatherResponseDto> getWeather(Position position) {
+        return weatherServiceRequester.getWeather(position).block();
+    }
+
+    public Mono<MountainSearchResponse> searchMountains(String mountainName) {
+        return kakaoMountainServiceRequester.searchMountainByKeyword(mountainName).map(this::extractMountainResponse);
+    }
+
+    @Override
+    public Mono<MountainFacilityResponse> searchFacility(MountainFacilityRequest request) {
+        return kakaoFacilityServiceRequester.searchFacilities(
+                request.mapX(),
+                request.mapY()
+        ).map(this::extractFacilityResponse);
+    }
+
+    @Override
+    public Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request) {
+        return kaKaoMapServiceRequester.searchRoute(
+                request.origin(),
+                request.mountain(),
+                request.cafes(),
+                request.restaurants(),
+                request.stays(),
+                request.spots(),
+                request.destination()
+        ).map(this::extractRouteResponse);
+    }
+
+    @Override
+    public Mono<BannerDescriptionDTO> getBannerDescription(String mountainName) {
+        return bannerDescriptionServiceRequester.getBannerDescription(mountainName).map(this::extractBannerDescription);
+    }
+
     private <T extends BasePlace> Mono<List<T>> extractPlacesMono(Long numOfRows, Long pageNo, ContentTypeId typeId, AreaCode areaCode, Long sigunguCode) {
         return koreanTourInfoServiceRequester
                 .getContentByAreaBasedList2(numOfRows, pageNo, areaCode, sigunguCode, Arrange.A, typeId)
@@ -70,8 +118,8 @@ public class ApiRequesterImpl implements APIRequester {
                             String name = node.path("title").asText();
                             String location = node.path("addr1").asText();
                             String imageUrl = node.path("firstimage").asText();
-                            Double mapX = node.path("mapX").asDouble();
-                            Double mapY = node.path("mapY").asDouble();
+                            Double mapX = node.path("mapx").asDouble();
+                            Double mapY = node.path("mapy").asDouble();
                             Position position = new Position(mapX, mapY);
 
                             switch (typeId) {
@@ -141,17 +189,137 @@ public class ApiRequesterImpl implements APIRequester {
     private Mono<Banner> enrichWithImageUrl(Banner banner) {
         return bannerInfoServiceRequester.getBannerImage(banner.getCode())
                 .map(jsonNode -> {
-                    System.out.println(banner.getCode());
                     String imageUrl = jsonNode.path("image").asText(null); // 없는 경우 null 반환
-                    System.out.println("이미지는"+ imageUrl);
                     banner.setImageUrl(imageUrl);
                     return banner;
                 })
                 .onErrorResume(e -> {
-                    System.out.println("이미지 API 호출 실패: " + banner.getCode() + " / " + e.getMessage());
                     return Mono.just(banner); // 이미지 없이 그냥 반환
                 });
-
     }
 
+    private MountainSearchResponse extractMountainResponse(JsonNode mountains) {
+        List<MountainDTO> mountainList = new ArrayList<>();
+        if (mountains.isArray()) {
+            for (JsonNode mountain : mountains) {
+                mountainList.add(new MountainDTO(
+                        mountain.path("place_name").asText(),
+                        mountain.path("address_name").asText(),
+                        mountain.path("x").asText(),
+                        mountain.path("y").asText()
+                ));
+            }
+        }
+        return new MountainSearchResponse(mountainList);
+    }
+
+    private MountainFacilityResponse extractFacilityResponse(JsonNode jsonNode) {
+        JsonNode hospitalsNode = jsonNode.path("hospitals");
+        JsonNode pharmaciesNode = jsonNode.path("pharmacies");
+        JsonNode toiletsNode = jsonNode.path("toilets");
+        JsonNode waterNode = jsonNode.path("water");
+
+        List<FacilityDTO> hospitals = parseFacilities(hospitalsNode);
+        List<FacilityDTO> pharmacies = parseFacilities(pharmaciesNode);
+        List<FacilityDTO> toilets = parseFacilities(toiletsNode);
+        List<FacilityDTO> water = parseFacilities(waterNode);
+
+        return new MountainFacilityResponse(
+                sortByDistance(toilets), // toilet
+                sortByDistance(water), // water
+                sortByDistance(hospitals), // hospital
+                sortByDistance(pharmacies) // pharmacy
+        );
+    }
+
+    private List<FacilityDTO> parseFacilities(JsonNode jsonNode) {
+        List<FacilityDTO> facilities = new ArrayList<>();
+
+        if(jsonNode.isArray()) {
+            for (JsonNode document : jsonNode) {
+                String placeName = document.path("place_name").asText();
+                String addressName = document.path("road_address_name").asText();
+                String mapX = document.path("x").asText();
+                String mapY = document.path("y").asText();
+                String distance = document.path("distance").asText();
+
+                facilities.add(new FacilityDTO(placeName, addressName, mapX, mapY, distance));
+            }
+        }
+
+        return facilities;
+    }
+
+    private List<FacilityDTO> sortByDistance(List<FacilityDTO> facilities) {
+        return facilities.stream()
+                .sorted(Comparator.comparingInt(facility ->
+                        facility.distance().isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(facility.distance())))
+                .toList();
+    }
+    private OptimalRouteResponse extractRouteResponse(JsonNode jsonNode) {
+        if (jsonNode.isArray() && !jsonNode.isEmpty()) {
+            JsonNode routeNode = jsonNode.get(0);
+            JsonNode summary = routeNode.path("summary");
+            JsonNode origin = summary.path("origin");
+            JsonNode destination = summary.path("destination");
+            JsonNode waypoints = summary.path("waypoints");
+            JsonNode fare = summary.path("fare");
+            JsonNode sections = summary.path("sections");
+
+            return new OptimalRouteResponse(
+                    new OptimalRouteResponse.OriginInfo(
+                            origin.path("name").asText(),
+                            origin.path("x").asDouble(),
+                            origin.path("y").asDouble()
+                    ),
+                    new OptimalRouteResponse.DestinationInfo(
+                            destination.path("name").asText(),
+                            destination.path("x").asDouble(),
+                            destination.path("y").asDouble()
+                    ),
+                    extractWaypoints(waypoints),
+                    summary.path("distance").asDouble(),
+                    summary.path("duration").asDouble(),
+                    fare.path("taxi").asDouble(),
+                    extractSections(sections)
+            );
+        }
+        throw new RuntimeException("경로를 찾을 수 없습니다.");
+    }
+
+    private List<OptimalRouteResponse.WaypointInfo> extractWaypoints(JsonNode waypoints) {
+        List<OptimalRouteResponse.WaypointInfo> waypointList = new ArrayList<>();
+        if (waypoints.isArray()) {
+            for (JsonNode waypoint : waypoints) {
+                waypointList.add(new OptimalRouteResponse.WaypointInfo(
+                        waypoint.path("name").asText(),
+                        waypoint.path("x").asDouble(),
+                        waypoint.path("y").asDouble()
+                ));
+            }
+        }
+        return waypointList;
+    }
+
+    private List<OptimalRouteResponse.SectionInfo> extractSections(JsonNode sections) {
+        List<OptimalRouteResponse.SectionInfo> sectionList = new ArrayList<>();
+        if (sections.isArray()) {
+            for (JsonNode section : sections) {
+                sectionList.add(new OptimalRouteResponse.SectionInfo(
+                        section.path("distance").asDouble(),
+                        section.path("duration").asDouble()
+                ));
+            }
+        }
+        return sectionList;
+    }
+
+    private BannerDescriptionDTO extractBannerDescription(JsonNode jsonNode) {
+        return new BannerDescriptionDTO(
+                jsonNode.path("mntiname").asText(),
+                jsonNode.path("mntihigh").asText(),
+                jsonNode.path("mntidetails").asText(),
+                jsonNode.path("mntitop").asText()
+        );
+    }
 }

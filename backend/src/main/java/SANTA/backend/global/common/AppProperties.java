@@ -10,6 +10,9 @@ public class AppProperties {
     private final Forest forest = new Forest();
     private final Kakao kakao = new Kakao();
     private final BannerMountain bannerMountain = new BannerMountain();
+    private final Weather weather = new Weather();
+    private final KakaoSearchKeyword kakaoSearchKeyword = new KakaoSearchKeyword();
+    private final BannerDescription bannerDescription = new BannerDescription();
 
     public KoreaTourOrganization getKoreaTourOrganization() {
         return this.koreaTourOrganization;
@@ -30,6 +33,14 @@ public class AppProperties {
     public BannerMountain getBannerMountain() {
         return this.bannerMountain;
     }
+
+    public Weather getWeather(){
+        return this.weather;
+    }
+
+    public KakaoSearchKeyword getKakaoSearchKeyword() {return this.kakaoSearchKeyword;}
+
+    public BannerDescription getBannerDescription() { return this.bannerDescription; }
 
     public static class KoreaTourOrganization {
         private String encodingKey;
@@ -69,21 +80,15 @@ public class AppProperties {
             return mobileAppName;
         }
 
-        public String getRoutingKey() {
-            return encodingKey;
-        }
+        public String getRoutingKey(){return encodingKey;}
     }
 
     public static class JWT {
         private String secret;
 
-        public String getSecret() {
-            return secret;
-        }
+        public String getSecret(){return secret;}
 
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
+        public void setSecret(String secret){this.secret = secret;}
     }
 
     public static class Forest {
@@ -169,5 +174,59 @@ public class AppProperties {
         public void setKey(String key) {
             this.key = key;
         }
+    }
+
+    public static class Weather {
+        private String url;
+        private String forecastUrl;
+        private String key;
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public void setUrl(String url){
+            this.url = url;
+        }
+
+        public String getForecastUrl(){return this.forecastUrl;}
+
+        public void setForecastUrl(String forecastUrl){
+            this.forecastUrl = forecastUrl;
+        }
+
+        public String getKey(){
+            return this.key;
+        }
+
+        public void setKey(String key){
+            this.key = key;
+        }
+    }
+
+    public static class KakaoSearchKeyword {
+        private String url;
+        private String key;
+
+        public String getUrl() { return this.url; }
+
+        public void setUrl(String url)  { this.url = url; }
+
+        public String getKey() { return this.key; }
+
+        public void setKey(String key) { this.key = key; }
+    }
+
+    public static class BannerDescription {
+        private String url;
+        private String key;
+
+        public String getUrl() { return this.url; }
+
+        public void setUrl(String url)  { this.url = url; }
+
+        public String getKey() { return this.key; }
+
+        public void setKey(String key) { this.key = key; }
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,7 @@ public class JoinService {
         this.redisTemplate = redisTemplate;
     }
 
+    @Transactional
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND, "해당 username의 유저가 존재하지 않습니다:" + username));
@@ -39,6 +41,7 @@ public class JoinService {
                 .orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND,"해당 nickname의 유저가 존재하지 않습니다:"+nickname));
     }
 
+    @Transactional
     public JoinResponseDTO join(String username, String password, String nickname, int age) throws IllegalAccessException {
         if (findByUsername(username) != null)
             throw new IllegalAccessException("이미 사용중인 아이디입니다.");

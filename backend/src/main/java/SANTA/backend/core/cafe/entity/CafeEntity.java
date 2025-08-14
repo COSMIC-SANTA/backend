@@ -30,4 +30,9 @@ public class CafeEntity extends BasePlaceEntity {
                 .position(cafe.getPosition())
                 .build();
     }
+
+    public void assignToCourse(CourseEntity courseEntity){
+        super.assignToCourse(courseEntity);
+        courseEntity.getCafes().add(this);
+    }
 }

@@ -2,6 +2,7 @@ package SANTA.backend.core.chatting.api;
 
 import SANTA.backend.core.auth.service.CustomUserDetails;
 import SANTA.backend.core.chatting.application.ChattingService;
+import SANTA.backend.core.chatting.application.LettuceLockStockFacade;
 import SANTA.backend.core.chatting.dto.ChattingRoomMessageResponseDto;
 import SANTA.backend.core.chatting.dto.ChattingRoomResponseDto;
 import SANTA.backend.core.chatting.dto.MessageDto;
@@ -24,6 +25,8 @@ public class ChattingApi {
 
     private final ChattingService chattingService;
 
+    private final LettuceLockStockFacade lettuceLockStockFacade;
+
     @GetMapping
     public ResponseEntity<ResponseHandler<List<ChattingRoomResponseDto>>> chattingRoomList() {
         List<ChattingRoomResponseDto> chattingRoomLists = chattingService.getChattingRoomList();
@@ -34,6 +37,14 @@ public class ChattingApi {
     public ResponseEntity<ResponseHandler<List<ChattingRoomResponseDto>>> searchChattingRoom(@PathVariable("roomName") String roomName) {
         List<ChattingRoomResponseDto> chattingRooms = chattingService.getChattingRoomByName(roomName);
         return ResponseEntity.ok().body(ResponseHandler.success(chattingRooms));
+    }
+
+
+    @PostMapping
+    public ResponseEntity<ResponseHandler<Boolean>> participateChattingRoom(@RequestParam("roomId")Long roomId, @AuthenticationPrincipal CustomUserDetails userDetails) throws InterruptedException {
+        Long userId = userDetails.getUserId();
+        lettuceLockStockFacade.participateChattingRoom(roomId,userId);
+        return ResponseEntity.ok().body(ResponseHandler.success(true));
     }
 
     @MessageMapping("/chat")
@@ -49,4 +60,5 @@ public class ChattingApi {
         List<ChattingRoomMessageResponseDto> chattingRoomMessageResponseDtos = chattingService.getChattingRoomMessageByRoomId(roomId);
         return ResponseEntity.ok().body(ResponseHandler.success(chattingRoomMessageResponseDtos));
     }
+
 }
