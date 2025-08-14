@@ -72,7 +72,7 @@ public class ApiRequesterImpl implements APIRequester {
     }
 
     @Override
-    public WeatherResponseDto getWeather(Position position) {
+    public List<WeatherResponseDto> getWeather(Position position) {
         return weatherServiceRequester.getWeather(position).block();
     }
 
@@ -111,8 +111,8 @@ public class ApiRequesterImpl implements APIRequester {
                             String name = node.path("title").asText();
                             String location = node.path("addr1").asText();
                             String imageUrl = node.path("firstimage").asText();
-                            Double mapX = node.path("mapX").asDouble();
-                            Double mapY = node.path("mapY").asDouble();
+                            Double mapX = node.path("mapx").asDouble();
+                            Double mapY = node.path("mapy").asDouble();
                             Position position = new Position(mapX, mapY);
 
                             switch (typeId) {

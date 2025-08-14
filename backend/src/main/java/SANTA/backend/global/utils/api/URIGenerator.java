@@ -147,7 +147,7 @@ public abstract class URIGenerator {
                 .fromHttpUrl(url)
                 .queryParam("serviceKey", key)
                 .queryParam("dataType", "JSON")
-                .queryParam("numOfRows", 10)
+                .queryParam("numOfRows", 30)
                 .queryParam("pageNo", 1)
                 .queryParam("base_date", baseDate)
                 .queryParam("base_time", baseTime)

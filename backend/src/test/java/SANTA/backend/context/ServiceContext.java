@@ -6,6 +6,9 @@ import SANTA.backend.core.banner.application.BannerService;
 import SANTA.backend.core.course.domain.CourseRepository;
 import SANTA.backend.core.mountain.application.MountainService;
 import SANTA.backend.core.mountain.domain.MountainRepository;
+import SANTA.backend.core.plan.application.PlanService;
+import SANTA.backend.core.plan.domain.PlanRepository;
+import SANTA.backend.core.plan.dto.PlanRequest;
 import SANTA.backend.core.user.application.UserService;
 import SANTA.backend.core.user.domain.UserRepository;
 import SANTA.backend.global.utils.api.*;
@@ -54,5 +57,11 @@ public abstract class ServiceContext {
 
     @Autowired
     protected KakaoFacilityServiceRequester kakaoFacilityServiceRequester;
+
+    @Autowired
+    protected PlanService planService;
+
+    @Autowired
+    protected PlanRepository planRepository;
 
 }

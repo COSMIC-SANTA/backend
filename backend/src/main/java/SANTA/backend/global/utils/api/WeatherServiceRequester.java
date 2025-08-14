@@ -1,23 +1,26 @@
 package SANTA.backend.global.utils.api;
 
 import SANTA.backend.core.basePlace.domain.Position;
+import SANTA.backend.core.weather.dto.GloomyLevel;
 import SANTA.backend.core.weather.dto.Grid;
 import SANTA.backend.core.weather.dto.WeatherResponseDto;
 import SANTA.backend.global.common.AppProperties;
 import SANTA.backend.global.utils.api.domain.WeatherCode;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-
-import static com.nimbusds.openid.connect.sdk.assurance.claims.ISO3166_1Alpha2CountryCode.RE;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class WeatherServiceRequester extends URIGenerator{
+public class WeatherServiceRequester extends URIGenerator {
 
     private final AppProperties appProperties;
     private final WebClientService webClientService;
@@ -30,12 +33,14 @@ public class WeatherServiceRequester extends URIGenerator{
     private static final double XO = 210 / GRID; // 기준점 X좌표
     private static final double YO = 675 / GRID; // 기준점 Y좌표
 
-    public Mono<WeatherResponseDto> getWeather(Position position){
+    public Mono<List<WeatherResponseDto>> getWeather(Position position) {
         String url = appProperties.getWeather().getUrl();
+        String forecastUrl = appProperties.getWeather().getForecastUrl();
         String key = appProperties.getWeather().getKey();
         Grid grid = toGrid(position.getMapY(), position.getMapX());
-        URI uri = weatherURIGenerator(url,key,grid);
-        Mono<JsonNode> items = webClientService.request(uri);;
+        URI uri = weatherURIGenerator(forecastUrl, key, grid);
+        Mono<JsonNode> items = webClientService.request(uri);
+
         return items.map(this::extractT1HAndRN1);
     }
 
@@ -69,20 +74,45 @@ public class WeatherServiceRequester extends URIGenerator{
         return new Grid(nx, ny);
     }
 
-    private WeatherResponseDto extractT1HAndRN1(JsonNode items) {
-        WeatherResponseDto resultNode = new WeatherResponseDto();
+    private List<WeatherResponseDto> extractT1HAndRN1(JsonNode items) {
 
-        for (JsonNode item : items) {
-            String category = item.path("category").asText();
-            String value = item.path("obsrValue").asText();
+        Map<String, List<JsonNode>> grouped = new ArrayList<JsonNode>() {{
+            items.forEach(this::add);
+        }}.stream()
+                .collect(Collectors.groupingBy(node -> node.get("fcstTime").asText()));
 
-            if ("T1H".equals(category)) {
-                resultNode.setTemperature(Double.parseDouble(value));
-            } else if ("PTY".equals(category)) {
-                resultNode.setWeatherCode(WeatherCode.fromCode(Integer.parseInt(value)));
+        List<WeatherResponseDto> result = new ArrayList<>();
+
+        for (Map.Entry<String, List<JsonNode>> entry : grouped.entrySet()) {
+            String fcstTime = entry.getKey();
+            List<JsonNode> values = entry.getValue();
+
+            WeatherResponseDto dto = new WeatherResponseDto();
+            dto.setTime(formatTime(fcstTime));
+
+            for (JsonNode v : values) {
+                String category = v.get("category").asText();
+                String fcstValue = v.get("fcstValue").asText();
+
+                if ("T1H".equals(category)) { // 기온
+                    dto.setTemperature(Double.valueOf(fcstValue));
+                } else if ("PTY".equals(category)) {
+                    dto.setWeatherCode(WeatherCode.fromCode(Integer.parseInt(fcstValue)));
+                } else if ("SKY".equals(category)){
+                    dto.setGloomyLevel(GloomyLevel.fromCode(Integer.parseInt(fcstValue)));
+                }
             }
+            result.add(dto);
         }
-        return resultNode;
+
+        // 시간순 정렬
+        result.sort(Comparator.comparing(WeatherResponseDto::getTime));
+        return result;
+    }
+
+    private static String formatTime (String fcstTime){
+        // "1000" → "10:00"
+        return fcstTime.substring(0, 2) + ":" + fcstTime.substring(2);
     }
 
 }
