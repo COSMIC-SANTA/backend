@@ -48,7 +48,7 @@ public class SecurityConfig {
 
     public LoginFilter loginFilter(AuthenticationManager authenticationManager) {
         LoginFilter loginFilter = new LoginFilter();
-        loginFilter.setFilterProcessesUrl("/PlanApi/auth/login");
+        loginFilter.setFilterProcessesUrl("/api/auth/login");
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
         loginFilter.setAuthenticationManager(authenticationManager);
         return loginFilter;
