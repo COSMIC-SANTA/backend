@@ -12,6 +12,7 @@ public class AppProperties {
     private final BannerMountain bannerMountain = new BannerMountain();
     private final Weather weather = new Weather();
     private final KakaoSearchKeyword kakaoSearchKeyword = new KakaoSearchKeyword();
+    private final BannerDescription bannerDescription = new BannerDescription();
 
     public KoreaTourOrganization getKoreaTourOrganization() {
         return this.koreaTourOrganization;
@@ -38,6 +39,8 @@ public class AppProperties {
     }
 
     public KakaoSearchKeyword getKakaoSearchKeyword() {return this.kakaoSearchKeyword;}
+
+    public BannerDescription getBannerDescription() { return this.bannerDescription; }
 
     public static class KoreaTourOrganization {
         private String encodingKey;
@@ -195,6 +198,19 @@ public class AppProperties {
     }
 
     public static class KakaoSearchKeyword {
+        private String url;
+        private String key;
+
+        public String getUrl() { return this.url; }
+
+        public void setUrl(String url)  { this.url = url; }
+
+        public String getKey() { return this.key; }
+
+        public void setKey(String key) { this.key = key; }
+    }
+
+    public static class BannerDescription {
         private String url;
         private String key;
 
