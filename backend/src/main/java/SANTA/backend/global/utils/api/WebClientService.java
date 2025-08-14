@@ -3,12 +3,12 @@ package SANTA.backend.global.utils.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.List;
 
 @Component
 public class WebClientService {
@@ -16,11 +16,13 @@ public class WebClientService {
     private final WebClient webClient;
     private final WebClient kakaoWebClient;
     private final WebClient kakaoSearchByKeywordClient;
+    private final WebClient bannerDescriptionClient;
 
-    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient, @Qualifier("kakaoRouteClient") WebClient kakaoWebClient, @Qualifier("kakaoSearchByKeywordClient") WebClient kakaoSearchByKeywordClient) {
+    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient, @Qualifier("kakaoRouteClient") WebClient kakaoWebClient, @Qualifier("kakaoSearchByKeywordClient") WebClient kakaoSearchByKeywordClient, @Qualifier("forestApiClient") WebClient bannerDescriptionClient) {
         this.webClient = webClient;
         this.kakaoWebClient = kakaoWebClient;
         this.kakaoSearchByKeywordClient = kakaoSearchByKeywordClient;
+        this.bannerDescriptionClient = bannerDescriptionClient;
     }
 
     public Mono<JsonNode> request(URI uri) {
@@ -70,4 +72,19 @@ public class WebClientService {
         });
     }
 
+    public Mono<JsonNode> requestBannerDescription(URI uri){
+        Mono<JsonNode> stringMono = bannerDescriptionClient.get()
+                .uri(uri)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(JsonNode.class);
+
+        return stringMono.map(json -> {
+            try {
+                return json.path("response").path("body").path("items").path("item");
+            } catch (Exception e) {
+                throw new RuntimeException("JSON 파싱 오류", e);
+            }
+        });
+    }
 }
