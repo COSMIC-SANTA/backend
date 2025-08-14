@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.AuthenticationException;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -33,18 +35,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = CustomException.class)
-    public ResponseEntity<?> handleCustomException(CustomException exception) {
-        log.warn("[CustomException에 잡힌 예외] : {} \n message: {}", exception.getErrorCode(),
-                exception.getMessage());
-
-        return ResponseEntity.status(exception.getErrorCode().getState())
-                .body(ResponseHandler.fail(exception.getMessage(), exception.getErrorCode().name()));
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
+        log.warn("[CustomException에 잡힌 예외] : {} \n message: {}", e.getErrorCode(),
+                e.getMessage());
+        ErrorResponse response = ErrorResponse.of(e.getErrorCode());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.info("ExceptionHandler에 잡힌 예외 {}", e.getStackTrace().toString());
-        ErrorResponse response = ErrorResponse.of(ErrorCode.TEMPORARY_ERROR);
+        log.info("ExceptionHandler에 잡힌 예외 {}", e.getMessage());
+        ErrorResponse response = ErrorResponse.of(ErrorCode.TEMPORARY_ERROR,e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
