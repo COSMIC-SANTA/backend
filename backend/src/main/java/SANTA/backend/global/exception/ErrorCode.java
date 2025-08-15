@@ -36,7 +36,14 @@ public enum ErrorCode {
     CHATTING_ROOM_NOT_FOUND(404,"M_024","해당하는 채팅방 정보를 찾을 수 없습니다."),
     CHATTING_ROOM_USER_NOT_FOUND(404,"M_025","해당하는 채팅참여자 정보를 찾을 수 없습니다."),
     CHATTING_ROOM_MESSAGE_NOT_FOUND(404,"M_026","채팅 목록을 찾을 수 없습니다."),
-    BANNER_NOT_AVAILABLE(400,"M_027","관심사에 해당하는 배너를 찾을 수 없습니다.");
+    BANNER_NOT_AVAILABLE(400,"M_027","관심사에 해당하는 배너를 찾을 수 없습니다."),
+    BANNER_NOT_FOUND(404,"M_028","해당하는 배너를 찾을 수 없습니다."),
+
+    BANNER_API_INVALID(500,"M_029","배너 API 이용이 불가능합니다."),
+
+    TOUR_API_INVALID(500,"M_030","관광 API 이용이 불가능합니다."),
+
+    KAKAO_API_INVALID(500,"M_031","카카오 편의시설 이용이 불가능합니다.");
 
 
     private final int state;

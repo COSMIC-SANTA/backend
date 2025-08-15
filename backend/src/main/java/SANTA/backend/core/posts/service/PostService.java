@@ -33,7 +33,6 @@ public class PostService {
     private final PostFileRepository postFileRepository;
 
     public PostDTO save(PostDTO postDTO, User user) throws IOException {
-
         if(postDTO.getPostFile() == null ||postDTO.getPostFile().isEmpty()){
             //파일 첨부 없음
             PostEntity postEntity = PostEntity.tosaveEntity(postDTO, user.getUserId(), user.getNickname());
@@ -47,16 +46,15 @@ public class PostService {
             for(MultipartFile postFile:postDTO.getPostFile()){
                 String originalFilename=postFile.getOriginalFilename();
                 String storedFileName= System.currentTimeMillis()+"_"+originalFilename;
-                //안2. String storedFileName = UUID.randomUUID() + "_" + originalFilename;
                 String savePath="C:/Users/User/Desktop/springtemp_img/"+storedFileName; // C:/springboot_img/파일이름.jpg이렇게 저장되게 함.->이거 바꾸든가 하자
                 postFile.transferTo(new File(savePath));//savePath로 파일을 넘긴다.
 
                 PostFileEntity postFileEntity=PostFileEntity.toPostFileEntity(post, originalFilename,storedFileName);
                 postFileRepository.save(postFileEntity);
+                post.getPostFileEntityList().add(postFileEntity);
             }
             return PostDTO.toPostDTO(post);
         }
-
     }
 
     @Transactional

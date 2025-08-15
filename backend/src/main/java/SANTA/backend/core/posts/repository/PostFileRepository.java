@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface PostFileRepository extends JpaRepository<PostFileEntity,Long> {
     List<PostFileEntity> findByPostEntity(PostEntity post);
-
 }

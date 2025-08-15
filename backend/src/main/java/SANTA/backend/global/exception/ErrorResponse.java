@@ -13,28 +13,36 @@ import java.util.List;
 public class ErrorResponse {
     private String message;
 
+    private String additionalMessage;
+
     private List<FieldError> errors;
 
     private String code;
 
-    private ErrorResponse(ErrorCode code, List<FieldError> errors){
+    private ErrorResponse(ErrorCode code, List<FieldError> errors, String additionalMessage){
         this.message = code.getMessage();
+        this.additionalMessage = additionalMessage;
         this.errors = errors;
         this.code = code.getCode();
     }
 
-    private ErrorResponse(ErrorCode code){
+    private ErrorResponse(ErrorCode code, String additionalMessage){
         this.message = code.getMessage();
         this.errors = new ArrayList<>();
         this.code = code.getCode();
+        this.additionalMessage = additionalMessage;
     }
 
-    public static ErrorResponse of(ErrorCode code, List<FieldError> errors){
-        return new ErrorResponse(code,errors);
+    public static ErrorResponse of(ErrorCode code, List<FieldError> errors,String additionalMessage){
+        return new ErrorResponse(code,errors,additionalMessage);
+    }
+
+    public static ErrorResponse of(ErrorCode code, String additionalMessage){
+        return new ErrorResponse(code, additionalMessage);
     }
 
     public static ErrorResponse of(ErrorCode code){
-        return new ErrorResponse(code);
+        return new ErrorResponse(code, null);
     }
 
 }
