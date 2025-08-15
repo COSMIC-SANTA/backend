@@ -42,5 +42,6 @@ public class Banner {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    public void setVisitCount(Long viewCount) {this.viewCount = viewCount;}
+
+    public void setViewCount(Long viewCount) {this.viewCount = viewCount;}
 }

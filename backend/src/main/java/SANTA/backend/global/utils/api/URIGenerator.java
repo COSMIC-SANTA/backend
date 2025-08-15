@@ -12,6 +12,7 @@ import SANTA.backend.global.utils.api.domain.AreaCode;
 import SANTA.backend.global.utils.api.domain.Arrange;
 import SANTA.backend.global.utils.api.domain.ContentTypeId;
 import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 public abstract class URIGenerator {
 
     private static final String JSON = "json";
@@ -102,13 +103,11 @@ public abstract class URIGenerator {
 
     protected URI mountainINfoServiceURIGenerator(String url, String key, Long mountainCode) {
         String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
-
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(url)
                 .queryParam("serviceKey", encodedKey)
                 .queryParam("_type", JSON)
                 .queryParam("searchWrd", mountainCode);
-
         return builder.build(true).toUri();
     }
 
@@ -177,6 +176,7 @@ public abstract class URIGenerator {
     }
 
     protected URI bannerDescriptionURIGenerator(String url, String key, String mountainName) {
+        log.info("url={}", url);
         UriComponentsBuilder componentsBuilder = UriComponentsBuilder
                 .fromHttpUrl(url)
                 .queryParam("searchWrd", mountainName)

@@ -35,7 +35,7 @@ public class RabbitMQResponder {
 
                 for (Banner banner : banners) {
                     log.info("배너 업데이트 실행됨 {}", banner.getName());
-                    banner.setVisitCount(0L);
+                    banner.setViewCount(0L);
                 }
                 bannerService.saveBanners(banners);
             } catch (Exception e) {

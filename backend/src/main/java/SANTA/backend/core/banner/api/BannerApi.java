@@ -38,7 +38,7 @@ public class BannerApi {
     }
 
     @PostMapping("/banner/click")
-    public ResponseEntity<ResponseHandler<BannerDescriptionDTO>> getBannerClick(@RequestParam String mountainName){
+    public ResponseEntity<ResponseHandler<BannerDescriptionDTO>> getBannerClick(@RequestParam("mountainName") String mountainName){
 
         bannerService.incrementViewCount(mountainName);
 

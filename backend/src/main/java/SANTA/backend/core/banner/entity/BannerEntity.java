@@ -44,6 +44,7 @@ public class BannerEntity {
     public static BannerEntity from(Banner banner){
         return BannerEntity.builder()
                 .name(banner.getName())
+                .imageUrl(banner.getImageUrl())
                 .location(banner.getLocation())
                 .interest(banner.getInterest())
                 .difficulty(banner.getDifficulty())
