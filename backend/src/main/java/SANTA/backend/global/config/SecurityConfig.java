@@ -1,5 +1,6 @@
 package SANTA.backend.global.config;
 
+import SANTA.backend.core.user.domain.Role;
 import SANTA.backend.global.jwt.JWTFilter;
 import SANTA.backend.global.jwt.JWTUtil;
 import SANTA.backend.global.jwt.LoginFilter;
@@ -36,10 +37,12 @@ public class SecurityConfig {
     private final SuccessHandler successHandler;
     private final FailureHandler failureHandler;
     private final JWTFilter jwtFilter;
-    private final JWTUtil jwtUtil;
     private final HttpCookieOAuth2Auth2AuthorizationRequestRepository httpCookieOAuth2Auth2AuthorizationRequestRepository;
     private final CustomOauth2UserService customOauth2UserService;
     private final LoginSuccessHandler loginSuccessHandler;
+
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_USER = "ROLE_USER";
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -84,23 +87,32 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
-
-                /** ✅ CorsFilter를 시큐리티 체인에 활성화 */
                 .cors(Customizer.withDefaults())
-
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
                 .authorizeHttpRequests(auth -> auth
-                        /** ✅ 프리플라이트는 전부 허용 (중요) */
+                        .requestMatchers(HttpMethod.GET, "/api/auth/sign-out")
+                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/form" )
+                        .hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/main/banner")
+                        .hasAnyRole(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/main/banner/click","/api/main/weather")
+                        .hasAnyRole(ROLE_USER, ROLE_ADMIN)
+                        .requestMatchers( "/api/main/saveMountainsFromApi")
+                        .hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/mountains/**")
+                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/mountains/**")
+                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/plan/**")
+                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/plan/**")
+                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/community/**")
+                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/community/**")
+                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        /** 공개 엔드포인트 */
-                        .requestMatchers("/", "/api/auth/login", "/api/auth/sign-up").permitAll()
-
-                        /** 필요 시 개발 단계에서 임시 오픈
-                         * .requestMatchers("/PlanApi/**").permitAll()
-                         */
-
                         .anyRequest().permitAll()
                 )
 
@@ -115,10 +127,8 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService))
                 );
 
-        /** ✅ 필터 순서 정정: CORS 처리 후에 JWT 검사 */
         http.addFilterAfter(jwtFilter, CorsFilter.class);
 
-        /** 로그인 필터 등록 */
         http.addFilterAt(loginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

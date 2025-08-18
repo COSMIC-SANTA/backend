@@ -57,6 +57,7 @@ public class BannerJpaRepository implements BannerRepository {
 
     @Override
     public Optional<Banner> findById(Long bannerId) {
+
         return Optional.ofNullable(em.find(Banner.class, bannerId));
     }
 }
