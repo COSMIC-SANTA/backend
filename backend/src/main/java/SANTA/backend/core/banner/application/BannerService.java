@@ -17,8 +17,6 @@ public interface BannerService {
 
     void saveBanners(List<Banner> banners);
 
-    Optional<Banner> findById(Long bannerId);
-
     void incrementViewCount(String mountainName);
 
     BannerDescriptionDTO getBannerDescription(String mountainName);

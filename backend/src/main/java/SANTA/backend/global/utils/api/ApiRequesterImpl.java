@@ -177,6 +177,7 @@ public class ApiRequesterImpl implements APIRequester {
                                 .name(mountainName)
                                 .location(location)
                                 .interest(height > 1000L ? Interest.HIGH : Interest.LOW)
+                                .imageUrl("")
                                 .difficulty(difficulty)
                                 .build()
                 );
@@ -188,15 +189,25 @@ public class ApiRequesterImpl implements APIRequester {
 
     private Mono<Banner> enrichWithImageUrl(Banner banner) {
         return bannerInfoServiceRequester.getBannerImage(banner.getCode())
-                .map(jsonNode -> {
-                    String imageUrl = jsonNode.path("image").asText(null); // 없는 경우 null 반환
-                    banner.setImageUrl(imageUrl);
+                // items.item 이 배열이면 첫 번째 선택, 객체면 그대로
+                .map(node -> node.isArray() ? node.get(0) : node)
+                .map(item -> {
+                    log.info("json 파싱 전 item: {}", item);
+                    String imageName = item.path("image").asText(null);
+                    System.out.println("imageName: "+ imageName);
+                    if (imageName != null) {
+                        imageName = imageName.trim(); // 응답에 공백이 붙는 경우가 있어 보임 (예시에 공백 존재)
+                        if (!imageName.isEmpty()) {
+                            String fullUrl = "http://www.forest.go.kr/swf/foreston/mountain/" + imageName;
+                            banner.setImageUrl(fullUrl);
+                        }
+                    }
                     return banner;
                 })
-                .onErrorResume(e -> {
-                    return Mono.just(banner); // 이미지 없이 그냥 반환
-                });
+                .switchIfEmpty(Mono.just(banner))   // item이 비어있을 때
+                .onErrorResume(e -> Mono.just(banner)); // 파싱/네트워크 오류엔 이미지 없이 진행
     }
+
 
     private MountainSearchResponse extractMountainResponse(JsonNode mountains) {
         List<MountainDTO> mountainList = new ArrayList<>();
