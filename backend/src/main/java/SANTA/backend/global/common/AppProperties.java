@@ -13,6 +13,7 @@ public class AppProperties {
     private final Weather weather = new Weather();
     private final KakaoSearchKeyword kakaoSearchKeyword = new KakaoSearchKeyword();
     private final BannerDescription bannerDescription = new BannerDescription();
+    private final OAuth2 OAuth2 = new OAuth2();
 
     public KoreaTourOrganization getKoreaTourOrganization() {
         return this.koreaTourOrganization;
@@ -41,6 +42,8 @@ public class AppProperties {
     public KakaoSearchKeyword getKakaoSearchKeyword() {return this.kakaoSearchKeyword;}
 
     public BannerDescription getBannerDescription() { return this.bannerDescription; }
+
+    public OAuth2 getOAuth2() {return this.OAuth2;}
 
     public static class KoreaTourOrganization {
         private String encodingKey;
@@ -228,5 +231,13 @@ public class AppProperties {
         public String getKey() { return this.key; }
 
         public void setKey(String key) { this.key = key; }
+    }
+
+    public static class OAuth2{
+        private String authorizedRedirectUris;
+
+        public String getAuthorizedRedirectUris() {return this.authorizedRedirectUris;}
+
+        public void setAuthorizedRedirectUris(String authorizedRedirectUris) {this.authorizedRedirectUris = authorizedRedirectUris;}
     }
 }
