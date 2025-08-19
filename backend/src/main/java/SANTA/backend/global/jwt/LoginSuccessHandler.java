@@ -26,12 +26,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         cookie.setSecure(true);   // HTTPS 환경에서만 사용
         cookie.setPath("/");      // 모든 경로에 대해 쿠키 전송
         cookie.setMaxAge(60*60*100);
+        cookie.setSecure(false);        
 
         response.addCookie(cookie); // ✅ jakarta.servlet.http.Cookie 를 사용해야 오류 없음
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"message\": \"Login successful, token is set in cookie\"}");
+        response.getWriter().write("{\"message\": \"Login successful, token is set in cookie\"}" + "accessToken" + jwt);
     }
 }
