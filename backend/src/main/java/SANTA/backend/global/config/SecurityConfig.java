@@ -41,8 +41,8 @@ public class SecurityConfig {
     private final CustomOauth2UserService customOauth2UserService;
     private final LoginSuccessHandler loginSuccessHandler;
 
-    private static final String ROLE_ADMIN = "ROLE_ADMIN";
-    private static final String ROLE_USER = "ROLE_USER";
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_USER = "USER";
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
