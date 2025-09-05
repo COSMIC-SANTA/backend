@@ -49,21 +49,28 @@ public class MountainApi {
         log.info("request.destination ={}", request.destination().getName());
         log.info("request.origin x={}, y={}", request.origin().getMapX(), request.origin().getMapY());
         log.info("request.mountain ={}", request.mountain().getName());
-        for (Cafe cafe : request.cafes()) {
-            log.info("request.cafe ={}", cafe.getName());
+        if(!request.cafes().isEmpty()){
+            for (Cafe cafe : request.cafes()) {
+                log.info("request.cafe ={}", cafe.getName());
+            }
         }
-        for (Restaurant restaurant : request.restaurants()) {
-            log.info("request.restaurant ={}", restaurant.getName());
+        if(!request.restaurants().isEmpty()){
+            for (Restaurant restaurant : request.restaurants()) {
+                log.info("request.restaurant ={}", restaurant.getName());
+            }
         }
-        for (Stay stay : request.stays()) {
-            log.info("request.stay ={}", stay);
+        if(!request.stays().isEmpty()){
+            for (Stay stay : request.stays()) {
+                log.info("request.stay ={}", stay);
+            }
         }
-        for (Spot spot : request.spots()) {
-            log.info("request.spot ={}", spot);
+        if(!request.spots().isEmpty()){
+            for (Spot spot : request.spots()) {
+                log.info("request.spot ={}", spot);
+            }
         }
         OptimalRouteResponse optimalRouteResponse = mountainService.searchOptimalRoute(request);
         return ResponseEntity.ok().body(optimalRouteResponse);
     }
 
-}
-
+} 

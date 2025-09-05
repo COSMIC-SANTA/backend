@@ -127,7 +127,7 @@ public abstract class URIGenerator {
                 .queryParam("road_details", "true")
                 .queryParam("summary", "true");
 
-        return componentsBuilder.build().toUri();
+	return componentsBuilder.encode(StandardCharsets.UTF_8).build().toUri();
     }
 
     protected URI weatherURIGenerator(String url, String key, Grid grid) {
