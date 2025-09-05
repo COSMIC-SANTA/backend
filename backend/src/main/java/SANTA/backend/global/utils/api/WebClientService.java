@@ -1,5 +1,6 @@
 package SANTA.backend.global.utils.api;
 
+import SANTA.backend.global.common.AppProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,12 +18,15 @@ public class WebClientService {
     private final WebClient kakaoWebClient;
     private final WebClient kakaoSearchByKeywordClient;
     private final WebClient bannerDescriptionClient;
+    private final AppProperties appProperties;
 
-    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient, @Qualifier("kakaoRouteClient") WebClient kakaoWebClient, @Qualifier("kakaoSearchByKeywordClient") WebClient kakaoSearchByKeywordClient, @Qualifier("forestApiClient") WebClient bannerDescriptionClient) {
+    public WebClientService(@Qualifier("clientServiceBean") WebClient webClient, @Qualifier("kakaoRouteClient") WebClient kakaoWebClient, @Qualifier("kakaoSearchByKeywordClient") WebClient kakaoSearchByKeywordClient, @Qualifier("forestApiClient") WebClient bannerDescriptionClient,
+                            AppProperties appProperties) {
         this.webClient = webClient;
         this.kakaoWebClient = kakaoWebClient;
         this.kakaoSearchByKeywordClient = kakaoSearchByKeywordClient;
         this.bannerDescriptionClient = bannerDescriptionClient;
+        this.appProperties = appProperties;
     }
 
     public Mono<JsonNode> request(URI uri) {
@@ -45,6 +49,7 @@ public class WebClientService {
     public Mono<JsonNode> requestKaKaoMap(URI uri){
         Mono<JsonNode> stringMono = kakaoWebClient.get()
                 .uri(uri)
+                .header("Authorization", "KakaoAK " + appProperties.getKakao().getKey())
                 .retrieve()
                 .bodyToMono(JsonNode.class);
 
@@ -88,3 +93,4 @@ public class WebClientService {
         });
     }
 }
+

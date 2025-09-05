@@ -92,6 +92,9 @@ public class ApiRequesterImpl implements APIRequester {
 
     @Override
     public Mono<OptimalRouteResponse> searchOptimalRoute(OptimalRouteRequest request) {
+        if(request.stays()==null){
+
+        }
         return kaKaoMapServiceRequester.searchRoute(
                 request.origin(),
                 request.mountain(),
@@ -216,8 +219,10 @@ public class ApiRequesterImpl implements APIRequester {
                 mountainList.add(new MountainDTO(
                         mountain.path("place_name").asText(),
                         mountain.path("address_name").asText(),
-                        mountain.path("x").asText(),
-                        mountain.path("y").asText()
+                        new Position(
+                                mountain.path("x").asDouble(),
+                                mountain.path("y").asDouble())
+
                 ));
             }
         }
@@ -331,7 +336,8 @@ public class ApiRequesterImpl implements APIRequester {
                 jsonNode.path("mntihigh").asText(),
                 jsonNode.path("mntidetails").asText(),
                 jsonNode.path("mntitop").asText(),
-		jsonNode.path("mntiadd").asText()
+                jsonNode.path("mntiadd").asText()
         );
     }
 }
+

@@ -113,6 +113,7 @@ public class SecurityConfig {
                         //.requestMatchers(HttpMethod.POST, "/api/community/**")
                         //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
 			.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // 👈 로그인 허용
+			.requestMatchers("/api/**").permitAll()
 			.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll()
                 )
