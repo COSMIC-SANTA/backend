@@ -5,6 +5,7 @@ import SANTA.backend.core.banner.dto.BannerDescriptionDTO;
 import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.banner.entity.BannerEntity;
 import SANTA.backend.core.banner.infra.BannerRepository;
+import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.user.domain.Interest;
 import SANTA.backend.global.exception.ErrorCode;
 import SANTA.backend.global.exception.type.CustomException;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +30,10 @@ public class BannerServiceImpl implements BannerService {
     public BannerResponse getInterestingMountains(Interest interest) {
         if (interest == Interest.POPULAR) {
             return getPopularMountains();
+        }
+	if (interest == Interest.ACTIVITY) {
+            List<BannerEntity> bannerMountains = bannerRepository.findByDifficulty(Difficulty.MODERATE);
+            return BannerResponse.from(interest, bannerMountains);
         }
 
         List<BannerEntity> bannerMountains = bannerRepository.findByInterest(interest);

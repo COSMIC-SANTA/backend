@@ -43,8 +43,9 @@ public enum ErrorCode {
 
     TOUR_API_INVALID(500,"M_030","관광 API 이용이 불가능합니다."),
 
-    KAKAO_API_INVALID(500,"M_031","카카오 편의시설 이용이 불가능합니다.");
+    KAKAO_API_INVALID(500,"M_031","카카오 편의시설 이용이 불가능합니다."),
 
+    UNAUTHORIZED_REDIRECT_URI(500, "M_032","인가되지 않은 사용자입니다.");
 
     private final int state;
     private final String code;

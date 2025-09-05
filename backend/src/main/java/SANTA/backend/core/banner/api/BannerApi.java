@@ -9,11 +9,13 @@ import SANTA.backend.core.user.domain.Interest;
 import SANTA.backend.global.common.ResponseHandler;
 import SANTA.backend.global.utils.api.rabbitmq.RabbitMQRequester;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/main")
 public class BannerApi {
 
@@ -43,7 +45,8 @@ public class BannerApi {
         bannerService.incrementViewCount(mountainName);
 
         BannerDescriptionDTO response = bannerService.getBannerDescription(mountainName);
-
+        log.info(response.mountainName());
+        log.info(response.location());
         return ResponseEntity.ok().body(ResponseHandler.success(response));
     }
 }

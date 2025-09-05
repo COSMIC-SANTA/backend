@@ -2,6 +2,7 @@ package SANTA.backend.core.banner.infra;
 
 import SANTA.backend.core.banner.dto.Banner;
 import SANTA.backend.core.banner.entity.BannerEntity;
+import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.user.domain.Interest;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -62,4 +63,12 @@ public class BannerJpaRepository implements BannerRepository {
 
         return Optional.ofNullable(em.find(Banner.class, bannerId));
     }
+
+    @Override
+    public List<BannerEntity> findByDifficulty(Difficulty difficulty) {
+        return em.createQuery("select b from BannerEntity b where b.difficulty = :difficulty", BannerEntity.class)
+                .setParameter("difficulty",difficulty)
+                .getResultList();
+    }
 }
+

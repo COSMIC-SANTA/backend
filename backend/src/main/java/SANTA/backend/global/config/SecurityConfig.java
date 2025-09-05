@@ -73,7 +73,7 @@ public class SecurityConfig {
         cfg.setExposedHeaders(List.of("*"));
 
         // withCredentials(쿠키/세션) 안 쓰면 false 권장. 쓰면 true + 정확한 Origin만 허용해야 함.
-        cfg.setAllowCredentials(false);
+	cfg.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
@@ -87,32 +87,33 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/auth/sign-out")
-                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/form" )
-                        .hasRole(ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/main/banner")
-                        .hasAnyRole(ROLE_USER, ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.POST, "/api/main/banner/click","/api/main/weather")
-                        .hasAnyRole(ROLE_USER, ROLE_ADMIN)
-                        .requestMatchers( "/api/main/saveMountainsFromApi")
-                        .hasRole(ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/mountains/**")
-                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.POST, "/api/mountains/**")
-                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/plan/**")
-                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.POST, "/api/plan/**")
-                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/community/**")
-                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.POST, "/api/community/**")
-                        .hasAnyRole(ROLE_USER,ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        //.requestMatchers(HttpMethod.GET, "/api/auth/sign-out")
+                        //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.GET, "/api/form" )
+                        //.hasRole(ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.GET, "/api/main/banner")
+                        //.hasAnyRole(ROLE_USER, ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.POST, "/api/main/banner/click","/api/main/weather")
+                        //.hasAnyRole(ROLE_USER, ROLE_ADMIN)
+                        //.requestMatchers( "/api/main/saveMountainsFromApi")
+                        //.hasRole(ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.GET, "/api/mountains/**")
+                        //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.POST, "/api/mountains/**")
+                        //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.GET, "/api/plan/**")
+                        //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.POST, "/api/plan/**")
+                        //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.GET, "/api/community/**")
+                        //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
+                        //.requestMatchers(HttpMethod.POST, "/api/community/**")
+                        //.hasAnyRole(ROLE_USER,ROLE_ADMIN)
+			.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll() // 👈 로그인 허용
+			.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll()
                 )
 
@@ -133,4 +134,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-}
+}    

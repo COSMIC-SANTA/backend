@@ -33,6 +33,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"message\": \"Login successful, token is set in cookie\"}" + "accessToken" + jwt);
+        response.getWriter().write("{\"accessToken\": \"" + jwt + "\" }");
     }
 }

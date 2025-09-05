@@ -330,7 +330,8 @@ public class ApiRequesterImpl implements APIRequester {
                 jsonNode.path("mntiname").asText(),
                 jsonNode.path("mntihigh").asText(),
                 jsonNode.path("mntidetails").asText(),
-                jsonNode.path("mntitop").asText()
+                jsonNode.path("mntitop").asText(),
+		jsonNode.path("mntiadd").asText()
         );
     }
 }

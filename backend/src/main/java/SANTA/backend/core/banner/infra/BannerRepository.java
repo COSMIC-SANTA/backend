@@ -1,7 +1,9 @@
 package SANTA.backend.core.banner.infra;
 
 import SANTA.backend.core.banner.dto.Banner;
+import SANTA.backend.core.banner.dto.BannerResponse;
 import SANTA.backend.core.banner.entity.BannerEntity;
+import SANTA.backend.core.mountain.domain.Difficulty;
 import SANTA.backend.core.user.domain.Interest;
 
 import java.util.List;
@@ -17,4 +19,7 @@ public interface BannerRepository {
     Optional<BannerEntity> findByName(String name);
 
     Optional<Banner> findById(Long bannerId);
+
+    List<BannerEntity> findByDifficulty(Difficulty difficulty);
 }
+
