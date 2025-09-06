@@ -4,6 +4,7 @@ import SANTA.backend.core.cafe.domain.Cafe;
 import SANTA.backend.core.restaurant.domain.Restaurant;
 import SANTA.backend.core.spot.domain.Spot;
 import SANTA.backend.core.stay.domain.Stay;
+import SANTA.backend.core.mountain.dto.MountainBasePlaceDTO;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
@@ -20,8 +21,9 @@ import lombok.NoArgsConstructor;
         @JsonSubTypes.Type(value = Cafe.class, name = "cafe"),
         @JsonSubTypes.Type(value = Stay.class, name = "stay"),
         @JsonSubTypes.Type(value = Spot.class, name = "spot"),
-        @JsonSubTypes.Type(value = Restaurant.class, name = "restaurant")
-})
+        @JsonSubTypes.Type(value = Restaurant.class, name = "restaurant"), 
+	@JsonSubTypes.Type(value = MountainBasePlaceDTO.class, name = "mountain")
+	})
 
 public abstract class BasePlace {
     protected Long id;
