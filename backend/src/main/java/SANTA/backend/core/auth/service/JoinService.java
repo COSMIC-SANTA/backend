@@ -55,11 +55,9 @@ public class JoinService {
     }
 
 
-    @CacheEvict(cacheNames = "users", key = "'userId:'+#userId",cacheManager = "cacheManager")
     public void logOut(Long userId, String accessToken) {
         if (accessToken == null || jwtUtil.isExpired(accessToken))
             throw new IllegalArgumentException("유효하지 않은 토큰");
         long expiration = jwtUtil.getExpiration(accessToken) - System.currentTimeMillis();
-        redisTemplate.opsForValue().set("blacklist:"+accessToken,"logout", expiration, TimeUnit.MILLISECONDS);
     }
 }

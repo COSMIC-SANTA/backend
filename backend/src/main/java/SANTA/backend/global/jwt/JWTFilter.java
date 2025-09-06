@@ -43,10 +43,6 @@ public class JWTFilter extends OncePerRequestFilter {
         //토큰 복호화로 사용자 인증
         Claims claims = jwtUtil.parseClaims(token);
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey("blacklist:" + token))) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
 
         //토큰 소멸 시간 검증
         if (jwtUtil.isExpired(claims)) {

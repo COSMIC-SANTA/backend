@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    @Cacheable(cacheNames = "users", key = "'userId:' + #userId", cacheManager = "cacheManager")
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND,"해당 userId의 유저가 존재하지 않습니다: " + userId));

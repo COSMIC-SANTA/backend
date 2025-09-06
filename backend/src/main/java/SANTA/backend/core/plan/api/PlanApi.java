@@ -22,8 +22,8 @@ public class PlanApi {
 
     @PostMapping
     public ResponseEntity<ResponseHandler<Long>> savePlan(@RequestBody PlanRequest planRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long planId = planService.savePlan(userDetails.getUserId(), planRequest.targetDate(), planRequest.mountain(), planRequest.restaurantDTO(),
-                planRequest.stayDTO(), planRequest.cafeDTO(), planRequest.touristSpotDTO());
+        Long planId = planService.savePlan(userDetails.getUserId(), planRequest.targetDate(), planRequest.mountain(), planRequest.restaurants(),
+                planRequest.stays(), planRequest.cafes(), planRequest.spots());
         return ResponseEntity.ok().body(ResponseHandler.success(planId));
     }
 
@@ -45,3 +45,4 @@ public class PlanApi {
         return ResponseEntity.ok(ResponseHandler.success(completedPlans));
     }
 }
+
