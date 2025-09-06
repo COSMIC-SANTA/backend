@@ -17,7 +17,7 @@ public record MountainNearByResponse(
         List<TouristSpotDTO> spotDTOS = spots.stream().map(spot -> new TouristSpotDTO(spot.getName(), spot.getLocation(), spot.getImageUrl(), spot.getPosition().getMapX(), spot.getPosition().getMapY())).toList();
         List<RestaurantDTO> restaurantDTOS = restaurants.stream().map(restaurant -> new RestaurantDTO(restaurant.getName(), restaurant.getLocation(), restaurant.getImageUrl(), restaurant.getPosition().getMapX(), restaurant.getPosition().getMapY())).toList();
         List<CafeDTO> cafeDTOS = cafes.stream().map(cafe -> new CafeDTO(cafe.getName(), cafe.getLocation(), cafe.getImageUrl(),  cafe.getPosition().getMapX(), cafe.getPosition().getMapY())).toList();
-        List<StayDTO> stayDTOS = stays.stream().map(stay -> new StayDTO(stay.getName(), stay.getLocation(), stay.getImageUrl(), stay.getPosition().getMapY(), stay.getPosition().getMapY())).toList();
+        List<StayDTO> stayDTOS = stays.stream().map(stay -> new StayDTO(stay.getName(), stay.getLocation(), stay.getImageUrl(), stay.getPosition().getMapX(), stay.getPosition().getMapY())).toList();
         return new MountainNearByResponse(spotDTOS,restaurantDTOS,cafeDTOS,stayDTOS);
     }
 }

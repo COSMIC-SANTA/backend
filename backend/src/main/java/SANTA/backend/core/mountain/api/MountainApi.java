@@ -46,31 +46,7 @@ public class MountainApi {
 
     @PostMapping("/optimalRoute")
     public ResponseEntity<OptimalRouteResponse> searchOptimalRoute(@RequestBody OptimalRouteRequest request) {
-        log.info("request.destination ={}", request.destination().getName());
-        log.info("request.origin x={}, y={}", request.origin().getMapX(), request.origin().getMapY());
-        log.info("request.mountain ={}", request.mountain().getName());
-        if(!request.cafes().isEmpty()){
-            for (Cafe cafe : request.cafes()) {
-                log.info("request.cafe ={}", cafe.getName());
-            }
-        }
-        if(!request.restaurants().isEmpty()){
-            for (Restaurant restaurant : request.restaurants()) {
-                log.info("request.restaurant ={}", restaurant.getName());
-            }
-        }
-        if(!request.stays().isEmpty()){
-            for (Stay stay : request.stays()) {
-                log.info("request.stay ={}", stay);
-            }
-        }
-        if(!request.spots().isEmpty()){
-            for (Spot spot : request.spots()) {
-                log.info("request.spot ={}", spot);
-            }
-        }
         OptimalRouteResponse optimalRouteResponse = mountainService.searchOptimalRoute(request);
         return ResponseEntity.ok().body(optimalRouteResponse);
     }
-
-} 
+}
